@@ -188,6 +188,7 @@ void Process_Key_Handler(uint8_t keylabel)
             run_t.wifi_led_fast_blink_flag=0;
             run_t.Timer_mode_flag = 0;
 			run_t.gWifi =0;
+			run_t.temperature_set_flag =0;
 		    Power_Off_Fun();
 
 
@@ -496,7 +497,8 @@ void Set_Timer_Temperature_Fun(void)
 			 set_temp_flag=0;
 		     counter_times=0;
 		      run_t.set_temperature_flag =0;
-			// if(run_t.wifi_set_temperature==0)run_t.wifi_set_temperature=20;
+              run_t.gTimer_temp_delay=0;
+			  run_t.temperature_set_flag =1;
 			  m =  run_t.wifi_set_temperature / 10 %10;
 			  n =  run_t.wifi_set_temperature % 10; //
 			  TM1639_Write_2bit_SetUp_TempData(m,n,0);

@@ -110,7 +110,7 @@ typedef struct __RUN{
    uint8_t gTimer_led_500ms;
 
    uint8_t fan_off_60s;
-   uint8_t gTimer_key_60s;
+ 
 
    uint8_t Timer_mode_flag;
    uint8_t temperature_set_flag;
