@@ -502,14 +502,22 @@ void Process_Key_Handler(uint8_t keylabel)
 	  break;
 
 	  case LINK_WIFI_KEY_ID:
-         run_t.gTimer_set_temp_times=0; //conflict with send temperatur value 
-         
-		run_t.wifi_led_fast_blink_flag=1;
-		run_t.wifi_connect_flag =0;
-		run_t.gTimer_wifi_connect_counter=0;
-         SendData_Set_Wifi(0x01);
-		
+	  	if(run_t.gPower_On ==1){
 
+		  if(run_t.gWifi ==0){
+		  	run_t.gWifi =1;
+			run_t.gTimer_set_temp_times=0; //conflict with send temperatur value 
+         
+			run_t.wifi_led_fast_blink_flag=1;
+			run_t.wifi_connect_flag =0;
+			run_t.gTimer_wifi_connect_counter=0;
+	         SendData_Set_Wifi(0x01);
+		  }
+		  else run_t.gWifi = 0;
+		
+        
+		
+	  	}
 	  break;
 
 	  case MODEL_KEY_ID://model_key:

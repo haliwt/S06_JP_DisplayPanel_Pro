@@ -467,7 +467,7 @@ static void DisplayPanel_Ref_Handler(void)
   static uint8_t timing_flag;
   static uint8_t p,q,m,n;
 
-	
+#if 0
   if(run_t.gTimer_key_4s > 6){
 		
 		if(run_t.dec_key_times ==0 && run_t.add_key_times==0){
@@ -507,7 +507,7 @@ static void DisplayPanel_Ref_Handler(void)
 		TM1639_Write_4Bit_Time(p,q,m,n,0) ;
        }
 	}
-
+#endif 
 
 	while(run_t.set_up_temp_flag==1 && run_t.gTimer_key_4s > 3){
 		 

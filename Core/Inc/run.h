@@ -141,6 +141,7 @@ typedef struct __RUN{
 
    //timer timing 
    uint8_t gTimer_set_temp_times;
+   uint8_t gTimer_wifi_slowly;
 
    
    

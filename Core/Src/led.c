@@ -13,14 +13,17 @@ static void Power_BreathOnOff(uint8_t sel);
 
 static void WIFI_LED_OnOff(uint8_t sel);
 
-
+/***********************************************************
+*
+*Function Name : static void WIFI_LED_OnOff(uint8_t sel)
+*
+*
+*
+************************************************************/
 static void WIFI_LED_OnOff(uint8_t sel)
 {
     if(sel==1){
-		LED_WIFI_ON();	
-
-	}
-	else{
+	
 		 if(run_t.gTimer_led_500ms > 0 && 	run_t.gTimer_led_500ms< 6){
 		     LED_WIFI_OFF();
 
@@ -35,6 +38,25 @@ static void WIFI_LED_OnOff(uint8_t sel)
 		     LED_WIFI_OFF();
 
 		}
+	}
+	else{
+		if(run_t .gTimer_wifi_slowly > 0 &&	run_t .gTimer_wifi_slowly< 2){
+				 LED_WIFI_OFF();
+	
+			 }
+			 else if(run_t .gTimer_wifi_slowly>1 && run_t .gTimer_wifi_slowly< 3){
+				 LED_WIFI_ON();
+				 
+	
+			}
+			else{
+				run_t .gTimer_wifi_slowly=0;
+				 LED_WIFI_OFF();
+	
+			}
+
+
+
 	}
 }
 
