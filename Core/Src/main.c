@@ -27,6 +27,7 @@
 #include "key.h"
 #include "single_mode.h"
 #include "run.h"
+#include "interrupt_manager.h"
 uint8_t keyvalue;
 /* USER CODE END Includes */
 
