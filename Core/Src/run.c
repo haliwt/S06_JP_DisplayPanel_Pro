@@ -353,7 +353,7 @@ void Power_On_Fun(void)
 
 	 hour_decade=(run_t.dispTime_hours ) /10;
      hour_unit=(run_t.dispTime_hours ) %10;
-	 
+	 SMG_POWER_ON(); //WT.EDIT 2023.03.02
      
 	 TM1639_Write_4Bit_Time(hour_decade,hour_unit,0x0,0x0,0);
 
