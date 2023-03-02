@@ -5,7 +5,8 @@ void (*panel_led_fun)(void);
 
 
 static void DRY_LED_OnOff(uint8_t sel);
-static void STER_LED_OnOff(uint8_t sel);
+static void PLASMA_LED_OnOff(uint8_t sel);
+
 static void TIME_LED_OnOff(uint8_t sel);
 
 static void Power_BreathOnOff(uint8_t sel);
@@ -31,7 +32,7 @@ static void DRY_LED_OnOff(uint8_t sel)
    	LED_DRY_OFF();
 
 }
-static void STER_LED_OnOff(uint8_t sel)
+static void PLASMA_LED_OnOff(uint8_t sel)
 {
 	if(sel==0){
 		LED_PLASMA_ON();
@@ -82,16 +83,31 @@ void ALL_LED_Off(void)
 void Panel_Led_OnOff_Function(void)
 {
 	
-//	 
-//	  if(){
-//		
-//		  LED_AI_ON();
-//		  run_t.gFan_off_flag=0;
-//	  }
-//	  else{
-//	     LED_WIFI_OFF();
-//
-//	  }
+	 
+	 if(run_t.gWifi == 1){
+		
+		  LED_WIFI_ON();
+		  
+	  }
+	  else{
+	  	
+	    
+		 if(run_t.gTimer_led_500ms > 0 && 	run_t.gTimer_led_500ms< 6){
+		     LED_WIFI_OFF();
+
+		 }
+		 else if(run_t.gTimer_led_500ms>5 && run_t.gTimer_led_500ms< 11){
+		 	 LED_WIFI_ON();
+		     
+
+        }
+		else{
+		  	run_t.gTimer_led_500ms=0;
+		     LED_WIFI_OFF();
+
+		}
+
+	  }
 	 
 	  
     if(run_t.gDry==0){
@@ -106,11 +122,11 @@ void Panel_Led_OnOff_Function(void)
 
 	 if(run_t.gPlasma==0){
 	 	 run_t.gFan_off_flag=0;
-	     STER_LED_OnOff(0);
+	     PLASMA_LED_OnOff(0);
 
      }
 	 else{
-	   STER_LED_OnOff(1);
+	   PLASMA_LED_OnOff(1);
 
 	 }
 

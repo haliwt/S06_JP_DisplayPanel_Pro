@@ -87,6 +87,7 @@ typedef struct __RUN{
  
    uint8_t  gDry;
    uint8_t  gBug;
+   uint8_t  gWifi;
 
    uint8_t  gFan;
    uint8_t  gModel;
