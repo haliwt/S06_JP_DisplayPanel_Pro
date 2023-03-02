@@ -8,10 +8,13 @@
 
 
 key_types key_t;
-
-
-
-
+/***********************************************************
+*
+*
+*
+*
+*
+***********************************************************/
 
 uint8_t KEY_Scan(void)
 {
@@ -177,7 +180,7 @@ void SplitDispose_Key(uint8_t value)
     
           if(run_t.gPower_On == 0 || run_t.gPower_On == 0xff){
 			  	  run_t.dispTime_hours=12;
-			      run_t.dispTime_minute=0;
+			      run_t.dispTime_minutes=0;
 		          run_t.gTimes_time_seconds=0;
 	              run_t.gPower_On=1;
 	          
@@ -236,7 +239,7 @@ void SplitDispose_Key(uint8_t value)
 				    run_t.dispTime_hours --;
 					if(run_t.dispTime_hours < 0){
 						run_t.dispTime_hours=23;
-				        run_t.dispTime_minute =59;
+				        run_t.dispTime_minutes =59;
 					   
 					}
 					
@@ -588,19 +591,11 @@ void Process_Key_Handler(uint8_t keylabel)
 			
 				run_t.gTimer_key_timing =0;
                 set_timer_flag=0;
-				run_t.dispTime_minutes = run_t.dispTime_minutes - 1;
-				if(run_t.dispTime_minutes < 0){
-
-				    run_t.dispTime_hours --;
-					if(run_t.dispTime_hours < 0){
-						run_t.dispTime_hours=24 ;
-				        run_t.dispTime_minutes =0;
-					  // run_t.dispTime_minutes = run_t.dispTime_minutes - 30;
-					}
-					else{
-					  run_t.dispTime_minutes =0;
-					  //run_t.dispTime_minutes = run_t.dispTime_minutes - 30;
-					}
+				run_t.dispTime_hours --;
+				if(run_t.dispTime_hours < 0){
+					run_t.dispTime_hours=24 ;
+				    run_t.dispTime_minutes =0;
+					 // run_t.dispTime_minutes = run_t.dispTime_minutes - 30;
 					
 				}
 
@@ -610,13 +605,8 @@ void Process_Key_Handler(uint8_t keylabel)
 				  p = 0;
 				  q = 0;
 
-					
-
-		         TM1639_Write_4Bit_Time(m,n,p,q,0) ; //timer is default 12 hours "12:00"    
-
-
-
-	    	}
+				TM1639_Write_4Bit_Time(m,n,p,q,0) ; //timer is default 12 hours "12:00"    
+				}
 		}
 
 	  break;
@@ -624,93 +614,37 @@ void Process_Key_Handler(uint8_t keylabel)
 	   case DRY_KEY_ID://0x02: //CIN6  ->DRY KEY 
           if(run_t.gPower_On ==1){
 		
-			    dry = dry^ 0x01;
-				if(dry==1){ //turn off the first be pressed 
-                   if(run_t.gDry== 1){
-				       run_t.gDry =0;
-					   run_t.gFan=0;   //WT.EDIT 2023.01.30
-                   	}
-                   else{
-                       run_t.gDry =1;
-                   }  
-				  
-
-				}
-				else{ //the second be pressed key
-                    
-                   if(run_t.gDry== 1){
-				       run_t.gDry =0;
-					   run_t.gFan=0;   //WT.EDIT 2023.01.30
-					   
-                   	}
-                   else{
-                       run_t.gDry =1;
-					  
-					 
-                   	}
-                    
-					
-				}
-			    if( run_t.gPlasma==1 && run_t.gDry ==1){
-			    	   run_t.gFan_RunContinue =1;
-					   run_t.fan_off_60s =0;
-		            }
-		            else run_t.gFan_RunContinue =0;
-			   
-				 
-           }
-          run_t.keyValue =0xff; 
+			  if(run_t.gDry== 1){
+				    run_t.gDry =0;
+               }
+               else{
+                    run_t.gDry =1;
+                 }  
+			   }
+				
          break;
 
 		 case PLASMA_KEY_ID: //0x04: //CIN5  -> plasma ->STERILIZATION KEY 
              if(run_t.gPower_On ==1){
 			
-               plasma = plasma ^ 0x01;
+              
 			   if(plasma ==1){  //turun off kill 
 			   	
-			       if(run_t.gPlasma ==1){
-				       run_t.gPlasma = 0;
-					   run_t.gFan=0;   //WT.EDIT 2023.01.30
-			       	}
-                   else{
-                       run_t.gPlasma = 1;
-					
-					   
-                   	}
+			       run_t.gPlasma = 0;
+			   	}  
+                else{
+                   run_t.gPlasma = 1;
+				}
 				   
-		       }
-			   else{
-			   	  if(run_t.gPlasma ==1){
-				       run_t.gPlasma = 0;
-					   run_t.gFan=0;   //WT.EDIT 2023.01.30
-			   	  	}
-                   else{
-                       run_t.gPlasma = 1;
-					 
-					  
-                   	}
-			   	}
-               
-                if( run_t.gPlasma==1 && run_t.gDry ==1){
-			    	   run_t.gFan_RunContinue =1;
-					   run_t.fan_off_60s =0;
-		          }
-		          else run_t.gFan_RunContinue =0;
-
-			
-             
-             }
+		       
+			 }
             
-         
-		 run_t.keyValue =0xff;
-         break;
+        break;
 
 		 case FAN_KEY_ID: //0x08: //Fan KEY 
               if(run_t.gPower_On ==1){
                    
-               
-			
-				if(run_t.gFan==0){
+               if(run_t.gFan==0){
  					   run_t.gFan =1; //tur off fan
  					   
 			     }
@@ -722,16 +656,10 @@ void Process_Key_Handler(uint8_t keylabel)
                  }
 				  
 				 
-				    
-            }
+			}
 				
-		
-		
-		 run_t.keyValue =0xff;
-         break;
+		 break;
 
-
-		 
 
 	  default:
 
@@ -781,7 +709,7 @@ void Set_Timer_Temperature_Fun(void)
 		   
 			
 	
-			   if(run_t.gTimer_smg_timing < 21){
+			   if(run_t.gTimer_smg_timing < 13){
 			   		
 				   m=run_t.dispTime_hours  /10%10;
 				   n=run_t.dispTime_hours  %10;
@@ -790,7 +718,7 @@ void Set_Timer_Temperature_Fun(void)
 					  TM1639_Write_4Bit_Time(m,n,p,q,0) ;
 
 			   	}
-				else if(run_t.gTimer_smg_timing > 19 && run_t.gTimer_smg_timing < 41)
+				else if(run_t.gTimer_smg_timing > 12 && run_t.gTimer_smg_timing < 27)
 					   TM1639_Write_4Bit_Time(0,0,0,0,1) ;
 				else{
 				   run_t.gTimer_smg_timing=0;
@@ -807,6 +735,7 @@ void Set_Timer_Temperature_Fun(void)
 		   run_t.Timer_mode_flag =0;
 		   run_t.temp_set_timer_timing_flag=0;
 		   run_t.timer_timing_define_flag = timing_success;
+            run_t.gTimer_Counter=0;
 		   SendData_Time_Data(run_t.dispTime_hours);
 		   TM1639_Write_4Bit_Time(m,n,p,q,0) ;
 		  }

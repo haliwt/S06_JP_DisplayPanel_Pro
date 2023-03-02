@@ -102,7 +102,7 @@ typedef struct __RUN{
    uint8_t set_up_temp_flag;
    uint8_t gSet_up_times;
   
-   uint8_t dispTime_minute;
+   
 
    uint8_t gTimer_display_dht11;
   
@@ -150,7 +150,7 @@ typedef struct __RUN{
 
    
    
- 
+   
 
 	int8_t dispTime_hours;
 	int8_t dispTime_minutes;

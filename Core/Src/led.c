@@ -128,7 +128,7 @@ void ALL_LED_Off(void)
 void Panel_Led_OnOff_Function(void)
 {
 	
-	 
+	LED_POWER_ON();
 	if(run_t.gWifi ==0){
        WIFI_LED_OnOff(0);
 

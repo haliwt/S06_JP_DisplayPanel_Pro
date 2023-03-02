@@ -23,8 +23,8 @@ void DisplaySMG_LED(void)
 
 		m = (run_t.dispTime_hours /10) ;
 		n=	(run_t.dispTime_hours%10); 
-		p = (run_t.dispTime_minute/10);
-		q=  (run_t.dispTime_minute%10);
+		p = (run_t.dispTime_minutes/10);
+		q=  (run_t.dispTime_minutes%10);
 
 
 
@@ -85,8 +85,8 @@ void DisplayTiming_KEY_Add_Subtract_Fun(void)
            
 			p=run_t.dispTime_hours  /10%10;
 		    q=run_t.dispTime_hours  %10;
-			m = run_t.dispTime_minute  /10%10;
-			n=	run_t.dispTime_minute %10;
+			m = run_t.dispTime_minutes  /10%10;
+			n=	run_t.dispTime_minutes %10;
 	
 			TM1639_Write_4Bit_Time(p,q,m,n,0) ; // timer   mode  "H0: xx"
 			
@@ -115,8 +115,8 @@ void Display_GMT(void)
     static uint8_t m,n,p,q;
 	m = run_t.dispTime_hours /10 %10;
 	n=	run_t.dispTime_hours%10; 
-	p = run_t.dispTime_minute/10 %10;
-	q=  run_t.dispTime_minute%10;
+	p = run_t.dispTime_minutes/10 %10;
+	q=  run_t.dispTime_minutes%10;
 	TM1639_Write_4Bit_Time(m,n,p,q,0) ; //timer is default 12 hours "12:00"
 
 

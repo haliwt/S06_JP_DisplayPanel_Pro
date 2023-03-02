@@ -57,7 +57,7 @@ void Power_Off(void)
 
 				  run_t.gTimer_Cmd=0; //timer of command "1"->timer is start
 				  run_t.dispTime_hours=0;
-				  run_t.dispTime_minute=0;
+				  run_t.dispTime_minutes=0;
 				  run_t.gTemperature_timer_flag=0;
 			
 			
@@ -89,8 +89,8 @@ void DisplayTimer_Timing(void)
       static uint8_t m,n,p,q;
       m = run_t.dispTime_hours /10 ;
 	  n=  run_t.dispTime_hours %10; 
-	  p = run_t.dispTime_minute /10;
-	  q=  run_t.dispTime_minute %10;
+	  p = run_t.dispTime_minutes /10;
+	  q=  run_t.dispTime_minutes %10;
 	  TM1639_Write_4Bit_Time(m,n,p,q,0) ; //timer is default 12 hours "12:00"
 
   
