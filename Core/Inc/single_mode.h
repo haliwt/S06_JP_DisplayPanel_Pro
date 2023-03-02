@@ -24,6 +24,7 @@ void Single_SendAi_Usart_RunCmd(void(*sendaiHandler)(uint8_t seddat));
 
 void SplitDispose_Key_RunCmd(void(*keyHandler)(uint8_t dat));
 
+void RunPocess_Command_Handler(void);
 
 #endif 
 

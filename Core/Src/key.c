@@ -76,7 +76,7 @@ uint8_t KEY_Scan(void)
                    
                     
 				}
-			   else if(++key_t.on_time > 20000 && run_t.power_times !=1 ){
+			   else if(++key_t.on_time > 1 && run_t.power_times !=1 ){
 				key_t.value = key_t.buffer^_KEY_ALL_OFF; // key.value = 0xFE ^ 0xFF = 0x01
 				key_t.on_time = 0;                        //key .value = 0xEF ^ 0XFF = 0X10
                    
@@ -96,7 +96,7 @@ uint8_t KEY_Scan(void)
 		{
 			if(key_t.read == key_t.buffer) //again adjust key if be pressed down 
 			{
-				if(++key_t.on_time>200000)// 10000 long key be down
+				if(++key_t.on_time>900000)// 10000 long key be down
 				{
 					
 					key_t.value = key_t.value|0x80; //key.value = 0x01 | 0x80  =0x81  

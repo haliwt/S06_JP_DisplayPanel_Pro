@@ -24,10 +24,16 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "key.h"
-#include "single_mode.h"
+#include "smg.h"
+#include "cmd_link.h"
 #include "run.h"
+#include "key.h"
+#include "led.h"
+#include "single_mode.h"
+#include "display.h"
 #include "interrupt_manager.h"
+//#include "delay.h"
+
 uint8_t keyvalue;
 /* USER CODE END Includes */
 
@@ -110,11 +116,15 @@ int main(void)
 		  
 	  }
 	  else{
-     HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_SET);
-
-  
-     HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_SET);
-      keyvalue=  KEY_Scan();
+	  	 keyvalue = KEY_Scan();//Scan_KeyMode();
+		 Process_Key_Handler(keyvalue);
+		 if(run_t.decodeFlag ==1){
+			run_t.decodeFlag =0;
+			Decode_Handler();
+		 }
+		 
+		 RunPocess_Command_Handler();
+    
       }
      // Scan_KeyMode();
   }
