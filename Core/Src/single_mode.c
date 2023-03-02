@@ -468,50 +468,9 @@ void Single_RunCmd(void)
 static void DisplayPanel_Ref_Handler(void)
 {
 
-  static uint8_t timing_flag;
-  static uint8_t p,q,m,n;
-
-#if 0
-  if(run_t.gTimer_key_4s > 6){
-		
-		if(run_t.dec_key_times ==0 && run_t.add_key_times==0){
-             
-			p=run_t.dispTime_hours  /10%10;
-		    q=run_t.dispTime_hours  %10;
-			m = run_t.dispTime_minute  /10%10;
-			n=	run_t.dispTime_minute %10;
-
-		
-			 // timer   mode  "H0: xx"
-
-			if(run_t.gTimer_led_500ms < 41)
-		           TM1639_Write_4Bit_Time(p,q,m,n,0) ;
-		     else if(run_t.gTimer_led_500ms > 39 && run_t.gTimer_led_500ms < 81)
-			 	    TM1639_Write_4Bit_Time(p,q,m,n,1) ;
-			 else{
-			 	run_t.gTimer_led_500ms=0;
-
-			     timing_flag ++;
-	 		 }
+  
 
 
-			
-			 if(p>0 || q>0 || m>0 || n>0){
-				run_t.timer_timing_define_flag = timing_success;//run_t.gTimer_Cmd=1;
-			}
-			else
-				run_t.timer_timing_define_flag = timing_not_definition;//run_t.gTimer_Cmd=0;
-		}
-		else
-			run_t.gTimer_key_4s=0;
-		
-       if(timing_flag > 3){
-	   	run_t.gTimer_Counter=0;
-	   	run_t.gMode_flag=0;
-		TM1639_Write_4Bit_Time(p,q,m,n,0) ;
-       }
-	}
-#endif 
 
 	if(run_t.set_up_temp_flag==1 && run_t.gTimer_temperature > 10){
 		 run_t.gTimer_temperature=0;
@@ -570,7 +529,7 @@ void RunPocess_Command_Handler(void)
 			TM1639_Write_2bit_SetUp_TempData(m,n,0);
             
 		}
-	   if(run_t.gModel == 0){ //as is "Ai mode"
+	  
 
           if(run_t.temperature_set_flag ==1 && run_t.gTimer_temp_delay >59){
                run_t.gTimer_temp_delay =0;
@@ -592,8 +551,7 @@ void RunPocess_Command_Handler(void)
 				 
 		  }
 	  
-	     }
-
+	    
 	  }
 	   
    }

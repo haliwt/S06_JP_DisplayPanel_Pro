@@ -481,6 +481,7 @@ void Process_Key_Handler(uint8_t keylabel)
 		    run_t.gTimer_set_temp_times=0; //conflict with send temperatur value 
             run_t.wifi_led_fast_blink_flag=0;
             run_t.Timer_mode_flag = 0;
+			run_t.gWifi =0;
 		    Power_Off_Fun();
 
 

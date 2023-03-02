@@ -162,15 +162,15 @@ void Receive_MainBoard_Data_Handler(uint8_t cmd)
 	 case PANEL_DATA:
 	   
         if(run_t.gPower_On ==1){
-        hum1 =  run_t.gReal_humtemp[0]/10 %10;  //Humidity 
-        hum2 =  run_t.gReal_humtemp[0]%10;
-        
-        temp1 = run_t.gReal_humtemp[1]/10 %10;  // temperature
-        temp2 = run_t.gReal_humtemp[1]%10;
-
-         //temperature 
-          TM1639_Write_2bit_TempData(temp1,temp2);
-	      TM1639_Write_2bit_HumData(hum1,hum2);
+//        hum1 =  run_t.gReal_humtemp[0]/10 %10;  //Humidity 
+//        hum2 =  run_t.gReal_humtemp[0]%10;
+//        
+//        temp1 = run_t.gReal_humtemp[1]/10 %10;  // temperature
+//        temp2 = run_t.gReal_humtemp[1]%10;
+//
+//         //temperature 
+//          TM1639_Write_2bit_TempData(temp1,temp2);
+//	      TM1639_Write_2bit_HumData(hum1,hum2);
 	
         }
 
@@ -187,7 +187,7 @@ void Receive_MainBoard_Data_Handler(uint8_t cmd)
             q = (run_t.dispTime_minutes )%10;
 			
 
-	       TM1639_Write_4Bit_Time(p,q,m,n,0) ; // timer   mode  "H0: xx"
+	       TM1639_Write_4Bit_Time(m,n,p,q,0) ; // timer   mode  "H0: xx"
 	      }
          }
 		    
@@ -208,7 +208,7 @@ void Receive_MainBoard_Data_Handler(uint8_t cmd)
 			 n= (run_t.dispTime_hours ) %10;;
 			
 	   
-              TM1639_Write_4Bit_Time(p,q,m,n,0) ; // timer   mode  "H0: xx"
+              TM1639_Write_4Bit_Time(m,n,p,q,0) ; // timer   mode  "H0: xx"
         }
 
       break;
@@ -333,7 +333,7 @@ void Power_On_Fun(void)
 	run_t.power_key =1;
 	run_t.gFan_RunContinue=0;
 
-	run_t.gModel =1; //WT.EDIT 2022.09.01
+
 	run_t.gPlasma=1;
 	run_t.gDry =1;
 	run_t.gBug =1;
@@ -371,7 +371,7 @@ void Power_On_Fun(void)
 void Power_Off_Fun(void)
 {
 	
-      //  run_t.gModel =0; //WT.EDIT 2022.09.01
+ 
 		run_t.gPlasma=0;
 		run_t.gDry =0;
 		run_t.gBug =0;

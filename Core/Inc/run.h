@@ -91,7 +91,7 @@ typedef struct __RUN{
    uint8_t  gWifi;
 
    uint8_t  gFan;
-   uint8_t  gModel;
+  
    uint8_t  gMode_flag;
    
    uint8_t  gFan_off_flag ;
