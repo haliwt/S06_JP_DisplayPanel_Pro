@@ -57,26 +57,67 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define SMG_POWER_Pin GPIO_PIN_1
-#define SMG_POWER_GPIO_Port GPIOA
-#define FAN_KEY_Pin GPIO_PIN_0
-#define FAN_KEY_GPIO_Port GPIOB
-#define PLASMA_KEY_Pin GPIO_PIN_1
-#define PLASMA_KEY_GPIO_Port GPIOB
-#define DRY_KEY_Pin GPIO_PIN_2
-#define DRY_KEY_GPIO_Port GPIOB
-#define WIFI_KEY_Pin GPIO_PIN_10
-#define WIFI_KEY_GPIO_Port GPIOB
-#define LED_POWER_Pin GPIO_PIN_12
-#define LED_POWER_GPIO_Port GPIOB
-#define POWER_KEY_Pin GPIO_PIN_7
-#define POWER_KEY_GPIO_Port GPIOC
-#define MODEL_KEY_Pin GPIO_PIN_10
-#define MODEL_KEY_GPIO_Port GPIOA
-#define DEC_KEY_Pin GPIO_PIN_11
-#define DEC_KEY_GPIO_Port GPIOA
-#define ADD_KEY_Pin GPIO_PIN_12
-#define ADD_KEY_GPIO_Port GPIOA
+#define SMG_POWER_Pin               GPIO_PIN_1
+#define SMG_POWER_GPIO_Port         GPIOA
+
+//smg output GPIO 
+#define TM1639_STB_Pin GPIO_PIN_4
+#define TM1639_STB_GPIO_Port GPIOA
+
+#define M1639_DIO_Pin GPIO_PIN_5
+#define M1639_DIO_GPIO_Port GPIOA
+
+#define TM1639_SCLK_Pin GPIO_PIN_6
+#define TM1639_SCLK_GPIO_Port GPIOA
+
+//key input GPIO
+#define FAN_KEY_Pin 					GPIO_PIN_0
+#define FAN_KEY_GPIO_Port 				GPIOB
+
+#define PLASMA_KEY_Pin 					GPIO_PIN_1
+#define PLASMA_KEY_GPIO_Port 			GPIOB
+
+#define DRY_KEY_Pin 					GPIO_PIN_2
+#define DRY_KEY_GPIO_Port 				GPIOB
+
+#define WIFI_KEY_Pin 					GPIO_PIN_10
+#define WIFI_KEY_GPIO_Port 				GPIOB
+
+#define POWER_KEY_Pin 					GPIO_PIN_7
+#define POWER_KEY_GPIO_Port 			GPIOC
+
+#define MODEL_KEY_Pin 					GPIO_PIN_10
+#define MODEL_KEY_GPIO_Port 				GPIOA
+
+#define DEC_KEY_Pin 					GPIO_PIN_11
+#define DEC_KEY_GPIO_Port 				GPIOA
+
+#define ADD_KEY_Pin 					GPIO_PIN_12
+#define ADD_KEY_GPIO_Port 				GPIOA
+
+
+
+
+//Led output GPIO
+#define LED_POWER_Pin 						GPIO_PIN_12
+#define LED_POWER_GPIO_Port 				GPIOB
+
+#define TIME_LED_EN_Pin 					GPIO_PIN_14
+#define TIME_LED_EN_GPIO_Port 				GPIOB
+
+#define FAN_LED_EN_Pin 						GPIO_PIN_15
+#define FAN_LED_EN_GPIO_Port 				GPIOB
+
+#define PLASMA_LED_EN_Pin 					GPIO_PIN_8
+#define PLASMA_LED_EN_GPIO_Port 			GPIOA
+
+#define DRY_LED_EN_Pin 						GPIO_PIN_9
+#define DRY_LED_EN_GPIO_Port 				GPIOA
+
+#define WIFI_LED_EN_Pin 					GPIO_PIN_6
+#define WIFI_LED_EN_GPIO_Port 				GPIOC
+
+
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */

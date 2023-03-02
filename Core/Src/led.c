@@ -3,10 +3,10 @@
 
 void (*panel_led_fun)(void);
 
-void AI_LED_OnOff(uint8_t sel);
-void DRY_LED_OnOff(uint8_t sel);
-void STER_LED_OnOff(uint8_t sel);
-void TIME_LED_OnOff(uint8_t sel);
+
+static void DRY_LED_OnOff(uint8_t sel);
+static void STER_LED_OnOff(uint8_t sel);
+static void TIME_LED_OnOff(uint8_t sel);
 
 static void Power_BreathOnOff(uint8_t sel);
 
@@ -16,67 +16,60 @@ static void Power_BreathOnOff(uint8_t sel);
 //{
 //    if(sel==0){
 //		LED_WIFI_ON();	
-
+//
 //	}
 //	else
 //		LED_WIFI_OFF();		
 //}
 
-//void DRY_LED_OnOff(uint8_t sel)
-//{
-//   if(sel==0){
-//	 LED_DRY_ON();
-//   }
-//   else 
-//   	LED_DRY_OFF();
+static void DRY_LED_OnOff(uint8_t sel)
+{
+   if(sel==0){
+	 LED_DRY_ON();
+   }
+   else 
+   	LED_DRY_OFF();
 
-//}
-//void STER_LED_OnOff(uint8_t sel)
-//{
-//	if(sel==0){
-//		LED_STER_ON();
-//   }
-//   else
-//   	 LED_STER_OFF();
+}
+static void STER_LED_OnOff(uint8_t sel)
+{
+	if(sel==0){
+		LED_PLASMA_ON();
+   }
+   else
+   	 LED_PLASMA_OFF();
 
-//}
+}
 
-//void TIME_LED_OnOff(uint8_t sel)
-//{
-//    if(sel==0)LED_TIME_ON();
-//	else  LED_TIME_OFF();
-
-
-//}
+static void TIME_LED_OnOff(uint8_t sel)
+{
+    if(sel==0)LED_TIME_ON();
+	else  LED_TIME_OFF();
 
 
-//void KeyLed_Power_On(void)
-//{
-//   LED_POWER_ON();
-//   LED_TIME_ON();
+}
+
+void KeyLed_Power_On(void)
+{
+   LED_POWER_ON();
+   LED_TIME_ON();
 
 
-//}
+}
 
 
-//void ALL_LED_Off(void)
-//{
-//   LED_STER_OFF();
-//   LED_WIFI_OFF();
-//  LED_DRY_OFF();
-//  LED_WIFI_OFF();
-//  LED_TIME_OFF();
+void ALL_LED_Off(void)
+{
+   LED_PLASMA_OFF();
+   LED_WIFI_OFF();
+  LED_DRY_OFF();
+  LED_WIFI_OFF();
+  LED_TIME_OFF();
 
 
-//}
+}
 
-//void AI_Auto_Stop(void)
-//{
-//	LED_STER_OFF();
-//	LED_WIFI_OFF();
-//	LED_DRY_OFF();
-//	
-//}
+
 
 /*******************************************************************************************
  	*
@@ -101,37 +94,37 @@ void Panel_Led_OnOff_Function(void)
 //	  }
 	 
 	  
-//    if(run_t.gDry==0){
-//		 run_t.gFan_off_flag=0;
-//	     DRY_LED_OnOff(0);
+    if(run_t.gDry==0){
+		 run_t.gFan_off_flag=0;
+	     DRY_LED_OnOff(0);
 
-//     }
-//	 else{
-//	    DRY_LED_OnOff(1);
+     }
+	 else{
+	    DRY_LED_OnOff(1);
 
-//	 }
+	 }
 
-//	 if(run_t.gPlasma==0){
-//	 	 run_t.gFan_off_flag=0;
-//	     STER_LED_OnOff(0);
+	 if(run_t.gPlasma==0){
+	 	 run_t.gFan_off_flag=0;
+	     STER_LED_OnOff(0);
 
-//     }
-//	 else{
-//	   STER_LED_OnOff(1);
+     }
+	 else{
+	   STER_LED_OnOff(1);
 
-//	 }
+	 }
 
-//	 if(run_t.gFan == 0 &&  run_t.gFan_off_flag ==0){
-//         LED_FAN_ON();
-//	 }
-//	 else{
-//         LED_FAN_OFF();
-//	 }
+	 if(run_t.gFan == 0 &&  run_t.gFan_off_flag ==0){
+         LED_FAN_ON();
+	 }
+	 else{
+         LED_FAN_OFF();
+	 }
 
-//	
+	
 
-//	
-// 
+	
+ 
 }
 /***************************************************************
 *
@@ -184,9 +177,7 @@ void Breath_Led(void)
     
    
      Power_BreathOnOff(0);
-   // LED_POWER_OFF(); 
-
-	 
+   
 }
 
 
