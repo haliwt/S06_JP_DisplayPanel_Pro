@@ -78,6 +78,7 @@ typedef struct __RUN{
   
 
    uint8_t decodeFlag;
+   uint8_t time_led_flag;
 
    uint8_t dec_key_times;
    uint8_t add_key_times;

@@ -337,6 +337,8 @@ void Power_On_Fun(void)
 	run_t.gPlasma=1;
 	run_t.gDry =1;
 	run_t.gBug =1;
+	run_t.time_led_flag=1;
+	run_t.gFan =1;
 	
 	run_t.temperature_set_flag = 0; //WT.EDIT 2023.01.31
     run_t.wifi_set_temp_flag=0; // //WT.EDIT 2023.01.31

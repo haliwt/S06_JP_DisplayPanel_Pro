@@ -11,21 +11,36 @@ static void TIME_LED_OnOff(uint8_t sel);
 
 static void Power_BreathOnOff(uint8_t sel);
 
+static void WIFI_LED_OnOff(uint8_t sel);
 
 
-//void AI_LED_OnOff(uint8_t sel)
-//{
-//    if(sel==0){
-//		LED_WIFI_ON();	
-//
-//	}
-//	else
-//		LED_WIFI_OFF();		
-//}
+static void WIFI_LED_OnOff(uint8_t sel)
+{
+    if(sel==1){
+		LED_WIFI_ON();	
+
+	}
+	else{
+		 if(run_t.gTimer_led_500ms > 0 && 	run_t.gTimer_led_500ms< 6){
+		     LED_WIFI_OFF();
+
+		 }
+		 else if(run_t.gTimer_led_500ms>5 && run_t.gTimer_led_500ms< 11){
+		 	 LED_WIFI_ON();
+		     
+
+        }
+		else{
+		  	run_t.gTimer_led_500ms=0;
+		     LED_WIFI_OFF();
+
+		}
+	}
+}
 
 static void DRY_LED_OnOff(uint8_t sel)
 {
-   if(sel==0){
+   if(sel==1){
 	 LED_DRY_ON();
    }
    else 
@@ -34,7 +49,7 @@ static void DRY_LED_OnOff(uint8_t sel)
 }
 static void PLASMA_LED_OnOff(uint8_t sel)
 {
-	if(sel==0){
+	if(sel==1){
 		LED_PLASMA_ON();
    }
    else
@@ -44,7 +59,7 @@ static void PLASMA_LED_OnOff(uint8_t sel)
 
 static void TIME_LED_OnOff(uint8_t sel)
 {
-    if(sel==0)LED_TIME_ON();
+    if(sel==1)LED_TIME_ON();
 	else  LED_TIME_OFF();
 
 
@@ -84,59 +99,48 @@ void Panel_Led_OnOff_Function(void)
 {
 	
 	 
-	 if(run_t.gWifi == 1){
-		
-		  LED_WIFI_ON();
-		  
-	  }
-	  else{
-	  	
-	    
-		 if(run_t.gTimer_led_500ms > 0 && 	run_t.gTimer_led_500ms< 6){
-		     LED_WIFI_OFF();
+	if(run_t.gWifi ==0){
+       WIFI_LED_OnOff(0);
 
-		 }
-		 else if(run_t.gTimer_led_500ms>5 && run_t.gTimer_led_500ms< 11){
-		 	 LED_WIFI_ON();
-		     
-
-        }
-		else{
-		  	run_t.gTimer_led_500ms=0;
-		     LED_WIFI_OFF();
-
-		}
-
-	  }
+	}
+	else
+		WIFI_LED_OnOff(1);
 	 
 	  
-    if(run_t.gDry==0){
+    if(run_t.gDry==1){
 		 run_t.gFan_off_flag=0;
-	     DRY_LED_OnOff(0);
+	     DRY_LED_OnOff(1);
 
      }
 	 else{
-	    DRY_LED_OnOff(1);
+	    DRY_LED_OnOff(0);
 
 	 }
 
-	 if(run_t.gPlasma==0){
+	 if(run_t.gPlasma==1){
 	 	 run_t.gFan_off_flag=0;
-	     PLASMA_LED_OnOff(0);
+	     PLASMA_LED_OnOff(1);
 
      }
 	 else{
-	   PLASMA_LED_OnOff(1);
+	   PLASMA_LED_OnOff(0);
 
 	 }
 
-	 if(run_t.gFan == 0 &&  run_t.gFan_off_flag ==0){
+	 if(run_t.gFan == 1){
          LED_FAN_ON();
 	 }
 	 else{
          LED_FAN_OFF();
 	 }
 
+	 if(run_t.time_led_flag ==1){
+	    TIME_LED_OnOff(1);
+	 }
+	 else
+	 	TIME_LED_OnOff(0);
+
+    
 	
 
 	
