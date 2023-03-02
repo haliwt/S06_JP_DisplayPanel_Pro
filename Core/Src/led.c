@@ -195,9 +195,7 @@ static void Power_BreathOnOff(uint8_t sel)
 
 	LED_POWER_ON();
 
-
-
-	}
+    }
           
 
 	if(k>40000 && k <80000){
@@ -235,4 +233,15 @@ void Panel_Led_OnOff_RunCmd(void (*panelledHandler)(void))
 {
 
 	 panel_led_fun= panelledHandler;
+}
+
+void Power_Off_Led_Off(void)
+{
+   LED_WIFI_OFF();
+   LED_DRY_OFF();
+   LED_TIME_OFF();
+   LED_PLASMA_OFF();
+   LED_FAN_OFF();
+   LED_POWER_OFF();
+
 }

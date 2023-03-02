@@ -80,6 +80,7 @@ void Power_Off(void)
 		Breath_Led();
 		SMG_POWER_OFF()	;
 		
+		
 	      
 }
 
@@ -162,15 +163,15 @@ void Receive_MainBoard_Data_Handler(uint8_t cmd)
 	 case PANEL_DATA:
 	   
         if(run_t.gPower_On ==1){
-//        hum1 =  run_t.gReal_humtemp[0]/10 %10;  //Humidity 
-//        hum2 =  run_t.gReal_humtemp[0]%10;
-//        
-//        temp1 = run_t.gReal_humtemp[1]/10 %10;  // temperature
-//        temp2 = run_t.gReal_humtemp[1]%10;
-//
-//         //temperature 
-//          TM1639_Write_2bit_TempData(temp1,temp2);
-//	      TM1639_Write_2bit_HumData(hum1,hum2);
+        hum1 =  run_t.gReal_humtemp[0]/10 %10;  //Humidity 
+        hum2 =  run_t.gReal_humtemp[0]%10;
+        
+        temp1 = run_t.gReal_humtemp[1]/10 %10;  // temperature
+        temp2 = run_t.gReal_humtemp[1]%10;
+
+         //temperature 
+          TM1639_Write_2bit_TempData(temp1,temp2);
+	      TM1639_Write_2bit_HumData(hum1,hum2);
 	
         }
 
@@ -249,19 +250,6 @@ static void Receive_Wifi_Cmd(uint8_t cmd)
               cmd=0xff;
 
 			 break;
-
-//			case WIFI_MODE_1: //AI turn on -> AI icon display 
-//                if(run_t.gPower_On==1){
-//				     run_t.gModel =1; //0-> has ,1->no gModel
-//                	} 
-//			break;
-//
-//			 case WIFI_MODE_2: //icon don't display 
-//                 if(run_t.gPower_On==1){
-//				   run_t.gModel =2; //turon off AI mode
-//			 	   
-//                 }
-//             break;
 
 			 case WIFI_KILL_ON: //kill turn on plasma
 			  if(run_t.gPower_On==1){
@@ -394,7 +382,7 @@ void Power_Off_Fun(void)
                 SendData_PowerOff(0);
 
         }
-		
+		Power_Off_Led_Off();
 
   
 } 
