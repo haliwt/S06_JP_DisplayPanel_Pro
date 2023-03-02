@@ -30,6 +30,7 @@ static void RunLocal_Smg_Process(void);
 	 * Return Reference :NO
 	 *
 *******************************************************************************/
+#if 0
 void Scan_KeyMode(void)
 {
    
@@ -78,7 +79,7 @@ void Scan_KeyMode(void)
 			  
 	          run_t.keyValue= 0x20; //
 	          run_t.dec_key_times =1;
-		      run_t.gTimer_key_4s=0;
+		 
 	          dispose_key(run_t.keyValue);//Display_Smg_RunMode(run_t.keyValue );
 	        
 		      single_buzzer_fun();//SendData_Buzzer();
@@ -95,7 +96,7 @@ void Scan_KeyMode(void)
 		  	 
 	     	  run_t.keyValue= 0x10;
 			  run_t.add_key_times =1;
-		      run_t.gTimer_key_4s=0;
+		 
 	          dispose_key(run_t.keyValue);//Display_Smg_RunMode(run_t.keyValue );
 		      single_buzzer_fun();//SendData_Buzzer();
 	          single_add_fun();//DisplayTiming_KEY_Add_Subtract_Fun();
@@ -171,6 +172,7 @@ void Scan_KeyMode(void)
      }
 	 
   }
+#endif 
 /*******************************************************************************
 	 * 
 	 * Function Name :void RunReference_Fun(void)
@@ -361,6 +363,7 @@ static void Setup_Timer_Times(void)
 *
 *
 ******************************************************************************/
+#if 0
 void Single_RunCmd(void)
 {
 
@@ -454,6 +457,7 @@ void Single_RunCmd(void)
 
 
 }
+#endif 
 /******************************************************************************
 *
 *Function Name:void Single_RunCmd(void)
@@ -509,8 +513,8 @@ static void DisplayPanel_Ref_Handler(void)
 	}
 #endif 
 
-	while(run_t.set_up_temp_flag==1 && run_t.gTimer_key_4s > 3){
-		 
+	if(run_t.set_up_temp_flag==1 && run_t.gTimer_temperature > 10){
+		 run_t.gTimer_temperature=0;
          SetUp_Temperature_Value();
 		 if(run_t.gSet_up_times > 3)run_t.set_up_temp_flag++ ;
 
@@ -593,30 +597,10 @@ void RunPocess_Command_Handler(void)
 	  }
 	   
    }
-   
-   //Power off 
-//   if(run_t.gPower_On ==0 || run_t.gPower_On == 0xff ){
-//	 	
-//	      run_t.gPower_On =0xff;
-//         if(run_t.gFan_RunContinue == 1){
-//           if(run_t.fan_off_60s < 61){
-//		      //LED_MODEL_OFF();
-//			  Power_Off();//POWER_ON_LED();
-//		      //LCD_Display_Wind_Icon_Handler();
-//           	}
-//		   else{
-//               run_t.gFan_RunContinue =0;
-//			   Power_Off();//Lcd_PowerOff_Fun();
-//
-//		   }
-//
-//         }
-//		
-//	    //  Breath_Led();
-//		//  Power_Off();
-//          
-//    
-//    }
+
+   //set up timrer timing how many? 
+   Set_Timer_Timing_Fun();
+
 
     if(run_t.gTimer_set_temp_times >9 && run_t.gPower_On==1){ // 4s
 	     run_t.gTimer_set_temp_times=0;
@@ -631,7 +615,14 @@ void RunPocess_Command_Handler(void)
      }
 
  }
-
+/*******************************************************
+	*
+	*Function Name: static void RunLocal_Smg_Process(void)
+	*Function : display pannel display conetent
+	*
+	*
+	*
+*******************************************************/
 static void RunLocal_Smg_Process(void)
 {
     if(run_t.gPower_On ==1){

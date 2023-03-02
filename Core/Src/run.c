@@ -68,7 +68,7 @@ void Power_Off(void)
 			
 				  run_t.gMode_flag =0;
 				
-				  run_t.gTimer_key_4s=0;
+			
 	              run_t.gTimer_key_60s=0;
 				  run_t.gTimer_fan_counter=0;
 				

@@ -117,6 +117,7 @@ uint8_t KEY_Scan(void);
 void SplitDispose_Key(uint8_t value);
 
 void Process_Key_Handler(uint8_t keylabel);
+void Set_Timer_Timing_Fun(void);
 
 
 #endif 

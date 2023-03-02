@@ -4,7 +4,15 @@
 #include "smg.h"
 #include "cmd_link.h"
 
+
+
+
 key_types key_t;
+
+
+
+
+
 uint8_t KEY_Scan(void)
 {
   uint8_t  reval = 0;
@@ -157,6 +165,7 @@ uint8_t KEY_Scan(void)
  	* Return Reference:NO
  	* 
 *********************************************************************************************************/
+#if 0
 void SplitDispose_Key(uint8_t value)
 {
     static uint8_t plasma,dry,ai,mode_flag;
@@ -222,24 +231,15 @@ void SplitDispose_Key(uint8_t value)
         case 0x20: //CIN3 -> DEC KEY
              if(run_t.gPower_On ==1){
 			
-			 	if(run_t.gMode_flag==1){//times, is timer is 
-
-				    run_t.dispTime_minute = run_t.dispTime_minute - 30;
-
-				    if(run_t.dispTime_minute < 0){
+			   if(run_t.temp_set_timer_timing_flag==1){
 
 				    run_t.dispTime_hours --;
 					if(run_t.dispTime_hours < 0){
 						run_t.dispTime_hours=23;
-				        run_t.dispTime_minute =60;
-					   run_t.dispTime_minute = run_t.dispTime_minute - 30;
-					}
-					else{
-					  run_t.dispTime_minute =60;
-					  run_t.dispTime_minute = run_t.dispTime_minute - 30;
+				        run_t.dispTime_minute =59;
+					   
 					}
 					
-				    }
 					run_t.gTimer_key_4s=0;
 					 
 				 }
@@ -275,26 +275,14 @@ void SplitDispose_Key(uint8_t value)
         case 0x10: //CIN2 ->ADD KEY
              if(run_t.gPower_On ==1){
 			 	  
-				if(run_t.gMode_flag==1){ //set up temperature value
-                    
-				
-					// run_t.dispTime_hours++;
-				    run_t.dispTime_minute = run_t.dispTime_minute + 30;
-				    if(run_t.dispTime_minute > 59){
-
-		                 run_t.dispTime_hours ++;
-		                 run_t.dispTime_minute=0;
-
-						 if(run_t.dispTime_hours > 23){
+			    if(run_t.temp_set_timer_timing_flag==1){
+			             run_t.dispTime_hours ++;
+		                if(run_t.dispTime_hours > 23){
 							 
 						      run_t.dispTime_hours=0;
-							    
-
-						}
+						   }
 						
-
-					}
-					run_t.gTimer_key_4s=0;		
+							run_t.gTimer_key_4s=0;		
 					
                  }
 				 else{
@@ -466,7 +454,7 @@ void SplitDispose_Key(uint8_t value)
 
 }
 
-
+#endif 
 /************************************************************************
 	*
 	*Function Name: void Process_Key_Handler(uint8_t keylabel)
@@ -504,16 +492,14 @@ void Process_Key_Handler(uint8_t keylabel)
 	  case LINK_WIFI_KEY_ID:
 	  	if(run_t.gPower_On ==1){
 
-		  if(run_t.gWifi ==0){
+		  
 		  	run_t.gWifi =1;
 			run_t.gTimer_set_temp_times=0; //conflict with send temperatur value 
          
 			run_t.wifi_led_fast_blink_flag=1;
 			run_t.wifi_connect_flag =0;
 			run_t.gTimer_wifi_connect_counter=0;
-	         SendData_Set_Wifi(0x01);
-		  }
-		  else run_t.gWifi = 0;
+	        SendData_Set_Wifi(0x01);
 		
         
 		
@@ -536,7 +522,7 @@ void Process_Key_Handler(uint8_t keylabel)
 	  	 if(run_t.gPower_On ==1){
 			SendData_Buzzer();//single_buzzer_fun();
 
-			if(run_t.temp_set_timer_timing_flag==0){//if(run_t.Timer_mode_flag==0){ //temperature value adjust 
+			if(run_t.temp_set_timer_timing_flag==0){
 
 				run_t.wifi_set_temperature ++;
 	            if(run_t.wifi_set_temperature < 20){
@@ -548,9 +534,6 @@ void Process_Key_Handler(uint8_t keylabel)
 			    m =  run_t.wifi_set_temperature / 10 %10;
 				n =  run_t.wifi_set_temperature % 10; //
 
-				//	run_t.gReal_humtemp[1] = run_t.wifi_set_temperature;
-	 			//	run_t.gReal_humtemp[1]%10;
-
                   TM1639_Write_2bit_SetUp_TempData(m,n,0);
 				  run_t.panel_key_setup_timer_flag = 1;
 					
@@ -558,19 +541,13 @@ void Process_Key_Handler(uint8_t keylabel)
 				else{ //Timer timing value adjust
 					
 					 run_t.gTimer_key_timing =0;
-                    set_timer_flag=0;
-					 run_t.dispTime_minutes = run_t.dispTime_minutes + 60;
-				    if(run_t.dispTime_minutes > 59){
-
-		                 run_t.dispTime_hours ++;
-		                 run_t.dispTime_minutes=0;
-
-						 if(run_t.dispTime_hours > 23){
+					 run_t.dispTime_hours ++;
+		                if(run_t.dispTime_hours > 24){
 							 
 						      run_t.dispTime_hours=0;
-							    
-							}
-					}
+						   }
+						
+							
 					
 
 					m = run_t.dispTime_hours /10 %10;
@@ -758,26 +735,75 @@ void Process_Key_Handler(uint8_t keylabel)
 	  break;
 
 	}
+	//
 	
+
+}
+/****************************************************************
+	*
+	*Function Name :void Set_Timer_Timing_Fun(void)
+	*Function : set timer timing how many ?
+	*
+	*
+*****************************************************************/
+void Set_Timer_Timing_Fun(void)
+{
+
+    static uint8_t m,n,p,q;
+    static uint8_t timing_flag,set_timer_flag;
 	if(run_t.gTimer_key_timing > 4 && run_t.temp_set_timer_timing_flag==1 && set_timer_flag ==0 && run_t.gPower_On==1){
 				
 			   
 				set_timer_flag++;
 			   run_t.gTimer_key_timing =0;
-			   if(run_t.dispTime_hours ==0 && run_t.dispTime_minutes==0){
+			   if(run_t.dispTime_hours ==0 ){
 				   run_t.Timer_mode_flag = 0;
 				   run_t.temp_set_timer_timing_flag=0;
+			       run_t.timer_timing_define_flag = timing_not_definition;
 	
 			   }
 			   else{
 				   run_t.Timer_mode_flag = 1;
-					SendData_Time_Data(run_t.dispTime_hours);
+				   run_t.gTimer_smg_timing =0; //couter time of smg blink timing 
+	
 	
 			   }
 	
-		}
+	}
+
+
+	if(run_t.Timer_mode_flag ==1 && run_t.gPower_On==1){
+		   
+				
+			   m=run_t.dispTime_hours  /10%10;
+			   n=run_t.dispTime_hours  %10;
+			   p =0;
+			   q=  0;
+	
+			   if(run_t.gTimer_smg_timing < 21)
+					  TM1639_Write_4Bit_Time(m,n,p,q,0) ;
+				else if(run_t.gTimer_smg_timing > 19 && run_t.gTimer_smg_timing < 41)
+					   TM1639_Write_4Bit_Time(m,n,p,q,1) ;
+				else{
+				   run_t.gTimer_smg_timing=0;
+	
+					timing_flag ++;
+				}
+
+		
+		 
+		   
+		  if(timing_flag > 3){
+		  	set_timer_flag=0;
+		  	timing_flag=0;
+		   run_t.Timer_mode_flag =0;
+		   run_t.temp_set_timer_timing_flag=0;
+		   run_t.timer_timing_define_flag = timing_success;
+		   SendData_Time_Data(run_t.dispTime_hours);
+		   TM1639_Write_4Bit_Time(m,n,p,q,0) ;
+		  }
+	   }
+
 
 }
-
-
 

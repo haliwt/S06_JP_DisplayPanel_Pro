@@ -103,7 +103,7 @@ typedef struct __RUN{
    uint8_t gSet_up_times;
   
    uint8_t dispTime_minute;
-   uint8_t gTimer_key_4s;
+
    uint8_t gTimer_display_dht11;
   
    uint8_t gTimer_led_500ms;
@@ -115,6 +115,7 @@ typedef struct __RUN{
    uint8_t temperature_set_flag;
 
    uint8_t gTimes_time_seconds;
+  
 	
    uint8_t gReal_humtemp[2];
    uint8_t gInputCmd[2];
@@ -142,6 +143,8 @@ typedef struct __RUN{
    //timer timing 
    uint8_t gTimer_set_temp_times;
    uint8_t gTimer_wifi_slowly;
+   uint8_t gTimer_smg_timing;
+   uint8_t gTimer_temperature;
 
    
    
