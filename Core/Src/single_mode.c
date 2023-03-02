@@ -480,7 +480,7 @@ static void DisplayPanel_Ref_Handler(void)
 
 	};
 
-	if(run_t.gTimer_display_dht11 > 10){
+	if(run_t.gTimer_display_dht11 > 10 && run_t.set_temperature_flag==0){
 	    run_t.gTimer_display_dht11=0;
        Display_DHT11_Value();
      
@@ -509,29 +509,8 @@ void RunPocess_Command_Handler(void)
    	
        RunLocal_Smg_Process();//RunKeyOrder_Handler();
        
-	   if(run_t.panel_key_setup_timer_flag==1){
-           run_t.panel_key_setup_timer_flag=0;
-		   key_set_temp_flag =1;
-		   run_t.wifi_set_temp_flag=1;
-		   run_t.gTimer_numbers_one_two_blink=0;
-	     
-		  
-	   }
-	   if(run_t.wifi_set_temp_flag ==0 && key_set_temp_flag ==1){
-	   	    key_set_temp_flag = 0;
-
-	        m = run_t.gReal_humtemp[1]/10 %10;  // temperature
-            n = run_t.gReal_humtemp[1]%10;
-
-		   
-			run_t.gTimer_temp_delay =0;
-			run_t.temperature_set_flag = 1;
-			TM1639_Write_2bit_SetUp_TempData(m,n,0);
-            
-		}
-	  
-
-          if(run_t.temperature_set_flag ==1 && run_t.gTimer_temp_delay >59){
+	
+	   if(run_t.temperature_set_flag ==1 && run_t.gTimer_temp_delay >59){
                run_t.gTimer_temp_delay =0;
 		 
 		  
@@ -556,15 +535,11 @@ void RunPocess_Command_Handler(void)
 	   
    }
 
-   //set up timrer timing how many? 
-   Set_Timer_Timing_Fun();
+   //set up timrer timing how many, temperature ? 
+   Set_Timer_Temperature_Fun();
 
 
-    if(run_t.gTimer_set_temp_times >9 && run_t.gPower_On==1){ // 4s
-	     run_t.gTimer_set_temp_times=0;
-		 if(run_t.wifi_set_temperature==0)run_t.wifi_set_temperature=20;
-         SendData_Temp_Data(run_t.wifi_set_temperature);
-    }
+
 
 	if(run_t.gPower_On ==0 || run_t.gPower_On == 0xff){
 	 	run_t.gPower_On =0xff;

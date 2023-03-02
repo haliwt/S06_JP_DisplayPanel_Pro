@@ -501,7 +501,7 @@ void Process_Key_Handler(uint8_t keylabel)
 			run_t.wifi_connect_flag =0;
 			run_t.gTimer_wifi_connect_counter=0;
 	        SendData_Set_Wifi(0x01);
-		
+		  
         
 		
 	  	}
@@ -536,8 +536,9 @@ void Process_Key_Handler(uint8_t keylabel)
 				n =  run_t.wifi_set_temperature % 10; //
 
                   TM1639_Write_2bit_SetUp_TempData(m,n,0);
-				  run_t.panel_key_setup_timer_flag = 1;
-					
+			
+				   run_t.set_temperature_flag=1;
+				   run_t.gTimer_key_temp_timing=0;
 				}
 				else{ //Timer timing value adjust
 					
@@ -554,8 +555,8 @@ void Process_Key_Handler(uint8_t keylabel)
 					m = run_t.dispTime_hours /10 %10;
 					n = run_t.dispTime_hours  %10;
 					
-					p= run_t.dispTime_minutes /10 %10;
-					q = run_t.dispTime_minutes %10;
+				    p=0;
+					q=0;
 				
 
 					 TM1639_Write_4Bit_Time(m,n,p,q,0) ; //timer is default 12 hours "12:00" 
@@ -580,7 +581,8 @@ void Process_Key_Handler(uint8_t keylabel)
 
 			
 			 TM1639_Write_2bit_SetUp_TempData(m,n,0);
-			run_t.panel_key_setup_timer_flag = 1;
+		      run_t.set_temperature_flag=1;
+			  run_t.gTimer_key_temp_timing=0;
 	    	}
 	    	else{ //Timer timing value adjust
 			
@@ -605,8 +607,8 @@ void Process_Key_Handler(uint8_t keylabel)
                   m = run_t.dispTime_hours /10 %10;
 				  n = run_t.dispTime_hours  %10;
 
-				  p = run_t.dispTime_minutes /10 %10;
-				  q = run_t.dispTime_minutes %10;
+				  p = 0;
+				  q = 0;
 
 					
 
@@ -747,11 +749,13 @@ void Process_Key_Handler(uint8_t keylabel)
 	*
 	*
 *****************************************************************/
-void Set_Timer_Timing_Fun(void)
+void Set_Timer_Temperature_Fun(void)
 {
 
-    static uint8_t m,n,p,q;
-    static uint8_t timing_flag,set_timer_flag;
+    static uint8_t m,n,p,q,set_temperature_flag,counter_times;
+    static uint8_t timing_flag,set_timer_flag,set_temp_flag;
+	
+	//set timer timing value 
 	if(run_t.gTimer_key_timing > 4 && run_t.temp_set_timer_timing_flag==1 && set_timer_flag ==0 && run_t.gPower_On==1){
 				
 			   
@@ -775,16 +779,19 @@ void Set_Timer_Timing_Fun(void)
 
 	if(run_t.Timer_mode_flag ==1 && run_t.gPower_On==1){
 		   
-				
-			   m=run_t.dispTime_hours  /10%10;
-			   n=run_t.dispTime_hours  %10;
-			   p =0;
-			   q=  0;
+			
 	
-			   if(run_t.gTimer_smg_timing < 21)
+			   if(run_t.gTimer_smg_timing < 21){
+			   		
+				   m=run_t.dispTime_hours  /10%10;
+				   n=run_t.dispTime_hours  %10;
+				   p =0;
+				   q=  0;
 					  TM1639_Write_4Bit_Time(m,n,p,q,0) ;
+
+			   	}
 				else if(run_t.gTimer_smg_timing > 19 && run_t.gTimer_smg_timing < 41)
-					   TM1639_Write_4Bit_Time(m,n,p,q,1) ;
+					   TM1639_Write_4Bit_Time(0,0,0,0,1) ;
 				else{
 				   run_t.gTimer_smg_timing=0;
 	
@@ -804,7 +811,52 @@ void Set_Timer_Timing_Fun(void)
 		   TM1639_Write_4Bit_Time(m,n,p,q,0) ;
 		  }
 	   }
+	
+      //set temperature value is blink
+      /**************************temperature value **************************/
+	  if(run_t.gTimer_key_temp_timing > 5 && run_t.set_temperature_flag==1 && set_temp_flag ==0 && run_t.gPower_On==1){
+					  
+					 
+					  set_temp_flag++;
+				      set_temperature_flag = 1;
+	            
+					run_t.gTimer_set_temp_times =0; //couter time of smg blink timing 
+		  
+		 }
+	  if(set_temperature_flag ==1 && run_t.gPower_On==1){
+	  	
+	  	
+		  if(run_t.gTimer_set_temp_times < 15 ){ // 4
+		        TM1639_Write_2bit_SetUp_TempData(0,0,1);
+          }
+		  else if(run_t.gTimer_set_temp_times > 14 && run_t.gTimer_set_temp_times < 29){
+		  	
+			  m =  run_t.wifi_set_temperature / 10 %10;
+			  n =  run_t.wifi_set_temperature % 10; //
+			  TM1639_Write_2bit_SetUp_TempData(m,n,0);
 
+		  }
+		  else{
+		  	 run_t.gTimer_set_temp_times=0;
+             counter_times++ ;  
+
+		  }
+
+
+           if(counter_times > 3){
+			 set_temperature_flag =0;
+			 set_temp_flag=0;
+		     counter_times=0;
+		      run_t.set_temperature_flag =0;
+			// if(run_t.wifi_set_temperature==0)run_t.wifi_set_temperature=20;
+			  m =  run_t.wifi_set_temperature / 10 %10;
+			  n =  run_t.wifi_set_temperature % 10; //
+			  TM1639_Write_2bit_SetUp_TempData(m,n,0);
+	         SendData_Temp_Data(run_t.wifi_set_temperature);
+	       }
+	  }
+	
+	  
 
 }
 
