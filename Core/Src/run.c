@@ -198,7 +198,8 @@ void Receive_MainBoard_Data_Handler(uint8_t cmd)
 
       case WIFI_SET_TIMING:
         
-        if(run_t.dispTime_hours !=0){
+       
+            if(run_t.dispTime_hours !=0){
             run_t.timer_timing_define_flag = timing_success ;
             run_t.Timer_mode_flag = 1;
             run_t.dispTime_minutes = 0;
@@ -253,9 +254,9 @@ static void Receive_Wifi_Cmd(uint8_t cmd)
 
 			 case WIFI_KILL_ON: //kill turn on plasma
 			  if(run_t.gPower_On==1){
-                    run_t.gPlasma = 1;
+               run_t.gPlasma = 1;
 			        run_t.gFan_RunContinue =0;
-                } 
+             } 
 			 break;
 
 			 case WIFI_KILL_OFF: //kill turn off

@@ -18,7 +18,6 @@ void SendData_Temp_Data(uint8_t tdata);
 
 void SendData_Time_Data(uint8_t tdata);
 
-
 void SendData_Buzzer(void);
 
 

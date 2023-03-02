@@ -160,304 +160,7 @@ uint8_t KEY_Scan(void)
 
 }
 
-/********************************************************************************************************
- 	*
- 	* Function Name:void SplitDispose_Key(uint8_t value)
- 	* Function : Touch key handler function 
- 	* Input Reference:NO
- 	* Return Reference:NO
- 	* 
-*********************************************************************************************************/
-#if 0
-void SplitDispose_Key(uint8_t value)
-{
-    static uint8_t plasma,dry,ai,mode_flag;
-	
-    
-    switch(value){
-        
-       case 0x80: //Power On
-    
-          if(run_t.gPower_On == 0 || run_t.gPower_On == 0xff){
-			  	  run_t.dispTime_hours=12;
-			      run_t.dispTime_minutes=0;
-		          run_t.gTimes_time_seconds=0;
-	              run_t.gPower_On=1;
-	          
-				  run_t.power_key =1;
-				  run_t.gFan_RunContinue=0;
-				 
-			
-				  run_t.gPlasma=0;
-				  run_t.gDry =0;
-				  run_t.gFan = 0;
-	              
-		  }
-		  else{
-                  
-		  	run_t.power_key =2;
-		
-		    run_t.gFan_RunContinue=1;
-            run_t.gPower_On=0;
-			run_t.fan_off_60s =0;
-			run_t.temperature_set_flag =0;
-			run_t.gTimer_Cmd = 0;
-			run_t.gTimes_time_seconds=0;
-            Smg_AllOff();
-            }
-       
-          value = 0xff;
-		 run_t.keyValue =0xff;
-        
-        break;
-       
-       case 0x40: //Mode On -> set time and timer 
-           if(run_t.gPower_On ==1){
-				
-			mode_flag = mode_flag ^ 0x01; //the same is "0",and differenct is "1"
 
-			if(run_t.gMode_flag  == 0){
-                
-				run_t.gMode_flag =1;
-		    }
-            else{
-			 
-			   run_t.gMode_flag =0;
-			 
-            }
-           run_t.gTimer_key_4s=0;
-	     }
-		 value = 0xff;
-		
-        break;
-        
-        case 0x20: //CIN3 -> DEC KEY
-             if(run_t.gPower_On ==1){
-			
-			   if(run_t.temp_set_timer_timing_flag==1){
-
-				    run_t.dispTime_hours --;
-					if(run_t.dispTime_hours < 0){
-						run_t.dispTime_hours=23;
-				        run_t.dispTime_minutes =59;
-					   
-					}
-					
-					run_t.gTimer_key_4s=0;
-					 
-				 }
-				 else{ //setup temperature value 
-                    
-					 
-				    //setup temperature of value,minimum 20,maximum 40
-					 run_t.gTemperature --;
-					 if(run_t.gTemperature<20) run_t.gTemperature=40;
-					
-					//  SetUp_Temperature_Value();
-					   if(run_t.gTemperature >=20){
-					   	    run_t.temperature_set_flag = 1;//run_t.gTemperature_timer_flag =1;
-					   	    run_t.set_up_temp_flag = 1;
-					   	}
-			            else run_t.temperature_set_flag=0;
-						
-					
-				     run_t.gTimer_key_4s=0;
-					 run_t.gSet_up_times =0;
-						
-				 }
-              
-				
-		
-             
-             }
-           
-           value = 0xff;   
-		  
-         break;
-        
-        case 0x10: //CIN2 ->ADD KEY
-             if(run_t.gPower_On ==1){
-			 	  
-			    if(run_t.temp_set_timer_timing_flag==1){
-			             run_t.dispTime_hours ++;
-		                if(run_t.dispTime_hours > 23){
-							 
-						      run_t.dispTime_hours=0;
-						   }
-						
-							run_t.gTimer_key_4s=0;		
-					
-                 }
-				 else{
-				      
-					  //setup temperature minimum 20, maximum 40
-				     run_t.gTemperature ++;
-                     if(run_t.gTemperature < 20)run_t.gTemperature= 20;
-					 else if(run_t.gTemperature >40) run_t.gTemperature=20;
-					
-			         if(run_t.gTemperature >=20){
-					 	run_t.temperature_set_flag = 1;//run_t.gTemperature_timer_flag =1;
-					 	run_t.set_up_temp_flag = 1;
-				     }
-			         else run_t.temperature_set_flag=0;
-					 
-					run_t.gTimer_key_4s=0;
-					run_t.gSet_up_times =0;
-					
-				 }
-
-             }
-            value = 0xff;
-			
-         break;
-         //function to mainboard link single
-         case 0x08: //Fan KEY 
-              if(run_t.gPower_On ==1){
-                   
-                ai = ai ^ 0x01;
-				if(ai==1){
-					    if(run_t.gFan==0){
- 					       run_t.gFan =1; //tur off fan
- 					
- 					       run_t.gDry=1; //tunr off gDry
-					    }
-                        else
-                            run_t.gFan =0;
- 					
-				  }
-				  else{ //turn on AI mode
-				        if(run_t.gFan==1){
-						   run_t.gFan =0;
-				        }
-                        else{
-                            run_t.gFan =1;
-						
-							run_t.gDry=1; //tunr off gDry
-                        }
-	               
-				}
-				    
-
-				}
-		
-			 value = 0xff;
-		
-         break;
-         
-         case 0x04: //CIN5  -> plasma ->STERILIZATION KEY 
-             if(run_t.gPower_On ==1){
-			
-               plasma = plasma ^ 0x01;
-			   if(plasma ==1){  //turun off kill 
-			   	
-			       if(run_t.gPlasma ==1){
-				       run_t.gPlasma = 0;
-					   run_t.gFan=0;   //WT.EDIT 2023.01.30
-			       	}
-                   else{
-                       run_t.gPlasma = 1;
-				
-					   
-                   	}
-				   
-		       }
-			   else{
-			   	  if(run_t.gPlasma ==1){
-				       run_t.gPlasma = 0;
-					   run_t.gFan=0;   //WT.EDIT 2023.01.30
-			   	  	}
-                   else{
-                       run_t.gPlasma = 1;
-					
-					  
-                   	}
-			   	}
-               
-                if( run_t.gPlasma==1 && run_t.gDry ==1){
-			    	   run_t.gFan_RunContinue =1;
-					   run_t.fan_off_60s =0;
-		          }
-		          else run_t.gFan_RunContinue =0;
-
-			
-             
-             }
-            
-             value = 0xff;
-	
-         break;
-         
-         case 0x02: //CIN6  ->DRY KEY 
-               if(run_t.gPower_On ==1){
-		
-			    dry = dry^ 0x01;
-				if(dry==1){ //turn off the first be pressed 
-                   if(run_t.gDry== 1){
-				       run_t.gDry =0;
-					   run_t.gFan=0;   //WT.EDIT 2023.01.30
-                   	}
-                   else{
-                       run_t.gDry =1;
-				
-                   	}
-				  
-
-				}
-				else{ //the second be pressed key
-                    
-                   if(run_t.gDry== 1){
-				       run_t.gDry =0;
-					   run_t.gFan=0;   //WT.EDIT 2023.01.30
-					   
-                   	}
-                   else{
-                       run_t.gDry =1;
-					  
-					 
-                   	}
-                    
-					
-				}
-			    if( run_t.gPlasma==1 && run_t.gDry ==1){
-			    	   run_t.gFan_RunContinue =1;
-					   run_t.fan_off_60s =0;
-		            }
-		            else run_t.gFan_RunContinue =0;
-			   
-				 
-               }
-           
-             value = 0xff;
-		
-         break;
-
-		  case 0x01: //CIN4 -> WIFI  KEY -> BY AI -> WIFI 
-              if(run_t.gPower_On ==1){
-                   
-              
-				    
-
-			 }
-		
-			 value = 0xff;
-		
-         break;
-
-		 
-         
-     
-             
-         default :
-             
-     
-		
-         break;
-        
-      }
-
-}
-
-#endif 
 /************************************************************************
 	*
 	*Function Name: void Process_Key_Handler(uint8_t keylabel)
@@ -468,7 +171,7 @@ void SplitDispose_Key(uint8_t value)
 ************************************************************************/
 void Process_Key_Handler(uint8_t keylabel)
 {
-   static uint8_t m,n,set_timer_flag,p,q,dry,plasma;
+   static uint8_t m,n,p,q;
   
     switch(keylabel){
 
@@ -490,6 +193,7 @@ void Process_Key_Handler(uint8_t keylabel)
 
 		 }
 	  	 
+	   keylabel= 0xff;
 
 	  break;
 
@@ -504,10 +208,11 @@ void Process_Key_Handler(uint8_t keylabel)
 			run_t.wifi_connect_flag =0;
 			run_t.gTimer_wifi_connect_counter=0;
 	        SendData_Set_Wifi(0x01);
-		  
+		 
         
 		
 	  	}
+		keylabel= 0xff;
 	  break;
 
 	  case MODEL_KEY_ID://model_key:
@@ -590,7 +295,6 @@ void Process_Key_Handler(uint8_t keylabel)
 	    	else{ //Timer timing value adjust
 			
 				run_t.gTimer_key_timing =0;
-                set_timer_flag=0;
 				run_t.dispTime_hours --;
 				if(run_t.dispTime_hours < 0){
 					run_t.dispTime_hours=24 ;
@@ -616,9 +320,11 @@ void Process_Key_Handler(uint8_t keylabel)
 		
 			  if(run_t.gDry== 1){
 				    run_t.gDry =0;
+					SendData_Set_Command(DRY_OFF);
                }
                else{
                     run_t.gDry =1;
+					SendData_Set_Command(DRY_ON);
                  }  
 			   }
 				
@@ -628,12 +334,14 @@ void Process_Key_Handler(uint8_t keylabel)
              if(run_t.gPower_On ==1){
 			
               
-			   if(plasma ==1){  //turun off kill 
+			   if(run_t.gPlasma ==1){  //turun off kill 
 			   	
 			       run_t.gPlasma = 0;
+				   SendData_Set_Command(PLASMA_OFF);
 			   	}  
                 else{
                    run_t.gPlasma = 1;
+				   SendData_Set_Command(PLASMA_ON);
 				}
 				   
 		       
@@ -645,14 +353,25 @@ void Process_Key_Handler(uint8_t keylabel)
               if(run_t.gPower_On ==1){
                    
                if(run_t.gFan==0){
- 					   run_t.gFan =1; //tur off fan
- 					   
+ 					run_t.gFan =1; //tur off fan
+ 					SendData_Set_Command(FAN_ON);
 			     }
                 else
                 {
-                     if(run_t.gDry == 1 || run_t.gPlasma ==1) run_t.gFan =1;
-                     else
-                         run_t.gFan =0;
+                    if(run_t.gFan==0){
+					 	run_t.gFan =1;
+						SendData_Set_Command(FAN_ON);
+                     }
+                     else{
+					 	 if(run_t.gDry == 1 || run_t.gPlasma ==1){
+						     run_t.gFan =1;
+							SendData_Set_Command(FAN_ON);
+						}
+						else{
+	                         run_t.gFan =0;
+						 	 SendData_Set_Command(FAN_OFF);
+                         }
+                     }
                  }
 				  
 				 
@@ -752,7 +471,7 @@ void Set_Timer_Temperature_Fun(void)
 					run_t.gTimer_set_temp_times =0; //couter time of smg blink timing 
 		  
 		 }
-	  if(set_temperature_flag ==1 && run_t.gPower_On==1){
+	  if(set_temperature_flag ==1 && ){
 	  	
 	  	
 		  if(run_t.gTimer_set_temp_times < 15 ){ // 4

@@ -150,8 +150,6 @@ void SendData_Time_Data(uint8_t tdata)
 		}
 
 }
-
-
 /********************************************************************************
 	**
 	*Function Name:void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)

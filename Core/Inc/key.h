@@ -68,6 +68,22 @@
 
 #define HIGH_LEVEL                   1  /* 根据原理图设计，KEY1按下时引脚为低电平，所以这里设置为0 */
 
+
+typedef enum{
+
+	 DRY_ON = 0x40,
+	 DRY_OFF = 0x41,
+
+	 PLASMA_ON = 0x20,
+	 PLASMA_OFF = 0x21,
+
+	 FAN_ON =0x10,
+	 FAN_OFF = 0x11
+
+}works_t;
+
+
+
 typedef enum
 {
   KEY_UP   = 0,

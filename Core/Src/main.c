@@ -117,7 +117,7 @@ int main(void)
 		  
 	  }
 	  else{
-	  	 keyvalue = KEY_Scan();//Scan_KeyMode();
+	  keyvalue = KEY_Scan();//Scan_KeyMode();
 		 Process_Key_Handler(keyvalue);
 		 if(run_t.decodeFlag ==1){
 			run_t.decodeFlag =0;

@@ -30,7 +30,9 @@ static void WIFI_LED_OnOff(uint8_t sel)
 	}
     else{
 
-	if(sel==1){
+	if(run_t.wifi_led_fast_blink_flag==1){
+
+	     if(run_t.gTimer_wifi_couter < 134 ){
 	
 		 if(run_t.gTimer_led_500ms > 0 && 	run_t.gTimer_led_500ms< 6){
 		     LED_WIFI_OFF();
@@ -44,6 +46,13 @@ static void WIFI_LED_OnOff(uint8_t sel)
 		else{
 		  	run_t.gTimer_led_500ms=0;
 		     LED_WIFI_OFF();
+
+		}
+	    }
+		else{
+		   	run_t.gTimer_wifi_couter=0;
+		    run_t.wifi_led_fast_blink_flag=0;
+		    run_t.gWifi =0;
 
 		}
 	}

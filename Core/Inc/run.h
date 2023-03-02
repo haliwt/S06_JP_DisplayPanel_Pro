@@ -21,6 +21,7 @@ typedef enum WIFI_STATE_T{
 
 }wifi_state_t;
 
+
 typedef enum TIMING_T{
 
    timing_not_definition,
@@ -147,6 +148,7 @@ typedef struct __RUN{
    uint8_t gTimer_smg_timing;
    uint8_t gTimer_temperature;
    uint8_t gTimer_key_temp_timing;
+   uint8_t gTimer_wifi_couter;
 
    
    
@@ -164,7 +166,7 @@ typedef struct __RUN{
 extern RUN_T run_t;
 
 
-
+void Power_Off(void);
 void SplitDispose_Key(uint8_t value);
 
 
