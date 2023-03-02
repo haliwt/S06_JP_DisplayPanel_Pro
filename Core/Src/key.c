@@ -471,7 +471,7 @@ void Set_Timer_Temperature_Fun(void)
 					run_t.gTimer_set_temp_times =0; //couter time of smg blink timing 
 		  
 		 }
-	  if(set_temperature_flag ==1 && ){
+	  if(set_temperature_flag ==1 && run_t.gPower_On==1){
 	  	
 	  	
 		  if(run_t.gTimer_set_temp_times < 15 ){ // 4
