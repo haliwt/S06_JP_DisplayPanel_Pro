@@ -374,10 +374,10 @@ void Power_Off_Fun(void)
 		power_on_off_flag=1;
 
    
-		if(run_t.wifi_send_buzzer_sound != WIFI_POWER_OFF_ITEM){
-                SendData_PowerOff(0);
+		
+           
 
-        }
+       
 		Power_Off_Led_Off();
 
   

@@ -219,13 +219,23 @@ void RunPocess_Command_Handler(void)
    //set up timrer timing how many, temperature ? 
    Set_Timer_Temperature_Fun();
 
-
-
-
-	if(run_t.gPower_On ==0 || run_t.gPower_On == 0xff){
+  if(run_t.gPower_On ==0 || run_t.gPower_On == 0xff){
 	 	run_t.gPower_On =0xff;
 	      Breath_Led();
 		  Power_Off();
+		  if(run_t.gFan_RunContinue==1){
+             if(run_t.fan_off_60s < 60){
+
+                LED_FAN_ON();
+
+			 }
+			 else {
+			 	LED_FAN_OFF();
+				run_t.gFan_RunContinue=0;
+
+			 }  
+
+		  }
      }
 
  }

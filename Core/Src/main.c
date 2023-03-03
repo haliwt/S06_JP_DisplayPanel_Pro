@@ -6,12 +6,10 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2023 STMicroelectronics.
-  * All rights reserved.
+  * S06 display panel by s03 mainboard to tencent cloud order
   *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
+  *
+  .
   *
   ******************************************************************************
   */
@@ -110,6 +108,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+	 //S06 -touch key 
       if(run_t.power_times == 0){
           run_t.power_times=1;
 		    HAL_Delay(1000);
@@ -117,7 +116,7 @@ int main(void)
 		  
 	  }
 	  else{
-	  keyvalue = KEY_Scan();//Scan_KeyMode();
+	  	 keyvalue = KEY_Scan();//Scan_KeyMode();
 		 Process_Key_Handler(keyvalue);
 		 if(run_t.decodeFlag ==1){
 			run_t.decodeFlag =0;

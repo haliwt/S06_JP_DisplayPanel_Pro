@@ -100,16 +100,16 @@ typedef enum{
    FAN_KEY_ID = 0x10,
    PLASMA_KEY_ID = 0x20,
    DRY_KEY_ID = 0x40,
-   LINK_WIFI_KEY_ID = 0x80
+   LINK_WIFI_KEY_ID = 0x90
   
 }key_item_t;
 
 
 typedef  struct  _state_
 {
- unsigned char         read;
- unsigned char         buffer;
- unsigned long          value;
+ unsigned char        read;
+ unsigned char        buffer;
+  unsigned long       value;
  unsigned char        off_time;
  unsigned long        on_time;
 

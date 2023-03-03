@@ -53,12 +53,7 @@ uint8_t KEY_Scan(void)
 		key_t.read &= ~0x80; // 0x1f & 0x7F =  0x7F
 	 }
 
-
- 
-	
-	
-	
-	switch(key_t.state )
+    switch(key_t.state )
 	{
 		case start:
 		{
@@ -75,7 +70,7 @@ uint8_t KEY_Scan(void)
 		}
 		case first:
 		{
-			if(key_t.read == key_t.buffer) // adjust key be down ->continunce be pressed key
+			if(key_t.read == key_t.buffer) //  short  key be down ->continunce be pressed key
 			{
 				if(++key_t.on_time> 10000 && run_t.power_times==1) //1000  0.5us
 				{
@@ -87,7 +82,7 @@ uint8_t KEY_Scan(void)
                    
                     
 				}
-			   else if(++key_t.on_time > 1 && run_t.power_times !=1 ){
+			   	else if(++key_t.on_time > 500 && run_t.power_times !=1 ){
 				key_t.value = key_t.buffer^_KEY_ALL_OFF; // key.value = 0xFE ^ 0xFF = 0x01
 				key_t.on_time = 0;                        //key .value = 0xEF ^ 0XFF = 0X10
                    
@@ -105,26 +100,27 @@ uint8_t KEY_Scan(void)
 		}
 		case second:
 		{
-			if(key_t.read == key_t.buffer) //again adjust key if be pressed down 
+			if(key_t.read == key_t.buffer) //long key key if be pressed down 
 			{
-				if(++key_t.on_time>900000)// 10000 long key be down
+				if(++key_t.on_time>80000)// 10000 long key be down
 				{
-					
-					key_t.value = key_t.value|0x80; //key.value = 0x01 | 0x80  =0x81  
+				    key_t.value = key_t.value|0x80; //key.value = 0x01 | 0x80  =0x81  
 					key_t.on_time = 0;
+					if(key_t.value == 0x80) key_t.value = 0x90;
 					key_t.state   = finish;
-                   
+	               
 				}
+					
 			}
 			else if(key_t.read == _KEY_ALL_OFF)  // loose hand 
-				{
-					if(++key_t.off_time>0) //30 don't holding key dithering
+			{
+					if(++key_t.off_time>20) //30 don't holding key dithering
 					{
 						key_t.value = key_t.buffer^_KEY_ALL_OFF; // key.value = 0x1E ^ 0x1f = 0x01
 						
 						key_t.state   = finish; // loose hand
 					}
-				}
+			}
 		   
 			break;
 		}
@@ -140,7 +136,7 @@ uint8_t KEY_Scan(void)
 		{
 			if(key_t.read == _KEY_ALL_OFF)
 			{
-				if(++key_t.off_time>1)//50 //100
+				if(++key_t.off_time>10)//50 //100
 				{
 					key_t.state   = start;
                   
@@ -184,6 +180,8 @@ void Process_Key_Handler(uint8_t keylabel)
 
 		 }
 		 else{
+
+		    SendData_PowerOff(0);
 		    run_t.gTimer_set_temp_times=0; //conflict with send temperatur value 
             run_t.wifi_led_fast_blink_flag=0;
             run_t.Timer_mode_flag = 0;
@@ -201,14 +199,14 @@ void Process_Key_Handler(uint8_t keylabel)
 	  case LINK_WIFI_KEY_ID:
 	  	if(run_t.gPower_On ==1){
 
-		  
+		    SendData_Set_Wifi(0x01);
 		  	run_t.gWifi =1;
 			run_t.gTimer_set_temp_times=0; //conflict with send temperatur value 
          
 			run_t.wifi_led_fast_blink_flag=1;
 			run_t.wifi_connect_flag =0;
 			run_t.gTimer_wifi_connect_counter=0;
-	        SendData_Set_Wifi(0x01);
+	       
 		 
         
 		
@@ -224,7 +222,7 @@ void Process_Key_Handler(uint8_t keylabel)
 			
 				
 		 }
-	  
+	  keylabel= 0xff;
 
 	  break;
 
@@ -273,7 +271,7 @@ void Process_Key_Handler(uint8_t keylabel)
 				}	
 			}
 				
-	  	
+	  	keylabel= 0xff;
 	  break;
 
 	  case DEC_KEY_ID://dec_key:
@@ -313,7 +311,7 @@ void Process_Key_Handler(uint8_t keylabel)
 				TM1639_Write_4Bit_Time(m,n,p,q,0) ; //timer is default 12 hours "12:00"    
 				}
 		}
-
+		keylabel= 0xff;
 	  break;
 
 	   case DRY_KEY_ID://0x02: //CIN6  ->DRY KEY 
@@ -328,7 +326,7 @@ void Process_Key_Handler(uint8_t keylabel)
 					SendData_Set_Command(DRY_ON);
                  }  
 			   }
-				
+			keylabel= 0xff;	
          break;
 
 		 case PLASMA_KEY_ID: //0x04: //CIN5  -> plasma ->STERILIZATION KEY 
@@ -347,7 +345,7 @@ void Process_Key_Handler(uint8_t keylabel)
 				   
 		       
 			 }
-            
+           keylabel= 0xff; 
         break;
 
 		 case FAN_KEY_ID: //0x08: //Fan KEY 
@@ -377,12 +375,12 @@ void Process_Key_Handler(uint8_t keylabel)
 				  
 				 
 			}
-				
+			keylabel= 0xff;	
 		 break;
 
 
 	  default:
-
+           keylabel=0xff;
 	  break;
 
 	}
