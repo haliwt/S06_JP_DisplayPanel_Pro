@@ -11,17 +11,14 @@
 *******************************************************************************/
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-  static uint8_t tm0,tm1;
+  static uint8_t tm0;
     if(htim->Instance==TIM3){  
     tm0++;
-	tm1++;
+	
     run_t.gTimer_smg_timing++;
 	run_t.gTimer_set_temp_times++;
-    if(tm1 > 9){ //100ms 
-		tm1=0;
-	    run_t.gTimer_led_500ms++;
-
-	}
+	run_t.gTimer_led_500ms++;
+ 
 	
     if(tm0>99){ //100 *10ms = 1000ms = 1s
 		tm0=0;
