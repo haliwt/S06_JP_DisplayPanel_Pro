@@ -327,9 +327,10 @@ void Power_On_Fun(void)
 	run_t.temperature_set_flag = 0; //WT.EDIT 2023.01.31
     run_t.wifi_set_temp_flag=0; // //WT.EDIT 2023.01.31
     run_t.disp_wind_speed_grade =3;
-	
+	        
 	run_t.gTimer_minute_Counter =0;
 	run_t.wifi_send_buzzer_sound=0xff;
+     Power_ON_Led();
 	if(power_on_off_flag==0){
 	     run_t.dispTime_hours=12;
 		 

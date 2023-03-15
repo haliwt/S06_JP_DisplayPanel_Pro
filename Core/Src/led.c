@@ -254,3 +254,14 @@ void Power_Off_Led_Off(void)
    LED_POWER_OFF();
 
 }
+
+void Power_ON_Led(void)
+{
+  
+   LED_DRY_ON();
+   LED_TIME_ON();
+   LED_PLASMA_ON();
+   LED_FAN_ON();
+   LED_POWER_ON();
+
+}

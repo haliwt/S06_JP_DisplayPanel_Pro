@@ -111,7 +111,7 @@ int main(void)
 	 //S06 -touch key 
       if(run_t.power_times == 0){
           run_t.power_times=1;
-		    HAL_Delay(1000);
+		    HAL_Delay(500);
 	      run_t.gPower_On=0;
 		  
 	  }

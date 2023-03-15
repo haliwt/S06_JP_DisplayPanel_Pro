@@ -72,7 +72,7 @@ uint8_t KEY_Scan(void)
 		{
 			if(key_t.read == key_t.buffer) //  short  key be down ->continunce be pressed key
 			{
-				if(++key_t.on_time> 10000 && run_t.power_times==1) //1000  0.5us
+				if(++key_t.on_time> 4000 ) //10000  0.5us
 				{
 					run_t.power_times++;
                     key_t.value = key_t.buffer^_KEY_ALL_OFF; // key.value = 0xFE ^ 0xFF = 0x01
@@ -82,14 +82,7 @@ uint8_t KEY_Scan(void)
                    
                     
 				}
-			   	else if(++key_t.on_time > 500 && run_t.power_times !=1 ){
-				key_t.value = key_t.buffer^_KEY_ALL_OFF; // key.value = 0xFE ^ 0xFF = 0x01
-				key_t.on_time = 0;                        //key .value = 0xEF ^ 0XFF = 0X10
-                   
-				key_t.state   = second;		
-
-
-			}
+			  
 			}
 			else
 			{
@@ -102,7 +95,7 @@ uint8_t KEY_Scan(void)
 		{
 			if(key_t.read == key_t.buffer) //long key key if be pressed down 
 			{
-				if(++key_t.on_time>80000)// 10000 long key be down
+				if(++key_t.on_time>70000)// 80000 long key be down
 				{
 				    key_t.value = key_t.value|0x80; //key.value = 0x01 | 0x80  =0x81  
 					key_t.on_time = 0;
@@ -168,20 +161,24 @@ uint8_t KEY_Scan(void)
 void Process_Key_Handler(uint8_t keylabel)
 {
    static uint8_t m,n,p,q;
-  
+   static uint8_t power_flag;
     switch(keylabel){
 
       case POWER_KEY_ID:
-	    if(run_t.gPower_On==0 || run_t.gPower_On ==0xFF){
+	   // if(run_t.gPower_On==0 || run_t.gPower_On ==0xFF){
+            power_flag = power_flag ^ 0x01;
+           if(power_flag ==1){
  			run_t.gTimer_set_temp_times=0; //conflict with send temperatur value 
 		 	  SendData_PowerOff(1);
-       
+              HAL_Delay(100);
 		      Power_On_Fun();
+
 
 		 }
 		 else{
 
 		    SendData_PowerOff(0);
+            HAL_Delay(100);
 		    run_t.gTimer_set_temp_times=0; //conflict with send temperatur value 
             run_t.wifi_led_fast_blink_flag=0;
             run_t.Timer_mode_flag = 0;
