@@ -15,7 +15,6 @@ typedef enum WIFI_STATE_T{
     WIFI_PTC_OFF = 0x12,
     WIFI_SONIC_ON = 0x01,       //ultrasonic
     WIFI_SONIC_OFF = 0x11,
-    WIFI_WIND_SPEED_ITEM = 0x90,
     WIFI_TEMPERATURE = 0xA0
 
 
@@ -37,7 +36,6 @@ typedef enum _Signal{
 	WIFI_TIME,
 	WIFI_TEMP,
 	WIFI_CMD,
-	WIFI_WIND_SPEED,
 	WIFI_BEIJING_TIME,
 	WIFI_SET_TIMING
 }signal_t;
@@ -64,7 +62,7 @@ typedef struct __RUN{
    uint8_t keyDec_continue;
   
 
-   uint8_t gDht11_flag;
+
    uint8_t gTemperature;
  
    uint8_t gTimer_Counter;
@@ -91,17 +89,18 @@ typedef struct __RUN{
    uint8_t  gBug;
    uint8_t  gWifi;
 
-   uint8_t  gFan;
+   uint8_t  gUltrasonic;
   
-   uint8_t  gMode_flag;
+  
    
    uint8_t  gFan_off_flag ;
   
    uint8_t  dry_key;
-   uint8_t  gTimer_fan_counter;
+
    uint8_t gTimes_minutes_temp;
    uint8_t set_up_temp_flag;
    uint8_t gSet_up_times;
+   uint8_t auto_model_shut_off_ptc_flag;
   
    
 
@@ -112,7 +111,7 @@ typedef struct __RUN{
    uint8_t fan_off_60s;
  
 
-   uint8_t Timer_mode_flag;
+   uint8_t Timer_model_flag;
    uint8_t temperature_set_flag;
 
    uint8_t gTimes_time_seconds;
@@ -136,7 +135,7 @@ typedef struct __RUN{
    uint8_t 	gTimer_numbers_one_two_blink;
    uint8_t gTimer_temp_delay;
    uint8_t wifi_set_temperature;
-   uint8_t wifi_set_wind_speed;
+ 
    uint8_t wifi_connect_flag;
    uint8_t gTimer_wifi_connect_counter;
    uint8_t temp_set_timer_timing_flag;
@@ -157,7 +156,8 @@ typedef struct __RUN{
 	int8_t dispTime_hours;
 	int8_t dispTime_minutes;
 	int8_t dispTime_seconds;
-   
+   uint16_t send_app_timer_minutes_data;
+   uint16_t send_app_wokes_minutes_data;
 
 
    

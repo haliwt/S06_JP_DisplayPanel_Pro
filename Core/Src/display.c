@@ -80,35 +80,18 @@ void DisplayTiming_KEY_Add_Subtract_Fun(void)
 
 	if(run_t.gPower_On==1){
     
-    if(run_t.gMode_flag==1){ // set up timer of  timimg value
-		
-           
-			p=run_t.dispTime_hours  /10%10;
-		    q=run_t.dispTime_hours  %10;
-			m = run_t.dispTime_minutes  /10%10;
-			n=	run_t.dispTime_minutes %10;
-	
-			TM1639_Write_4Bit_Time(p,q,m,n,0) ; // timer   mode  "H0: xx"
-			
-			
-            run_t.add_key_times =0;
-			run_t.dec_key_times =0;
-		
-		
-	 }
-	 else{
+		p=run_t.dispTime_hours  /10%10;
+		q=run_t.dispTime_hours  %10;
+		m = run_t.dispTime_minutes  /10%10;
+		n=	run_t.dispTime_minutes %10;
 
-        run_t.gMode_flag=0;
-		m= (run_t.gTemperature /10) %10;
-        n =  run_t.gTemperature %10;
-	    TM1639_Write_2bit_TempData(m,n);
+		TM1639_Write_4Bit_Time(p,q,m,n,0) ; // timer   mode  "H0: xx"
 
-	 }
-	 
-	
-	
 
-    }
+		run_t.add_key_times =0;
+		run_t.dec_key_times =0;
+		
+	}
  }
 void Display_GMT(void)
 { 

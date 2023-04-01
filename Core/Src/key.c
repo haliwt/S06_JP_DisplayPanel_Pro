@@ -72,13 +72,12 @@ uint8_t KEY_Scan(void)
 		{
 			if(key_t.read == key_t.buffer) //  short  key be down ->continunce be pressed key
 			{
-				if(++key_t.on_time> 4000 ) //10000  0.5us
+				if(++key_t.on_time> 2500 ) //10000  0.5us
 				{
 					run_t.power_times++;
                     key_t.value = key_t.buffer^_KEY_ALL_OFF; // key.value = 0xFE ^ 0xFF = 0x01
 					key_t.on_time = 0;                      //key .value = 0xEF ^ 0XFF = 0X10
-                   
-					key_t.state   = second;
+                    key_t.state   = second;
                    
                     
 				}
@@ -86,7 +85,6 @@ uint8_t KEY_Scan(void)
 			}
 			else
 			{
-				
 				key_t.state   = start;
 			}
 			break;
@@ -95,7 +93,7 @@ uint8_t KEY_Scan(void)
 		{
 			if(key_t.read == key_t.buffer) //long key key if be pressed down 
 			{
-				if(++key_t.on_time>70000)// 80000 long key be down
+				if(++key_t.on_time>65000)// 80000 long key be down
 				{
 				    key_t.value = key_t.value|0x80; //key.value = 0x01 | 0x80  =0x81  
 					key_t.on_time = 0;
@@ -107,7 +105,7 @@ uint8_t KEY_Scan(void)
 			}
 			else if(key_t.read == _KEY_ALL_OFF)  // loose hand 
 			{
-					if(++key_t.off_time>20) //30 don't holding key dithering
+					if(++key_t.off_time>1) //20//30 don't holding key dithering
 					{
 						key_t.value = key_t.buffer^_KEY_ALL_OFF; // key.value = 0x1E ^ 0x1f = 0x01
 						
@@ -119,8 +117,9 @@ uint8_t KEY_Scan(void)
 		}
 		case finish:
 		{
-			
+		
 			reval = key_t.value; // is short time  TIMER_KEY = 0x01  2. long times TIMER_KEY = 0X81
+
 			key_t.state   = end;
          
 			break;
@@ -129,7 +128,7 @@ uint8_t KEY_Scan(void)
 		{
 			if(key_t.read == _KEY_ALL_OFF)
 			{
-				if(++key_t.off_time>10)//50 //100
+				if(++key_t.off_time>0)//10//50 //100
 				{
 					key_t.state   = start;
                   
@@ -172,7 +171,7 @@ void Process_Key_Handler(uint8_t keylabel)
 		 	  SendData_PowerOff(1);
               HAL_Delay(100);
 		      Power_On_Fun();
-
+            
 
 		 }
 		 else{
@@ -181,7 +180,7 @@ void Process_Key_Handler(uint8_t keylabel)
             HAL_Delay(100);
 		    run_t.gTimer_set_temp_times=0; //conflict with send temperatur value 
             run_t.wifi_led_fast_blink_flag=0;
-            run_t.Timer_mode_flag = 0;
+            run_t.Timer_model_flag = 0;
 			run_t.gWifi =0;
 			run_t.temperature_set_flag =0;
 		    Power_Off_Fun();
@@ -204,10 +203,7 @@ void Process_Key_Handler(uint8_t keylabel)
 			run_t.wifi_connect_flag =0;
 			run_t.gTimer_wifi_connect_counter=0;
 	       
-		 
-        
-		
-	  	}
+		 }
 		keylabel= 0xff;
 	  break;
 
@@ -345,29 +341,18 @@ void Process_Key_Handler(uint8_t keylabel)
            keylabel= 0xff; 
         break;
 
-		 case FAN_KEY_ID: //0x08: //Fan KEY 
+		 case ULTRASONIC_KEY_ID: //0x08: //Fan KEY 
               if(run_t.gPower_On ==1){
                    
-               if(run_t.gFan==0){
- 					run_t.gFan =1; //tur off fan
- 					SendData_Set_Command(FAN_ON);
+                if(run_t.gUltrasonic==0){
+ 					run_t.gUltrasonic =1; //tur ON
+ 					SendData_Set_Command(ULTRASONIC_ON);
 			     }
-                else
-                {
-                    if(run_t.gFan==0){
-					 	run_t.gFan =1;
-						SendData_Set_Command(FAN_ON);
-                     }
-                     else{
-					 	 if(run_t.gDry == 1 || run_t.gPlasma ==1){
-						     run_t.gFan =1;
-							SendData_Set_Command(FAN_ON);
-						}
-						else{
-	                         run_t.gFan =0;
-						 	 SendData_Set_Command(FAN_OFF);
-                         }
-                     }
+                else{
+               
+					run_t.gUltrasonic =0;
+					SendData_Set_Command(ULTRASONIC_OFF);
+                    
                  }
 				  
 				 
@@ -387,12 +372,13 @@ void Process_Key_Handler(uint8_t keylabel)
 }
 /****************************************************************
 	*
-	*Function Name :void Set_Timer_Timing_Fun(void)
+	*Function Name :void SetTimer_Temperature_Number_Blink(void)
 	*Function : set timer timing how many ?
-	*
+	*Input Parameters :NO
+	*Retrurn Parameter :NO
 	*
 *****************************************************************/
-void Set_Timer_Temperature_Fun(void)
+void SetTimer_Temperature_Number_Blink(void)
 {
 
     static uint8_t m,n,p,q,set_temperature_flag,counter_times;
@@ -401,71 +387,62 @@ void Set_Timer_Temperature_Fun(void)
 	//set timer timing value 
 	if(run_t.gTimer_key_timing > 4 && run_t.temp_set_timer_timing_flag==1 && set_timer_flag ==0 && run_t.gPower_On==1){
 				
-			   
-				set_timer_flag++;
-			   run_t.gTimer_key_timing =0;
-			   if(run_t.dispTime_hours ==0 ){
-				   run_t.Timer_mode_flag = 0;
-				   run_t.temp_set_timer_timing_flag=0;
-			       run_t.timer_timing_define_flag = timing_not_definition;
-	
-			   }
-			   else{
-				   run_t.Timer_mode_flag = 1;
-				   run_t.gTimer_smg_timing =0; //couter time of smg blink timing 
-	
-	
-			   }
+		set_timer_flag++;
+		run_t.gTimer_key_timing =0;
+		if(run_t.dispTime_hours ==0 ){
+			run_t.Timer_model_flag = 0;
+			run_t.temp_set_timer_timing_flag=0;
+			run_t.timer_timing_define_flag = timing_not_definition;
+
+		}
+		else{
+			run_t.Timer_model_flag = 1; //confirm the set timer timing  is success
+			run_t.gTimer_smg_timing =0; //couter time of smg blink timing 
+		}
 	
 	}
 
-
-	if(run_t.Timer_mode_flag ==1 && run_t.gPower_On==1){
+	//set timer timing  smg blink timing 
+	if(run_t.Timer_model_flag ==1 && run_t.gPower_On==1){
 		   
-			
-	
-			   if(run_t.gTimer_smg_timing < 13){
-			   		
-				   m=run_t.dispTime_hours  /10%10;
-				   n=run_t.dispTime_hours  %10;
-				   p =0;
-				   q=  0;
-					  TM1639_Write_4Bit_Time(m,n,p,q,0) ;
+		if(run_t.gTimer_smg_timing < 13){
 
-			   	}
-				else if(run_t.gTimer_smg_timing > 12 && run_t.gTimer_smg_timing < 27)
-					   TM1639_Write_4Bit_Time(0,0,0,0,1) ;
-				else{
-				   run_t.gTimer_smg_timing=0;
-	
-					timing_flag ++;
-				}
+			m=run_t.dispTime_hours  /10%10;
+			n=run_t.dispTime_hours  %10;
+			p =0;
+			q=  0;
+			TM1639_Write_4Bit_Time(m,n,p,q,0) ;
 
-		
-		 
-		   
-		  if(timing_flag > 3){
-		  	set_timer_flag=0;
-		  	timing_flag=0;
-		   run_t.Timer_mode_flag =0;
-		   run_t.temp_set_timer_timing_flag=0;
-		   run_t.timer_timing_define_flag = timing_success;
-            run_t.gTimer_Counter=0;
-		   SendData_Time_Data(run_t.dispTime_hours);
-		   TM1639_Write_4Bit_Time(m,n,p,q,0) ;
-		  }
+		}
+		else if(run_t.gTimer_smg_timing > 12 && run_t.gTimer_smg_timing < 27)
+			TM1639_Write_4Bit_Time(0,0,0,0,1) ;
+			else{
+			run_t.gTimer_smg_timing=0;
+
+			timing_flag ++;
+		}
+
+		if(timing_flag > 3){
+			set_timer_flag=0;
+			timing_flag=0;
+			run_t.Timer_model_flag =0;
+			run_t.temp_set_timer_timing_flag=0;
+			run_t.timer_timing_define_flag = timing_success;
+			run_t.send_app_timer_minutes_data = run_t.dispTime_hours * 60 ;//minutes
+			run_t.gTimer_Counter=0;
+			SendData_Time_Data(run_t.dispTime_hours);
+			TM1639_Write_4Bit_Time(m,n,p,q,0) ;
+		}
 	   }
 	
       //set temperature value is blink
       /**************************temperature value **************************/
-	  if(run_t.gTimer_key_temp_timing > 5 && run_t.set_temperature_flag==1 && set_temp_flag ==0 && run_t.gPower_On==1){
-					  
-					 
-					  set_temp_flag++;
-				      set_temperature_flag = 1;
-	            
-					run_t.gTimer_set_temp_times =0; //couter time of smg blink timing 
-		  
+	  if(run_t.gTimer_key_temp_timing > 4 && run_t.set_temperature_flag==1 && set_temp_flag ==0 && run_t.gPower_On==1){
+			set_temp_flag++;
+			set_temperature_flag = 1;
+
+			run_t.gTimer_set_temp_times =0; //couter time of smg blink timing 
+
 		 }
 	  if(set_temperature_flag ==1 && run_t.gPower_On==1){
 	  	

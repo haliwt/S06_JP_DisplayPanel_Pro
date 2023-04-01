@@ -21,7 +21,7 @@ static void Timing_Handler(void);
 static void RunLocal_Smg_Process(void);
 
 static void DisplayPanel_DHT11_Value(void);
-
+static void SetTemperature_Function(void);
 
 
 
@@ -35,15 +35,16 @@ static void DisplayPanel_DHT11_Value(void);
 ******************************************************************************/
 static void Timing_Handler(void)
 {
-    
-	
-	if( run_t.timer_timing_define_flag == timing_success){
-		
-        
-       if(run_t.gTimer_Counter > 59){
+
+   uint8_t rem_one,rem_two,	work_time_one,work_time_two;
+	switch(run_t.timer_timing_define_flag){
+
+	case timing_success:
+	   if(run_t.gTimer_Counter > 59){
 
 	    run_t.gTimer_Counter =0;
 		run_t.dispTime_minutes -- ;
+		run_t.send_app_timer_minutes_data--;
 	    if(run_t.dispTime_minutes < 0){
 		     run_t.dispTime_hours -- ;
 			 run_t.dispTime_minutes =59;
@@ -51,40 +52,78 @@ static void Timing_Handler(void)
 			if(run_t.dispTime_hours < 0 ){
 
 	            run_t.dispTime_hours=0;
-			
+				
 				run_t.dispTime_minutes=0;
+				run_t.send_app_timer_minutes_data=0;
 				run_t.gTimer_Cmd =0;	 //shut off timer of times
 
 			
 				run_t.gPower_On =0 ;
-			    run_t.gFan_RunContinue=1;
-				run_t.fan_off_60s = 0;
+			 
 				SendData_PowerOff(0);//shut down 
 				
 		     }
 
 	     }
+		 if(run_t.send_app_timer_minutes_data !=0){
+
+		    rem_one = run_t.send_app_timer_minutes_data >>8;
+			rem_two = run_t.send_app_timer_minutes_data & 0x00FF;
+		 	
+		    SendData_Remaining_Time(rem_one,rem_two);
+			HAL_Delay(100);
+
+		  }
 		
 		Display_GMT();
 	  
 	  
 	   }
+
+	break;
+
+	case   timing_not_definition:
+		if(run_t.gTimes_time_seconds > 59){
+
+			run_t.gTimes_time_seconds=0;
+			run_t.dispTime_minutes++; //1 minute 
+			run_t.send_app_wokes_minutes_data++;
+			if(run_t.dispTime_minutes> 59){ //1 hour
+			run_t.dispTime_minutes=0;
+			run_t.dispTime_hours++;
+			if(run_t.dispTime_hours > 24){
+			run_t.dispTime_hours =0;
+			}
+		}
+		
+
+		 work_time_one = run_t.send_app_wokes_minutes_data >> 8;
+	     work_time_two = run_t.send_app_wokes_minutes_data & 0x00ff;
+	
+	     SendData_Works_Time(work_time_one ,work_time_two);
+		 Display_GMT();
+			
+	   }
+	
+    break;
+
 	}
-    else{
-		      if(run_t.gTimes_time_seconds > 59){
-			  	
-				run_t.gTimes_time_seconds=0;
-				run_t.dispTime_minutes++; //1 minute 
-                if(run_t.dispTime_minutes> 59){ //1 hour
-                   run_t.dispTime_minutes=0;
- 					run_t.dispTime_hours++;
-                   if(run_t.dispTime_hours > 24){
-				    run_t.dispTime_hours =0;
-				    }
-			   }
-               Display_GMT();
-		      }
-  }
+
+	
+	if(run_t.timer_timing_define_flag != timing_not_definition){
+		if(run_t.gTimes_time_seconds > 59){
+            run_t.gTimes_time_seconds=0;
+		   run_t.send_app_wokes_minutes_data++;
+		   work_time_one = run_t.send_app_wokes_minutes_data >> 8;
+	       work_time_two = run_t.send_app_wokes_minutes_data & 0x00ff;
+	
+	       SendData_Works_Time(work_time_one ,work_time_two);
+
+			
+		}
+	  
+	}
+	
 
 }
    
@@ -122,7 +161,7 @@ static void Setup_Timer_Times(void)
 
 			
 				run_t.gPower_On =0 ;
-			    run_t.gFan_RunContinue=1;
+			 
 				run_t.fan_off_60s = 0;
 				SendData_PowerOff(0);//shut down 
 				
@@ -169,7 +208,7 @@ static void DisplayPanel_DHT11_Value(void)
 
   if(run_t.gTimer_display_dht11 > 10 && run_t.set_temperature_flag==0){
 	    run_t.gTimer_display_dht11=0;
-       Display_DHT11_Value();
+       	Display_DHT11_Value();
      
 	}
 }
@@ -188,55 +227,20 @@ void RunPocess_Command_Handler(void)
    static uint8_t key_set_temp_flag,m,n;
    if(run_t.gPower_On ==1 && run_t.decodeFlag ==0){
    	
-       RunLocal_Smg_Process();//RunKeyOrder_Handler();
-       
-	
-	   if(run_t.temperature_set_flag ==1 && run_t.gTimer_temp_delay >59){
-               run_t.gTimer_temp_delay =0;
-		 
-		  
-		  if(run_t.wifi_set_temperature <= run_t.gReal_humtemp[1] || run_t.gReal_humtemp[1] >39){//envirment temperature
-	  
-				run_t.gDry = 0;
-
-		        SendData_Set_Command(DRY_OFF);//PTC turn off
-			    
-			    
-                
-		  }
-		  else if((run_t.wifi_set_temperature -3) > run_t.gReal_humtemp[1] ||  run_t.gReal_humtemp[1] < 37){
-	  
-		     run_t.gDry = 1;
-	         SendData_Set_Command(DRY_ON); //PTC turn On
-				 
-		  }
-	  
-	    
-	  }
-	   
-   }
-
-   //set up timrer timing how many, temperature ? 
-   Set_Timer_Temperature_Fun();
-
+       RunLocal_Smg_Process();
+	   Timing_Handler();
+       SetTemperature_Function();  
+   	   SetTimer_Temperature_Number_Blink();
+  }
+   
+  //POWER OFF 
   if(run_t.gPower_On ==0 || run_t.gPower_On == 0xff){
 	 	run_t.gPower_On =0xff;
 	      Breath_Led();
 		  Power_Off();
-		  if(run_t.gFan_RunContinue==1){
-             if(run_t.fan_off_60s < 60){
-
-                LED_FAN_ON();
-
-			 }
-			 else {
-			 	LED_FAN_OFF();
-				run_t.gFan_RunContinue=0;
-
-			 }  
-
-		  }
+		 
      }
+ 
 
  }
 /*******************************************************
@@ -249,18 +253,61 @@ void RunPocess_Command_Handler(void)
 *******************************************************/
 static void RunLocal_Smg_Process(void)
 {
-    if(run_t.gPower_On ==1){
-		
 
-	 Panel_Led_OnOff_Function() ;//Lcd_PowerOn_Fun();
-	 Timing_Handler();
+	Panel_Led_OnOff_Function() ;//Lcd_PowerOn_Fun();
+	
 	 DisplayPanel_DHT11_Value();
 
 
-    }
-
 }
 
+static void SetTemperature_Function(void)
+{
+	 if(run_t.temperature_set_flag ==1 && run_t.gTimer_temp_delay >59){
+               run_t.gTimer_temp_delay =0;
+		 
+		  
+		  if(run_t.wifi_set_temperature <= run_t.gReal_humtemp[1] || run_t.gReal_humtemp[1] >39){//envirment temperature
+	  
+				run_t.gDry = 0;
+
+		        SendData_Set_Command(DRY_OFF_NO_BUZZER);//PTC turn off
+			    
+			    
+                
+		  }
+		  else if((run_t.wifi_set_temperature -3) > run_t.gReal_humtemp[1] ||  run_t.gReal_humtemp[1] < 37){
+	  
+		     run_t.gDry = 1;
+	         SendData_Set_Command(DRY_ON_NO_BUZZER); //PTC turn On
+				 
+		  }
+	  
+	    
+	  }
+      else{ //no define set up temperature value 
+          if(run_t.gReal_humtemp[1] >39 && run_t.gTimer_temp_delay >119){//envirment temperature
+	            run_t.gTimer_temp_delay =0;
+				run_t.gDry = 0;
+                run_t.auto_model_shut_off_ptc_flag =1;
+			    SendData_Set_Command(DRY_OFF_NO_BUZZER);
+
+             }
+             
+             if(run_t.gReal_humtemp[1] < 36 && run_t.auto_model_shut_off_ptc_flag ==1 &&  run_t.gTimer_temp_delay >119){
+                  run_t.gTimer_temp_delay =0;
+                  run_t.gDry = 1;
+	              SendData_Set_Command(DRY_ON_NO_BUZZER); //PTC turn On
+             
+             
+             }
+			    
+                
+		  }
+
+
+
+}
 
 /****************************************************************
  * 

@@ -126,7 +126,6 @@ void SendData_Temp_Data(uint8_t tdata)
 		}
 
 }
-
 /*********************************************************
  * 
  * Function Name:void SendData_Time_Data(uint8_t tdata)
@@ -138,7 +137,7 @@ void SendData_Time_Data(uint8_t tdata)
 
         outputBuf[0]='T'; //4D
 		outputBuf[1]='K'; //58
-		outputBuf[2]='T'; //"T"->temperature
+		outputBuf[2]='T'; //"T"->timer timing
 		outputBuf[3]=tdata; //53	//
 		
 		transferSize=4;
@@ -150,6 +149,53 @@ void SendData_Time_Data(uint8_t tdata)
 		}
 
 }
+/*********************************************************
+ * 
+ * Function Name:void SendData_Temp_Data(uint8_t tdata)
+ * Function:send temperature value 
+ * 
+*********************************************************/
+void SendData_Works_Time(uint8_t tdata,uint8_t tdata_2)
+{
+
+        outputBuf[0]='T'; //4D
+		outputBuf[1]='K'; //58
+		outputBuf[2]='O'; //"T"->temperature
+		outputBuf[3]=tdata; //53	//
+		outputBuf[4]=tdata_2;
+		
+		transferSize=5;
+		if(transferSize)
+		{
+			while(transOngoingFlag);
+			transOngoingFlag=1;
+			HAL_UART_Transmit_IT(&huart1,outputBuf,transferSize);
+		}
+
+}
+
+
+void SendData_Remaining_Time(uint8_t tdata,uint8_t tdata_2)
+{
+
+        outputBuf[0]='T'; //4D
+		outputBuf[1]='K'; //58
+		outputBuf[2]='R'; //"T"->temperature
+		outputBuf[3]=tdata; //53	//
+		outputBuf[4]=tdata_2;
+		
+		transferSize=5;
+		if(transferSize)
+		{
+			while(transOngoingFlag);
+			transOngoingFlag=1;
+			HAL_UART_Transmit_IT(&huart1,outputBuf,transferSize);
+		}
+
+}
+
+
+
 /********************************************************************************
 	**
 	*Function Name:void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
@@ -179,7 +225,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 			break;
 		case 2://#2
 			if(inputBuf[0]=='D' || inputBuf[0]=='W'   || inputBuf[0]=='P' ||inputBuf[0] =='C' || inputBuf[0] == 'B' \
-			 ||inputBuf[0] == 'S' || inputBuf[0]=='T') //'D'->data , 'W' ->wifi
+			  || inputBuf[0]=='T') //'D'->data , 'W' ->wifi
 			{
 				
 				if(inputBuf[0]=='D') run_t.wifi_orderByMainboard_label=PANEL_DATA; //receive data is single data
@@ -187,7 +233,6 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
                 else if(inputBuf[0]=='P') run_t.wifi_orderByMainboard_label = WIFI_TEMP;//temperature 
 				else if(inputBuf[0]=='C') run_t.wifi_orderByMainboard_label = WIFI_CMD; //command 
 				else if(inputBuf[0]=='B') run_t.wifi_orderByMainboard_label = WIFI_BEIJING_TIME;
-				else if(inputBuf[0]=='S') run_t.wifi_orderByMainboard_label = WIFI_WIND_SPEED;
 				else if(inputBuf[0]=='T') run_t.wifi_orderByMainboard_label = WIFI_SET_TIMING;
 			    state=3;
 			}
@@ -225,12 +270,6 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
                  run_t.decodeFlag=1; 
             break;
 
-            case WIFI_WIND_SPEED:
-                 run_t.wifi_set_wind_speed=inputBuf[0];
-                 state=0;
-                 run_t.decodeFlag=1; 
-
-             break;
 			 case WIFI_BEIJING_TIME:
 			 	if(run_t.timer_timing_define_flag == timing_not_definition && run_t.temp_set_timer_timing_flag==0)
 			  	    run_t.dispTime_hours  = inputBuf[0];
@@ -267,7 +306,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
            
         case 5: 
 			if(run_t.wifi_orderByMainboard_label == WIFI_BEIJING_TIME){
-				 run_t.dispTime_seconds = inputBuf[0] + 2;
+				 run_t.dispTime_seconds = inputBuf[0];
 				 run_t.decodeFlag=1;
 			    state=0;
 		 }

@@ -13,6 +13,8 @@ static void Power_BreathOnOff(uint8_t sel);
 
 static void WIFI_LED_OnOff(uint8_t sel);
 
+static void ULTRASONIC_LED_OnOff(uint8_t sel);
+
 /***********************************************************
 *
 *Function Name : static void WIFI_LED_OnOff(uint8_t sel)
@@ -112,6 +114,14 @@ void KeyLed_Power_On(void)
 
 }
 
+static void ULTRASONIC_LED_OnOff(uint8_t sel)
+{
+
+	if(sel==1)LED_FAN_ON();
+	else  LED_FAN_OFF();
+
+
+}
 
 void ALL_LED_Off(void)
 {
@@ -147,7 +157,7 @@ void Panel_Led_OnOff_Function(void)
 	 
 	  
     if(run_t.gDry==1){
-		 run_t.gFan_off_flag=0;
+		 
 	     DRY_LED_OnOff(1);
 
      }
@@ -157,7 +167,7 @@ void Panel_Led_OnOff_Function(void)
 	 }
 
 	 if(run_t.gPlasma==1){
-	 	 run_t.gFan_off_flag=0;
+	 	
 	     PLASMA_LED_OnOff(1);
 
      }
@@ -166,11 +176,11 @@ void Panel_Led_OnOff_Function(void)
 
 	 }
 
-	 if(run_t.gFan == 1){
-         LED_FAN_ON();
+	 if(run_t.gUltrasonic == 1){
+         ULTRASONIC_LED_OnOff(1);
 	 }
 	 else{
-         LED_FAN_OFF();
+         ULTRASONIC_LED_OnOff(0);
 	 }
 
 	 if(run_t.time_led_flag ==1){

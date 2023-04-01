@@ -44,38 +44,19 @@ void Power_Off(void)
 {
     	 if(run_t.gPower_On ==0){
 
-			     run_t.gPower_On =0xff;
-			 	  Smg_AllOff();
-				
-		        
-				
-				 run_t.gPlasma=0;
-				 run_t.gDry=0;
-				
-				 run_t.gTemperature =20;
-				
+			run_t.gPower_On =0xff;
+			Smg_AllOff();
 
-				  run_t.gTimer_Cmd=0; //timer of command "1"->timer is start
-				  run_t.dispTime_hours=0;
-				  run_t.dispTime_minutes=0;
-				  run_t.gTemperature_timer_flag=0;
-			
-			
-			
-				  run_t.gDht11_flag=0; //the first power on display "00"
-				  run_t.dispTime_hours=12;
+			run_t.gPlasma=0;
+			run_t.gDry=0;
+			run_t.gUltrasonic =0;
+			run_t.gTimer_Cmd=0; //timer of command "1"->timer is start
+			//  run_t.dispTime_hours=0;
+			//  run_t.dispTime_minutes=0;
+			//  run_t.gTemperature_timer_flag=0;
+			//run_t.dispTime_hours=12;
 
-			
-				  run_t.gMode_flag =0;
 				
-			
-	             
-				  run_t.gTimer_fan_counter=0;
-				
-				//  SendData_PowerOff(0);//ShutDown_AllFunction();
-				//  ALL_LED_Off();
-				  
-                  
 		}
 		Breath_Led();
 		SMG_POWER_OFF()	;
@@ -115,32 +96,6 @@ void Receive_MainBoard_Data_Handler(uint8_t cmd)
 	 case WIFI_CMD:
 	 	 
 	 	 Receive_Wifi_Cmd(run_t.wifiCmd[0]);
-	 break;
-
-	 case  WIFI_WIND_SPEED:
-	 	if(run_t.gPower_On ==1){
-		  
-
-		   if(run_t.wifi_set_wind_speed <40){
-		   	 
-                run_t.disp_wind_speed_grade = 1;
-		   	}
-			else if(run_t.wifi_set_wind_speed >39 && run_t.wifi_set_wind_speed < 67){
-			    run_t.disp_wind_speed_grade = 2;
-
-
-			}
-			else if(run_t.wifi_set_wind_speed >66){
-
-				run_t.disp_wind_speed_grade = 3;
-
-			}
-
-
-
-		}
-    
-	  
 	 break;
 
 	 case WIFI_TEMP: //set temperature value
@@ -196,7 +151,7 @@ void Receive_MainBoard_Data_Handler(uint8_t cmd)
        
             if(run_t.dispTime_hours !=0){
             run_t.timer_timing_define_flag = timing_success ;
-            run_t.Timer_mode_flag = 1;
+            run_t.Timer_model_flag = 1;
             run_t.dispTime_minutes = 0;
             
              m=(run_t.dispTime_hours ) /10;
@@ -250,7 +205,7 @@ static void Receive_Wifi_Cmd(uint8_t cmd)
 			 case WIFI_KILL_ON: //kill turn on plasma
 			  if(run_t.gPower_On==1){
                run_t.gPlasma = 1;
-			        run_t.gFan_RunContinue =0;
+			        
              } 
 			 break;
 
@@ -258,14 +213,14 @@ static void Receive_Wifi_Cmd(uint8_t cmd)
                 if(run_t.gPower_On==1){
 			 	  run_t.gPlasma =0;
 				  
-		          run_t.gFan_RunContinue =0;
+		          
                 }
 			 break;
 
 			 case WIFI_PTC_ON://dry turn on
                 if(run_t.gPower_On==1){
 			        run_t.gDry =1;
-                    run_t.gFan_RunContinue =0;
+                    
                  
                 }
 			 break;
@@ -275,7 +230,7 @@ static void Receive_Wifi_Cmd(uint8_t cmd)
 			 	if(run_t.gPower_On==1){
 					run_t.gDry=0;
                  
-		            run_t.gFan_RunContinue =0;
+		           
 			 	}
 
 			 break;
@@ -283,17 +238,17 @@ static void Receive_Wifi_Cmd(uint8_t cmd)
 			 case WIFI_SONIC_ON:  //drive bug
 		
 				 if(run_t.gPower_On==1){		   
-				  run_t.gBug =1; //turn on 
+				  run_t.gUltrasonic =1; //turn on 
 			
-				 run_t.gFan_RunContinue =0;
+				 
 			    }
 
 			 break;
 
 			 case WIFI_SONIC_OFF: //drive bug turn off
 			 	if(run_t.gPower_On==1){
-				    run_t.gBug=0;
-					run_t.gFan_RunContinue =0;
+				    run_t.gUltrasonic=0;
+					
 			   }
 			 break;
 
@@ -315,14 +270,14 @@ void Power_On_Fun(void)
 	run_t.gPower_On=1;
 
 	run_t.power_key =1;
-	run_t.gFan_RunContinue=0;
+	
 
 
 	run_t.gPlasma=1;
 	run_t.gDry =1;
 	run_t.gBug =1;
 	run_t.time_led_flag=1;
-	run_t.gFan =1;
+	run_t.gUltrasonic =1;
 	
 	run_t.temperature_set_flag = 0; //WT.EDIT 2023.01.31
     run_t.wifi_set_temp_flag=0; // //WT.EDIT 2023.01.31
@@ -368,7 +323,7 @@ void Power_Off_Fun(void)
 		
 	
 		run_t.power_key =2;
-		run_t.gFan_RunContinue=1;
+	
 		run_t.disp_wind_speed_grade =1;	
 		run_t.gPower_On=0;
 		run_t.fan_off_60s =0;

@@ -20,7 +20,9 @@ void SendData_Time_Data(uint8_t tdata);
 
 void SendData_Buzzer(void);
 
+void SendData_Works_Time(uint8_t tdata,uint8_t tdata_2);
 
+void SendData_Remaining_Time(uint8_t tdata,uint8_t tdata_2);
 
 
 

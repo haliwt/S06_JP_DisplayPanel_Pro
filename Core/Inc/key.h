@@ -66,7 +66,7 @@
 #define		_KEY_COM_3    		    0x94
 #define		_KEY_COM_4    		    0x98
 
-#define HIGH_LEVEL                   1  /* 根据原理图设计，KEY1按下时引脚为低电平，所以这里设置为0 */
+#define HIGH_LEVEL                   1  /* 锟斤拷锟斤拷原锟斤拷图锟斤拷疲锟終EY1锟斤拷锟斤拷时锟斤拷锟斤拷为锟酵碉拷平锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷为0 */
 
 
 typedef enum{
@@ -74,11 +74,14 @@ typedef enum{
 	 DRY_ON = 0x40,
 	 DRY_OFF = 0x41,
 
+   DRY_ON_NO_BUZZER = 0x90,
+	 DRY_OFF_NO_BUZZER = 0x91,
+
 	 PLASMA_ON = 0x20,
 	 PLASMA_OFF = 0x21,
 
-	 FAN_ON =0x10,
-	 FAN_OFF = 0x11
+	 ULTRASONIC_ON =0x10,
+	 ULTRASONIC_OFF = 0x11
 
 }works_t;
 
@@ -97,7 +100,7 @@ typedef enum{
    DEC_KEY_ID = 0x04,
    ADD_KEY_ID = 0x08,
 
-   FAN_KEY_ID = 0x10,
+   ULTRASONIC_KEY_ID = 0x10,
    PLASMA_KEY_ID = 0x20,
    DRY_KEY_ID = 0x40,
    LINK_WIFI_KEY_ID = 0x90
@@ -133,8 +136,8 @@ uint8_t KEY_Scan(void);
 void SplitDispose_Key(uint8_t value);
 
 void Process_Key_Handler(uint8_t keylabel);
-void Set_Timer_Temperature_Fun(void);
 
+void SetTimer_Temperature_Number_Blink(void);
 
 
 #endif 
