@@ -292,7 +292,7 @@ void Power_On_Fun(void)
 		
       }
       else{
-	     run_t.dispTime_hours =12;
+	     run_t.dispTime_hours =0;
 
         }
 
