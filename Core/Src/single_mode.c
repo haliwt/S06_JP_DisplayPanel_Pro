@@ -67,13 +67,12 @@ static void Timing_Handler(void)
 		 if(run_t.send_app_timer_total_minutes_data !=0){
 
 		 
-            run_t.send_app_timer_minutes_one = run_t.send_app_timer_total_minutes_data/255;
-		    run_t.send_app_timer_minutes_two = run_t.send_app_timer_total_minutes_data%255;
+            run_t.send_app_timer_minutes_one = run_t.send_app_timer_total_minutes_data >> 8;
+		    run_t.send_app_timer_minutes_two = run_t.send_app_timer_total_minutes_data & 0x00ff;
             
 		 	
 		    SendData_Remaining_Time(run_t.send_app_timer_minutes_one, run_t.send_app_timer_minutes_two);
-			HAL_Delay(100);
-
+			
 		  }
 		
 		Display_GMT();
@@ -97,14 +96,9 @@ static void Timing_Handler(void)
 			}
 		}
 		
-		if( run_t.send_app_wokes_minutes_data < 257 ){
-            run_t.send_app_wokes_minutes_two = run_t.send_app_wokes_minutes_data;
-         }
-		else{
-			run_t.send_app_wokes_minutes_two=0;
-			run_t.send_app_wokes_minutes_one ++;
-        }
-		   SendData_Works_Time(run_t.send_app_wokes_minutes_one ,run_t.send_app_wokes_minutes_two);
+		run_t.send_app_wokes_minutes_two=run_t.send_app_wokes_minutes_data >> 8;
+        run_t.send_app_wokes_minutes_one =run_t.send_app_wokes_minutes_data & 0x0ff;
+		 SendData_Works_Time(run_t.send_app_wokes_minutes_one ,run_t.send_app_wokes_minutes_two);
 		
 		 Display_GMT();
 			
@@ -120,8 +114,8 @@ static void Timing_Handler(void)
             run_t.gTimes_time_seconds=0;
 			run_t.send_app_wokes_minutes_data ++ ;
 		  
-			run_t.send_app_wokes_minutes_two=run_t.send_app_wokes_minutes_data/255;
-             run_t.send_app_wokes_minutes_one =run_t.send_app_wokes_minutes_data %255;
+			run_t.send_app_wokes_minutes_two=run_t.send_app_wokes_minutes_data >> 8;
+            run_t.send_app_wokes_minutes_one =run_t.send_app_wokes_minutes_data & 0x0ff;
             
 		   SendData_Works_Time(run_t.send_app_wokes_minutes_one ,run_t.send_app_wokes_minutes_two);
 
