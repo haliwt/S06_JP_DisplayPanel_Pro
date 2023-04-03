@@ -5,12 +5,13 @@
 
 void Display_DHT11_Value(void);
 
-void DisplaySMG_LED(void);
+//void DisplaySMG_LED(void);
 
 void DisplayTiming_KEY_Add_Subtract_Fun(void);
 
 
-void Display_GMT(void);
+void Display_GMT(uint8_t hours,uint8_t minutes);
+
 
 
 

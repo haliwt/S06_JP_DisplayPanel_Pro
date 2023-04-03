@@ -155,7 +155,8 @@ typedef struct __RUN{
    uint8_t send_app_timer_minutes_two;
    uint8_t define_initialization_timer_time_hours;
    uint8_t receive_app_timer_time_flag ;
-   uint8_t receive_app_timer_time_value;
+   uint8_t works_dispTime_minutes;
+   uint8_t works_dispTime_hours;
 
    
    
@@ -185,8 +186,7 @@ void Decode_Handler(void);
 
 void Power_Off_Fun(void);
 
-//void Power_Off(void);
-void DisplayTimer_Timing(void);
+
 
 void Receive_MainBoard_Data_Handler(uint8_t cmd);
 void Power_On_Fun(void);

@@ -277,8 +277,6 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 
              case WIFI_SET_TIMING:
              	run_t.dispTime_hours  = inputBuf[0];
-				run_t.timer_timing_define_flag = timing_fail;
-				run_t.receive_app_timer_time_value =inputBuf[0];
 				run_t.gTimer_key_timing=0;
              		 state=0;
                     run_t.decodeFlag=1; 

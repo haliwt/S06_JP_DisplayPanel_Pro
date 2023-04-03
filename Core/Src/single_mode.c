@@ -75,7 +75,7 @@ static void Timing_Handler(void)
 			
 		  }
 		
-		Display_GMT();
+		Display_GMT(run_t.dispTime_hours,run_t.dispTime_minutes);
 	  
 	  
 	   }
@@ -86,13 +86,13 @@ static void Timing_Handler(void)
 		if(run_t.gTimes_time_seconds > 59){
 
 			run_t.gTimes_time_seconds=0;
-			run_t.dispTime_minutes++; //1 minute 
+			run_t.works_dispTime_minutes++; //1 minute 
 			run_t.send_app_wokes_minutes_data++;
-			if(run_t.dispTime_minutes> 59){ //1 hour
-			run_t.dispTime_minutes=0;
-			run_t.dispTime_hours++;
-			if(run_t.dispTime_hours > 24){
-			run_t.dispTime_hours =0;
+			if(run_t.works_dispTime_minutes> 59){ //1 hour
+			run_t.works_dispTime_minutes=0;
+			run_t.works_dispTime_hours++;
+			if(run_t.works_dispTime_hours > 24){
+			run_t.works_dispTime_hours =0;
 			}
 		}
 		
@@ -100,7 +100,7 @@ static void Timing_Handler(void)
         run_t.send_app_wokes_minutes_two =run_t.send_app_wokes_minutes_data & 0x0ff;
 		 SendData_Works_Time(run_t.send_app_wokes_minutes_one ,run_t.send_app_wokes_minutes_two);
 		
-		 Display_GMT();
+		 Display_GMT(run_t.works_dispTime_hours,run_t.works_dispTime_minutes);
 			
 	   }
 	
@@ -112,19 +112,23 @@ static void Timing_Handler(void)
 	if(run_t.timer_timing_define_flag !=timing_fail){
 		if(run_t.gTimes_time_seconds > 59){
             run_t.gTimes_time_seconds=0;
-			run_t.send_app_wokes_minutes_data ++ ;
-		  
+			run_t.works_dispTime_minutes++; //1 minute 
+			run_t.send_app_wokes_minutes_data++;
+			if(run_t.works_dispTime_minutes> 59){ //1 hour
+			run_t.works_dispTime_minutes=0;
+			run_t.works_dispTime_hours++;
+			if(run_t.works_dispTime_hours > 24){
+			run_t.works_dispTime_hours =0;
+			}
+        
 			run_t.send_app_wokes_minutes_one=run_t.send_app_wokes_minutes_data >> 8;
             run_t.send_app_wokes_minutes_two =run_t.send_app_wokes_minutes_data & 0x0ff;
             
 		   SendData_Works_Time(run_t.send_app_wokes_minutes_one ,run_t.send_app_wokes_minutes_two);
-
-			
-		}
+            }
 	  
-	}
-	
-
+        }
+    }
 }
    
 /******************************************************************************

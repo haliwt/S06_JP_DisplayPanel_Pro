@@ -13,29 +13,29 @@
  * Function :
  * 
 *************************************************************/
-void DisplaySMG_LED(void)
-{
-   static uint8_t m,n,p,q;
-    if(run_t.gPower_On==1){
-
-		SMG_POWER_ON()	;
-
-
-		m = (run_t.dispTime_hours /10) ;
-		n=	(run_t.dispTime_hours%10); 
-		p = (run_t.dispTime_minutes/10);
-		q=  (run_t.dispTime_minutes%10);
-
-
-
-		TM1639_Write_4Bit_Time(m,n,p,q,0) ; //timer is default 12 hours "12:00"
-		panel_led_fun();//Display_Function_OnOff();
-		//KeyLed_Power_On();
-
-   }
-
-		   
-}
+//void DisplaySMG_LED(void)
+//{
+//   static uint8_t m,n,p,q;
+//    if(run_t.gPower_On==1){
+//
+//		SMG_POWER_ON()	;
+//
+//
+//		m = (run_t.dispTime_hours /10) ;
+//		n=	(run_t.dispTime_hours%10); 
+//		p = (run_t.dispTime_minutes/10);
+//		q=  (run_t.dispTime_minutes%10);
+//
+//
+//
+//		TM1639_Write_4Bit_Time(m,n,p,q,0) ; //timer is default 12 hours "12:00"
+//		panel_led_fun();//Display_Function_OnOff();
+//		//KeyLed_Power_On();
+//
+//   }
+//
+//		   
+//}
 
 
 /**********************************************************************
@@ -93,13 +93,13 @@ void DisplayTiming_KEY_Add_Subtract_Fun(void)
 		
 	}
  }
-void Display_GMT(void)
+void Display_GMT(uint8_t hours,uint8_t minutes)
 { 
     static uint8_t m,n,p,q;
-	m = run_t.dispTime_hours /10 %10;
-	n=	run_t.dispTime_hours%10; 
-	p = run_t.dispTime_minutes/10 %10;
-	q=  run_t.dispTime_minutes%10;
+	m = hours /10 %10;
+	n=	hours%10; 
+	p = minutes/10 %10;
+	q=  minutes%10;
 	TM1639_Write_4Bit_Time(m,n,p,q,0) ; //timer is default 12 hours "12:00"
 
 

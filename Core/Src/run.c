@@ -65,17 +65,6 @@ void Power_Off(void)
 	      
 }
 
-void DisplayTimer_Timing(void)
-{
-      static uint8_t m,n,p,q;
-      m = run_t.dispTime_hours /10 ;
-	  n=  run_t.dispTime_hours %10; 
-	  p = run_t.dispTime_minutes /10;
-	  q=  run_t.dispTime_minutes %10;
-	  TM1639_Write_4Bit_Time(m,n,p,q,0) ; //timer is default 12 hours "12:00"
-
-  
-}
 
 /**********************************************************************
 *
@@ -149,10 +138,8 @@ void Receive_MainBoard_Data_Handler(uint8_t cmd)
       case WIFI_SET_TIMING:
         
        
-            if(run_t.dispTime_hours !=0){
-
-			run_t.dispTime_minutes = 0;
-            //run_t.receive_app_timer_time_flag = 1;
+            run_t.dispTime_minutes = 0;
+             
             run_t.temp_set_timer_timing_flag= 1;
 			run_t.gTimer_key_timing=0;
 		    
@@ -164,7 +151,7 @@ void Receive_MainBoard_Data_Handler(uint8_t cmd)
 			
 	   
               TM1639_Write_4Bit_Time(m,n,p,q,0) ; // timer   mode  "H0: xx"
-        }
+      
 
       break;
 
