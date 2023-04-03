@@ -128,8 +128,8 @@ void Receive_MainBoard_Data_Handler(uint8_t cmd)
       break;
 
        case WIFI_BEIJING_TIME: 
-         if(run_t.wifi_connect_flag ==1 && run_t.gPower_On==1){
-           if(run_t.timer_timing_define_flag==timing_not_definition && run_t.temp_set_timer_timing_flag==0){
+         if(run_t.wifi_link_cloud_flag ==1 && run_t.gPower_On==1){
+          
                
 			 m=(run_t.dispTime_hours ) /10;
 	        n = (run_t.dispTime_hours ) %10;;
@@ -140,7 +140,7 @@ void Receive_MainBoard_Data_Handler(uint8_t cmd)
 
 	       TM1639_Write_4Bit_Time(m,n,p,q,0) ; // timer   mode  "H0: xx"
 	      }
-         }
+         
 		    
         
  
@@ -151,9 +151,9 @@ void Receive_MainBoard_Data_Handler(uint8_t cmd)
        
             if(run_t.dispTime_hours !=0){
             run_t.timer_timing_define_flag = timing_success ;
-            run_t.Timer_model_flag = 1;
+     
             run_t.dispTime_minutes = 0;
-            
+          //  run_t.send_app_timer_total_minutes_data = run_t.dispTime_hours * 60;
              m=(run_t.dispTime_hours ) /10;
 	       
 
@@ -268,15 +268,11 @@ void Power_On_Fun(void)
    static uint8_t hour_decade,hour_unit;
 
 	run_t.gPower_On=1;
-
-	run_t.power_key =1;
-	
-
-
+    run_t.power_key =1;
 	run_t.gPlasma=1;
 	run_t.gDry =1;
 	run_t.gBug =1;
-	run_t.time_led_flag=1;
+   run_t.time_led_flag=1;
 	run_t.gUltrasonic =1;
 	
 	run_t.temperature_set_flag = 0; //WT.EDIT 2023.01.31
@@ -285,16 +281,25 @@ void Power_On_Fun(void)
 	        
 	run_t.gTimer_minute_Counter =0;
 	run_t.wifi_send_buzzer_sound=0xff;
-     Power_ON_Led();
-	if(power_on_off_flag==0){
-	     run_t.dispTime_hours=12;
-		 
-	}
 
-	 hour_decade=(run_t.dispTime_hours ) /10;
-     hour_unit=(run_t.dispTime_hours ) %10;
-	 SMG_POWER_ON(); //WT.EDIT 2023.03.02
-     
+	
+     Power_ON_Led();
+	
+     if(run_t.timer_timing_define_flag==timing_success){ //power on remeber last powr off of reference
+
+	     run_t.dispTime_hours = run_t.define_initialization_timer_time_hours ;
+         run_t.send_app_timer_total_minutes_data = run_t.define_initialization_timer_time_hours * 60;
+		
+      }
+      else{
+	     run_t.dispTime_hours =12;
+
+        }
+
+	  hour_decade=(run_t.dispTime_hours ) /10;
+	  hour_unit=(run_t.dispTime_hours ) %10;
+	  SMG_POWER_ON(); //WT.EDIT 2023.03.02
+	 
 	 TM1639_Write_4Bit_Time(hour_decade,hour_unit,0x0,0x0,0);
 
 
@@ -318,23 +323,13 @@ void Power_Off_Fun(void)
 		
 		run_t.wifi_led_fast_blink_flag=0;
       
-		run_t.timer_timing_define_flag = timing_not_definition;
-
-		
-	
 		run_t.power_key =2;
 	
 		run_t.disp_wind_speed_grade =1;	
 		run_t.gPower_On=0;
 		run_t.fan_off_60s =0;
 		power_on_off_flag=1;
-
-   
-		
-           
-
-       
-		Power_Off_Led_Off();
+        Power_Off_Led_Off();
 
   
 } 

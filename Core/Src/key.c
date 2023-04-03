@@ -180,9 +180,10 @@ void Process_Key_Handler(uint8_t keylabel)
             HAL_Delay(100);
 		    run_t.gTimer_set_temp_times=0; //conflict with send temperatur value 
             run_t.wifi_led_fast_blink_flag=0;
-            run_t.Timer_model_flag = 0;
+   
 			run_t.gWifi =0;
 			run_t.temperature_set_flag =0;
+	
 		    Power_Off_Fun();
 
 
@@ -200,7 +201,7 @@ void Process_Key_Handler(uint8_t keylabel)
 			run_t.gTimer_set_temp_times=0; //conflict with send temperatur value 
          
 			run_t.wifi_led_fast_blink_flag=1;
-			run_t.wifi_connect_flag =0;
+			run_t.wifi_link_cloud_flag =0;
 			run_t.gTimer_wifi_connect_counter=0;
 	       
 		 }
@@ -382,28 +383,32 @@ void SetTimer_Temperature_Number_Blink(void)
 {
 
     static uint8_t m,n,p,q,set_temperature_flag,counter_times;
-    static uint8_t timing_flag,set_timer_flag,set_temp_flag;
+    static uint8_t timing_flag,set_timer_flag,set_temp_flag,define_timer_times;
 	
 	//set timer timing value 
 	if(run_t.gTimer_key_timing > 4 && run_t.temp_set_timer_timing_flag==1 && set_timer_flag ==0 && run_t.gPower_On==1){
 				
 		set_timer_flag++;
 		run_t.gTimer_key_timing =0;
+        run_t.gTimer_Counter=0;
 		if(run_t.dispTime_hours ==0 ){
-			run_t.Timer_model_flag = 0;
+		    define_timer_times = timing_fail;
 			run_t.temp_set_timer_timing_flag=0;
-			run_t.timer_timing_define_flag = timing_not_definition;
+			run_t.timer_timing_define_flag =timing_fail;
 
 		}
 		else{
-			run_t.Timer_model_flag = 1; //confirm the set timer timing  is success
+			
+			define_timer_times = timing_success;
 			run_t.gTimer_smg_timing =0; //couter time of smg blink timing 
+            run_t.gTimer_Counter=0;
+			
 		}
 	
 	}
 
 	//set timer timing  smg blink timing 
-	if(run_t.Timer_model_flag ==1 && run_t.gPower_On==1){
+	if(define_timer_times == timing_success  && run_t.gPower_On==1){
 		   
 		if(run_t.gTimer_smg_timing < 13){
 
@@ -414,9 +419,10 @@ void SetTimer_Temperature_Number_Blink(void)
 			TM1639_Write_4Bit_Time(m,n,p,q,0) ;
 
 		}
-		else if(run_t.gTimer_smg_timing > 12 && run_t.gTimer_smg_timing < 27)
-			TM1639_Write_4Bit_Time(0,0,0,0,1) ;
-			else{
+		else if(run_t.gTimer_smg_timing > 12 && run_t.gTimer_smg_timing < 27){
+		  TM1639_Write_4Bit_Time(0,0,0,0,1) ;
+		}
+		else{
 			run_t.gTimer_smg_timing=0;
 
 			timing_flag ++;
@@ -425,10 +431,11 @@ void SetTimer_Temperature_Number_Blink(void)
 		if(timing_flag > 3){
 			set_timer_flag=0;
 			timing_flag=0;
-			run_t.Timer_model_flag =0;
+		   	define_timer_times++ ;
 			run_t.temp_set_timer_timing_flag=0;
 			run_t.timer_timing_define_flag = timing_success;
-			run_t.send_app_timer_minutes_data = run_t.dispTime_hours * 60 ;//minutes
+			run_t.define_initialization_timer_time_hours = run_t.dispTime_hours ;//* 60 ;//minutes
+			run_t.send_app_timer_total_minutes_data = run_t.define_initialization_timer_time_hours*60;
 			run_t.gTimer_Counter=0;
 			SendData_Time_Data(run_t.dispTime_hours);
 			TM1639_Write_4Bit_Time(m,n,p,q,0) ;

@@ -36,15 +36,14 @@ static void SetTemperature_Function(void);
 static void Timing_Handler(void)
 {
 
-   uint8_t rem_one,rem_two,	work_time_one,work_time_two;
+   
 	switch(run_t.timer_timing_define_flag){
 
 	case timing_success:
 	   if(run_t.gTimer_Counter > 59){
-
 	    run_t.gTimer_Counter =0;
 		run_t.dispTime_minutes -- ;
-		run_t.send_app_timer_minutes_data--;
+		run_t.send_app_timer_total_minutes_data--;
 	    if(run_t.dispTime_minutes < 0){
 		     run_t.dispTime_hours -- ;
 			 run_t.dispTime_minutes =59;
@@ -54,7 +53,7 @@ static void Timing_Handler(void)
 	            run_t.dispTime_hours=0;
 				
 				run_t.dispTime_minutes=0;
-				run_t.send_app_timer_minutes_data=0;
+				run_t.send_app_timer_total_minutes_data=0;
 				run_t.gTimer_Cmd =0;	 //shut off timer of times
 
 			
@@ -65,12 +64,14 @@ static void Timing_Handler(void)
 		     }
 
 	     }
-		 if(run_t.send_app_timer_minutes_data !=0){
+		 if(run_t.send_app_timer_total_minutes_data !=0){
 
-		    rem_one = run_t.send_app_timer_minutes_data >>8;
-			rem_two = run_t.send_app_timer_minutes_data & 0x00FF;
+		 
+            run_t.send_app_timer_minutes_one = run_t.send_app_timer_total_minutes_data/255;
+		    run_t.send_app_timer_minutes_two = run_t.send_app_timer_total_minutes_data%255;
+            
 		 	
-		    SendData_Remaining_Time(rem_one,rem_two);
+		    SendData_Remaining_Time(run_t.send_app_timer_minutes_one, run_t.send_app_timer_minutes_two);
 			HAL_Delay(100);
 
 		  }
@@ -82,7 +83,7 @@ static void Timing_Handler(void)
 
 	break;
 
-	case   timing_not_definition:
+	case  timing_fail:
 		if(run_t.gTimes_time_seconds > 59){
 
 			run_t.gTimes_time_seconds=0;
@@ -96,11 +97,15 @@ static void Timing_Handler(void)
 			}
 		}
 		
-
-		 work_time_one = run_t.send_app_wokes_minutes_data >> 8;
-	     work_time_two = run_t.send_app_wokes_minutes_data & 0x00ff;
-	
-	     SendData_Works_Time(work_time_one ,work_time_two);
+		if( run_t.send_app_wokes_minutes_data < 257 ){
+            run_t.send_app_wokes_minutes_two = run_t.send_app_wokes_minutes_data;
+         }
+		else{
+			run_t.send_app_wokes_minutes_two=0;
+			run_t.send_app_wokes_minutes_one ++;
+        }
+		   SendData_Works_Time(run_t.send_app_wokes_minutes_one ,run_t.send_app_wokes_minutes_two);
+		
 		 Display_GMT();
 			
 	   }
@@ -110,14 +115,15 @@ static void Timing_Handler(void)
 	}
 
 	
-	if(run_t.timer_timing_define_flag != timing_not_definition){
+	if(run_t.timer_timing_define_flag !=timing_fail){
 		if(run_t.gTimes_time_seconds > 59){
             run_t.gTimes_time_seconds=0;
-		   run_t.send_app_wokes_minutes_data++;
-		   work_time_one = run_t.send_app_wokes_minutes_data >> 8;
-	       work_time_two = run_t.send_app_wokes_minutes_data & 0x00ff;
-	
-	       SendData_Works_Time(work_time_one ,work_time_two);
+			run_t.send_app_wokes_minutes_data ++ ;
+		  
+			run_t.send_app_wokes_minutes_two=run_t.send_app_wokes_minutes_data/255;
+             run_t.send_app_wokes_minutes_one =run_t.send_app_wokes_minutes_data %255;
+            
+		   SendData_Works_Time(run_t.send_app_wokes_minutes_one ,run_t.send_app_wokes_minutes_two);
 
 			
 		}
@@ -127,73 +133,6 @@ static void Timing_Handler(void)
 
 }
    
-
-
-/******************************************************************************
-*
-*Function Name:static void Setup_Timer_Times(void)
-*Funcion:display setup timer times  //__asm("NOP");//等待1个指令周期，系统主频24M
-*Iinput Ref:NO
-*Return Ref:NO
-*
-******************************************************************************/
-static void Setup_Timer_Times(void)
-{
-    
-	
-	if(run_t.gTimer_Cmd==1){
-		
-        
-       if(run_t.gTimer_Counter > 59){
-
-	    run_t.gTimer_Counter =0;
-		run_t.dispTime_minutes -- ;
-	    if(run_t.dispTime_minutes < 0){
-		     run_t.dispTime_hours -- ;
-			 run_t.dispTime_minutes =59;
-
-			if(run_t.dispTime_hours < 0 ){
-
-	            run_t.dispTime_hours=0;
-			
-				run_t.dispTime_minutes=0;
-				run_t.gTimer_Cmd =0;	 //shut off timer of times
-
-			
-				run_t.gPower_On =0 ;
-			 
-				run_t.fan_off_60s = 0;
-				SendData_PowerOff(0);//shut down 
-				
-		     }
-
-	     }
-		
-			Display_GMT();
-	  
-	  
-	   }
-	}
-    else{
-		      if(run_t.gTimes_time_seconds > 59){
-			  	
-				run_t.gTimes_time_seconds=0;
-				run_t.dispTime_minutes++; //1 minute 
-                if(run_t.dispTime_minutes> 59){ //1 hour
-                   run_t.dispTime_minutes=0;
- 					run_t.dispTime_hours++;
-                   if(run_t.dispTime_hours > 24){
-				    run_t.dispTime_hours =0;
-				    }
-			   }
-               Display_GMT();
-		      }
-  }
-
-}
-   
-
-
 /******************************************************************************
 *
 *Function Name:void Single_RunCmd(void)
@@ -203,8 +142,6 @@ static void Setup_Timer_Times(void)
 ******************************************************************************/
 static void DisplayPanel_DHT11_Value(void)
 {
-
-  
 
   if(run_t.gTimer_display_dht11 > 10 && run_t.set_temperature_flag==0){
 	    run_t.gTimer_display_dht11=0;

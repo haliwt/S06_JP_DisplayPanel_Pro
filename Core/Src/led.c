@@ -25,7 +25,7 @@ static void ULTRASONIC_LED_OnOff(uint8_t sel);
 static void WIFI_LED_OnOff(uint8_t sel)
 {
 
-    if(run_t.wifi_connect_flag ==1){
+    if(run_t.wifi_link_cloud_flag ==1){
 
            LED_WIFI_ON();
 

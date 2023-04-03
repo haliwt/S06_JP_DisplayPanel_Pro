@@ -122,8 +122,8 @@ int main(void)
 			run_t.decodeFlag =0;
 			Decode_Handler();
 		 }
-		 
-		 RunPocess_Command_Handler();
+		
+		  RunPocess_Command_Handler();
     
       }
      // Scan_KeyMode();

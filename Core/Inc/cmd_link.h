@@ -8,6 +8,14 @@ extern uint8_t inputBuf[MAX_BUFFER_SIZE];
 extern uint8_t outputBuf[8];
 
 
+typedef enum{
+
+     WIFI_CLOUD_FAIL,
+	 WIFI_CLOUD_SUCCESS
+
+}wifi_cloud_state;
+
+
 void SendData_PowerOff(uint8_t index);
 
 void SendData_Set_Wifi(uint8_t hdata);

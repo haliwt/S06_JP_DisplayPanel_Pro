@@ -159,12 +159,11 @@ void SendData_Works_Time(uint8_t tdata,uint8_t tdata_2)
 {
 
         outputBuf[0]='T'; //4D
-		outputBuf[1]='K'; //58
-		outputBuf[2]='O'; //"T"->temperature
-		outputBuf[3]=tdata; //53	//
-		outputBuf[4]=tdata_2;
+		outputBuf[1]='O'; //"T"->temperature
+		outputBuf[2]=tdata; //53	//
+		outputBuf[3]=tdata_2;
 		
-		transferSize=5;
+		transferSize=4;
 		if(transferSize)
 		{
 			while(transOngoingFlag);
@@ -179,12 +178,11 @@ void SendData_Remaining_Time(uint8_t tdata,uint8_t tdata_2)
 {
 
         outputBuf[0]='T'; //4D
-		outputBuf[1]='K'; //58
-		outputBuf[2]='R'; //"T"->temperature
-		outputBuf[3]=tdata; //53	//
-		outputBuf[4]=tdata_2;
+		outputBuf[1]='R'; //"T"->temperature
+		outputBuf[2]=tdata; //53	//
+		outputBuf[3]=tdata_2;
 		
-		transferSize=5;
+		transferSize=4;
 		if(transferSize)
 		{
 			while(transOngoingFlag);
@@ -249,9 +247,9 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
             break;
             case WIFI_INFO :
                   if(inputBuf[0]==0x01)
-                     run_t.wifi_connect_flag =1;
+                     run_t.wifi_link_cloud_flag =WIFI_CLOUD_SUCCESS;
                    else 
-                      run_t.wifi_connect_flag =0;
+                      run_t.wifi_link_cloud_flag =WIFI_CLOUD_FAIL;
                    
                     state=0;
                     run_t.decodeFlag=1;
@@ -260,6 +258,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 
             case WIFI_TEMP ://4 //wifi modify temperature of value
                  run_t.wifi_set_temperature=inputBuf[0]; 
+                 
                  state=0;
                  run_t.decodeFlag=1;
             break;
@@ -271,13 +270,15 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
             break;
 
 			 case WIFI_BEIJING_TIME:
-			 	if(run_t.timer_timing_define_flag == timing_not_definition && run_t.temp_set_timer_timing_flag==0)
-			  	    run_t.dispTime_hours  = inputBuf[0];
+			 	
+			  	 run_t.dispTime_hours  = inputBuf[0];
                  state = 4; 
              break;
 
              case WIFI_SET_TIMING:
              		run_t.dispTime_hours  = inputBuf[0];
+				    
+                    run_t.gTimer_key_timing=0;
              		 state=0;
                     run_t.decodeFlag=1; 
 
@@ -291,8 +292,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 		case 4: //
 
 		 if(run_t.wifi_orderByMainboard_label == WIFI_BEIJING_TIME){
-		 	  if(run_t.timer_timing_define_flag == timing_not_definition && run_t.temp_set_timer_timing_flag==0)
-				   run_t.dispTime_minutes = inputBuf[0];
+		 	  run_t.dispTime_minutes = inputBuf[0];
 				state =5;
 		 }
 		 else if(run_t.wifi_orderByMainboard_label==PANEL_DATA){
