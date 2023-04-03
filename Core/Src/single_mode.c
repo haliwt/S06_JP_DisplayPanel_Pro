@@ -67,7 +67,7 @@ static void Timing_Handler(void)
 		 if(run_t.send_app_timer_total_minutes_data !=0){
 
 		 
-            run_t.send_app_timer_minutes_one = run_t.send_app_timer_total_minutes_data & 0xff00>> 8;
+            run_t.send_app_timer_minutes_one = run_t.send_app_timer_total_minutes_data >> 8;
 		    run_t.send_app_timer_minutes_two = run_t.send_app_timer_total_minutes_data & 0x00ff;
             
 		 	

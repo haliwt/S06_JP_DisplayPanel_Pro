@@ -276,12 +276,13 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
              break;
 
              case WIFI_SET_TIMING:
-             		run_t.dispTime_hours  = inputBuf[0];
-				    
-                    run_t.gTimer_key_timing=0;
+             	run_t.dispTime_hours  = inputBuf[0];
+				run_t.timer_timing_define_flag = timing_fail;
+				run_t.receive_app_timer_time_value =inputBuf[0];
+				run_t.gTimer_key_timing=0;
              		 state=0;
                     run_t.decodeFlag=1; 
-
+ 
              break;
 
          	}
@@ -307,6 +308,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
         case 5: 
 			if(run_t.wifi_orderByMainboard_label == WIFI_BEIJING_TIME){
 				 run_t.dispTime_seconds = inputBuf[0];
+				 run_t.send_app_timer_total_minutes_data = run_t.dispTime_seconds* 60;
 				 run_t.decodeFlag=1;
 			    state=0;
 		 }

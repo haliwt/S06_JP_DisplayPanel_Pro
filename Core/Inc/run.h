@@ -154,7 +154,8 @@ typedef struct __RUN{
    uint8_t send_app_timer_minutes_one;
    uint8_t send_app_timer_minutes_two;
    uint8_t define_initialization_timer_time_hours;
-   
+   uint8_t receive_app_timer_time_flag ;
+   uint8_t receive_app_timer_time_value;
 
    
    

@@ -150,10 +150,13 @@ void Receive_MainBoard_Data_Handler(uint8_t cmd)
         
        
             if(run_t.dispTime_hours !=0){
-            run_t.timer_timing_define_flag = timing_success ;
-     
-            run_t.dispTime_minutes = 0;
-          //  run_t.send_app_timer_total_minutes_data = run_t.dispTime_hours * 60;
+
+			run_t.dispTime_minutes = 0;
+            //run_t.receive_app_timer_time_flag = 1;
+            run_t.temp_set_timer_timing_flag= 1;
+			run_t.gTimer_key_timing=0;
+		    
+            
              m=(run_t.dispTime_hours ) /10;
 	       
 
