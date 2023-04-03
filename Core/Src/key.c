@@ -393,8 +393,13 @@ void SetTimer_Temperature_Number_Blink(void)
 		run_t.gTimer_key_timing =0;
         run_t.gTimer_Counter=0;
 		if(run_t.dispTime_hours ==0 ){
-		    define_timer_times = timing_fail;
+		  
+			set_timer_flag=0;
+			timing_flag=0;
+			define_timer_times = timing_fail;
+
 			run_t.temp_set_timer_timing_flag=0;
+
 			run_t.timer_timing_define_flag =timing_fail;
 			run_t.send_app_timer_minutes_one = 0;
 		    run_t.send_app_timer_minutes_two = 0;
