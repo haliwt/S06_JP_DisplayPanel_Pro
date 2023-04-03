@@ -438,6 +438,7 @@ void SetTimer_Temperature_Number_Blink(void)
 			run_t.send_app_timer_total_minutes_data = run_t.define_initialization_timer_time_hours*60;
 			run_t.gTimer_Counter=0;
 			SendData_Time_Data(run_t.dispTime_hours);
+		
 			TM1639_Write_4Bit_Time(m,n,p,q,0) ;
 		}
 	   }
@@ -481,7 +482,7 @@ void SetTimer_Temperature_Number_Blink(void)
 			  m =  run_t.wifi_set_temperature / 10 %10;
 			  n =  run_t.wifi_set_temperature % 10; //
 			  TM1639_Write_2bit_SetUp_TempData(m,n,0);
-	         SendData_Temp_Data(run_t.wifi_set_temperature);
+	          SendData_Temp_Data(run_t.wifi_set_temperature);
 	       }
 	  }
 	
