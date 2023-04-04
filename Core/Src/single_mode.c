@@ -15,7 +15,7 @@ void (*single_add_fun)(void);
 void (*single_buzzer_fun)(void);
 void (*sendAi_usart_fun)(uint8_t senddat);
 void (*dispose_key)(uint8_t dsdat);
-static void Setup_Timer_Times(void);
+
 
 static void Timing_Handler(void);
 static void RunLocal_Smg_Process(void);
@@ -159,7 +159,7 @@ static void DisplayPanel_DHT11_Value(void)
 void RunPocess_Command_Handler(void)
 {
 	//key input run function
-   static uint8_t key_set_temp_flag,m,n;
+ 
    if(run_t.gPower_On ==1 && run_t.decodeFlag ==0){
    	
        RunLocal_Smg_Process();

@@ -76,7 +76,7 @@
 
 #define Set14_16TM1640 		    0X8F//??????? 14/16 
 
-    
+//Low Bit    
 #define   seg_a  0x01      //SEG0   //seg_e = 0x10  
 #define   seg_b  0x02      //SEG1 , //seg_f = 0x20
 #define   seg_c  0x04      //SEG2 , //seg_g = 0x40
