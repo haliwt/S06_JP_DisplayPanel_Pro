@@ -51,10 +51,6 @@ void Power_Off(void)
 			run_t.gDry=0;
 			run_t.gUltrasonic =0;
 			run_t.gTimer_Cmd=0; //timer of command "1"->timer is start
-			//  run_t.dispTime_hours=0;
-			//  run_t.dispTime_minutes=0;
-			//  run_t.gTemperature_timer_flag=0;
-			//run_t.dispTime_hours=12;
 
 				
 		}
@@ -262,14 +258,11 @@ void Power_On_Fun(void)
 	run_t.gPlasma=1;
 	run_t.gDry =1;
 	run_t.gBug =1;
-   run_t.time_led_flag=1;
+   	run_t.time_led_flag=1;
 	run_t.gUltrasonic =1;
 	
-	run_t.temperature_set_flag = 0; //WT.EDIT 2023.01.31
-    run_t.wifi_set_temp_flag=0; // //WT.EDIT 2023.01.31
-    run_t.disp_wind_speed_grade =3;
-	        
-	run_t.gTimer_minute_Counter =0;
+	//run_t.temperature_set_flag = 0; //WT.EDIT 2023.01.31
+   
 	run_t.wifi_send_buzzer_sound=0xff;
 
 	
@@ -279,10 +272,19 @@ void Power_On_Fun(void)
 
 	     run_t.dispTime_hours = run_t.define_initialization_timer_time_hours ;
          run_t.send_app_timer_total_minutes_data = run_t.define_initialization_timer_time_hours * 60;
-		
+		 run_t.gTimer_minute_Counter =0;
+		 run_t.dispTime_minutes =0;
+		 run_t.send_app_timer_minutes_one = run_t.send_app_timer_total_minutes_data >> 8;
+		 run_t.send_app_timer_minutes_two = run_t.send_app_timer_total_minutes_data & 0x00ff;
+		 SendData_Remaining_Time(run_t.send_app_timer_minutes_one, run_t.send_app_timer_minutes_two);
       }
-      else{
+      else{ //don't has timer timing 
 	     run_t.dispTime_hours =0;
+		 run_t.dispTime_minutes=0;
+	     run_t.works_dispTime_hours =0;
+		 run_t.works_dispTime_minutes =0 ;
+		 run_t.send_app_wokes_total_minutes_data=0;
+		 SendData_Works_Time(run_t.send_app_wokes_minutes_one, run_t.send_app_wokes_minutes_two);
 
         }
 
@@ -291,8 +293,6 @@ void Power_On_Fun(void)
 	  SMG_POWER_ON(); //WT.EDIT 2023.03.02
 	 
 	 TM1639_Write_4Bit_Time(hour_decade,hour_unit,0x0,0x0,0);
-
-
 }
 
 /************************************************************************
@@ -314,10 +314,8 @@ void Power_Off_Fun(void)
 		run_t.wifi_led_fast_blink_flag=0;
       
 		run_t.power_key =2;
-	
-		run_t.disp_wind_speed_grade =1;	
-		run_t.gPower_On=0;
-		run_t.fan_off_60s =0;
+	    run_t.gPower_On=0;
+		
 		power_on_off_flag=1;
         Power_Off_Led_Off();
 

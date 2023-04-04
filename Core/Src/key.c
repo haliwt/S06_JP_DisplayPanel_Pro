@@ -165,9 +165,9 @@ void Process_Key_Handler(uint8_t keylabel)
     switch(keylabel){
 
       case POWER_KEY_ID:
-	   // if(run_t.gPower_On==0 || run_t.gPower_On ==0xFF){
+	 
             power_flag = power_flag ^ 0x01;
-           if(power_flag ==1){
+           if(power_flag ==1){ //turn on 
  			run_t.gTimer_set_temp_times=0; //conflict with send temperatur value 
 		 	  SendData_PowerOff(1);
               HAL_Delay(100);
@@ -183,7 +183,7 @@ void Process_Key_Handler(uint8_t keylabel)
             run_t.wifi_led_fast_blink_flag=0;
    
 			run_t.gWifi =0;
-			run_t.temperature_set_flag =0;
+		//	run_t.temperature_set_flag =0;
 	
 		    Power_Off_Fun();
 
@@ -407,8 +407,6 @@ void SetTimer_Temperature_Number_Blink(void)
 		 	SendData_Remaining_Time(run_t.send_app_timer_minutes_one, run_t.send_app_timer_minutes_two);
 			HAL_Delay(100);
 			
-		    run_t.send_app_wokes_minutes_one=run_t.send_app_wokes_minutes_data >> 8;
-			run_t.send_app_wokes_minutes_two =run_t.send_app_wokes_minutes_data & 0x0ff;
 					
 			SendData_Works_Time(run_t.send_app_wokes_minutes_one ,run_t.send_app_wokes_minutes_two);
 			HAL_Delay(100);

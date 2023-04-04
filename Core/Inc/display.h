@@ -11,15 +11,7 @@ void DisplayTiming_KEY_Add_Subtract_Fun(void);
 
 
 void Display_GMT(uint8_t hours,uint8_t minutes);
-
-
-
-
-void SetUp_Temperature_Value(void);
-
-
-
-
+void Display_Colon_Blink_Function(uint8_t hours,uint8_t minutes,uint8_t sel);
 
 
 #endif 

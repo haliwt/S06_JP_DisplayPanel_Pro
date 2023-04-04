@@ -8,14 +8,14 @@
 #include "display.h"
 
 
-
+uint8_t send_works_times_flag;
 
 void (*single_ai_fun)(uint8_t cmd);
 void (*single_add_fun)(void);
 void (*single_buzzer_fun)(void);
 void (*sendAi_usart_fun)(uint8_t senddat);
 void (*dispose_key)(uint8_t dsdat);
-
+static void Setup_Timer_Times(void);
 
 static void Timing_Handler(void);
 static void RunLocal_Smg_Process(void);
@@ -36,7 +36,7 @@ static void SetTemperature_Function(void);
 static void Timing_Handler(void)
 {
 
-   
+ 
 	switch(run_t.timer_timing_define_flag){
 
 	case timing_success:
@@ -48,7 +48,7 @@ static void Timing_Handler(void)
 		     run_t.dispTime_hours -- ;
 			 run_t.dispTime_minutes =59;
 
-			if(run_t.dispTime_hours < 0 ){
+			if(run_t.dispTime_hours == 0 ){
 
 	            run_t.dispTime_hours=0;
 				
@@ -56,15 +56,25 @@ static void Timing_Handler(void)
 				run_t.send_app_timer_total_minutes_data=0;
 				run_t.gTimer_Cmd =0;	 //shut off timer of times
 
-			
-				run_t.gPower_On =0 ;
-			 
-				SendData_PowerOff(0);//shut down 
+			    run_t.timer_timing_define_flag =  timing_fail;
+				
+
+			    
+			    SendData_PowerOff(0);
+				HAL_Delay(100);
+				run_t.gTimer_set_temp_times=0; //conflict with send temperatur value 
+				run_t.wifi_led_fast_blink_flag=0;
+	
+				run_t.gWifi =0;
+				//run_t.temperature_set_flag =0;
+		
+				Power_Off_Fun();
+				
 				
 		     }
 
 	     }
-		 if(run_t.send_app_timer_total_minutes_data !=0){
+		   
 
 		 
             run_t.send_app_timer_minutes_one = run_t.send_app_timer_total_minutes_data >> 8;
@@ -73,13 +83,25 @@ static void Timing_Handler(void)
 		 	
 		    SendData_Remaining_Time(run_t.send_app_timer_minutes_one, run_t.send_app_timer_minutes_two);
 			
-		  }
+		    Display_GMT(run_t.dispTime_hours,run_t.dispTime_minutes);
+            HAL_Delay(200);
 		
-		Display_GMT(run_t.dispTime_hours,run_t.dispTime_minutes);
-	  
-	  
+		
 	   }
+        if(run_t.gTimer_colon < 51){
+		   Display_Colon_Blink_Function(run_t.dispTime_hours,run_t.dispTime_minutes,0);
+        }
+		else if(run_t.gTimer_colon >  49  &&  run_t.gTimer_colon < 101){
+		   
+	       Display_Colon_Blink_Function(run_t.dispTime_hours,run_t.dispTime_minutes,1);
 
+       }
+	   else{
+	      run_t.gTimer_colon =0;
+
+	   }
+      
+       
 	break;
 
 	case  timing_fail:
@@ -87,7 +109,7 @@ static void Timing_Handler(void)
 
 			run_t.gTimes_time_seconds=0;
 			run_t.works_dispTime_minutes++; //1 minute 
-			run_t.send_app_wokes_minutes_data++;
+			run_t.send_app_wokes_total_minutes_data++;
 			if(run_t.works_dispTime_minutes> 59){ //1 hour
 			run_t.works_dispTime_minutes=0;
 			run_t.works_dispTime_hours++;
@@ -96,24 +118,38 @@ static void Timing_Handler(void)
 			}
 		}
 		
-		run_t.send_app_wokes_minutes_one=run_t.send_app_wokes_minutes_data >> 8;
-        run_t.send_app_wokes_minutes_two =run_t.send_app_wokes_minutes_data & 0x0ff;
+		run_t.send_app_wokes_minutes_one=run_t.send_app_wokes_total_minutes_data >> 8;
+        run_t.send_app_wokes_minutes_two =run_t.send_app_wokes_total_minutes_data & 0x0ff;
 		 SendData_Works_Time(run_t.send_app_wokes_minutes_one ,run_t.send_app_wokes_minutes_two);
 		
 		 Display_GMT(run_t.works_dispTime_hours,run_t.works_dispTime_minutes);
 			
 	   }
+
+	   if(run_t.gTimer_colon < 51){
+		   Display_Colon_Blink_Function(run_t.works_dispTime_hours,run_t.works_dispTime_minutes,0);
+        }
+		else if(run_t.gTimer_colon >  49  &&  run_t.gTimer_colon < 101){
+		    Display_Colon_Blink_Function(run_t.works_dispTime_hours,run_t.works_dispTime_minutes,1);
+
+       }
+	   else{
+	      run_t.gTimer_colon =0;
+
+	   }
+      
 	
     break;
 
 	}
-
-	
-	if(run_t.timer_timing_define_flag !=timing_fail){
-		if(run_t.gTimes_time_seconds > 59){
+    
+    
+    if(run_t.gTimes_time_seconds > 59 && run_t.timer_timing_define_flag ==timing_success ){
             run_t.gTimes_time_seconds=0;
+            send_works_times_flag=1;
 			run_t.works_dispTime_minutes++; //1 minute 
-			run_t.send_app_wokes_minutes_data++;
+			run_t.send_app_wokes_total_minutes_data++;
+            run_t.send_app_wokes_minutes_two++;
 			if(run_t.works_dispTime_minutes> 59){ //1 hour
 			run_t.works_dispTime_minutes=0;
 			run_t.works_dispTime_hours++;
@@ -121,14 +157,24 @@ static void Timing_Handler(void)
 			run_t.works_dispTime_hours =0;
 			}
         
-			run_t.send_app_wokes_minutes_one=run_t.send_app_wokes_minutes_data >> 8;
-            run_t.send_app_wokes_minutes_two =run_t.send_app_wokes_minutes_data & 0x0ff;
-            
-		   SendData_Works_Time(run_t.send_app_wokes_minutes_one ,run_t.send_app_wokes_minutes_two);
+            if(run_t.works_dispTime_minutes >255){
+               run_t.send_app_wokes_minutes_one++;
+               run_t.send_app_wokes_minutes_two=0;
+               run_t.send_app_wokes_total_minutes_data=0;
+            }
+		
+    
+          
             }
 	  
         }
-    }
+     while(send_works_times_flag==1){
+            send_works_times_flag=0;
+        SendData_Works_Time(run_t.send_app_wokes_minutes_one ,run_t.send_app_wokes_minutes_two);
+        }
+
+
+	
 }
    
 /******************************************************************************
@@ -159,7 +205,7 @@ static void DisplayPanel_DHT11_Value(void)
 void RunPocess_Command_Handler(void)
 {
 	//key input run function
- 
+   static uint8_t key_set_temp_flag,m,n;
    if(run_t.gPower_On ==1 && run_t.decodeFlag ==0){
    	
        RunLocal_Smg_Process();

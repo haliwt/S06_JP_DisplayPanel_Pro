@@ -106,9 +106,11 @@ void TM1639_Write_4Bit_TimerData(uint8_t onebit,uint8_t twobit,uint8_t threebit,
 void TM1639_Write_2bit_SetUp_TempData(uint8_t onebit,uint8_t twobit,uint8_t sel);
 
 
+void SmgBlink_Colon_Function(uint8_t onebit,uint8_t twobit,uint8_t sel);
 
 
-void Times_Led_IndicationOnOff(uint8_t sel);
+
+
 
 
 

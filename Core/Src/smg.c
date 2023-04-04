@@ -174,7 +174,7 @@ static void TM1639_Write_OneByte(uint8_t data)
    //  data = data >> 1;   //LSB is the first send 
     // TM1639_CLK_SetHigh();
      
- }
+   }
 // HAL_Delay(2);
 // TM1639_CLK_SetLow();
 // TM1639_DIO_SetLow();
@@ -241,16 +241,17 @@ void TM1639_Write_4Bit_Time(uint8_t onebit,uint8_t twobit,uint8_t threebit,uint8
 
 	TM1639_Start();
 
-     TM1639_Write_OneByte(0xCB);//0xC1H->GRID_2->BIT_2
+    TM1639_Write_OneByte(0xCB);//0xC1H->GRID_2->BIT_2
      if(sl==0){
          TM1639_Write_OneByte(segNumber_High[twobit]|0x80|seg_h);//display "2 :"
    
      }
      else {
       
-        TM1639_Write_OneByte(0);
+        TM1639_Write_OneByte(0|seg_h);
 	 }
-     TM1639_Stop();
+	 
+    TM1639_Stop();
 	 
    
      //digital 3 
@@ -272,6 +273,7 @@ void TM1639_Write_4Bit_Time(uint8_t onebit,uint8_t twobit,uint8_t threebit,uint8
 
 	}//TM1639_Write_OneByte(OFFLED);//display "NULL"
     else TM1639_Write_OneByte(0);
+	
     TM1639_Stop();
 	
     //digital 4
@@ -305,6 +307,57 @@ void TM1639_Write_4Bit_Time(uint8_t onebit,uint8_t twobit,uint8_t threebit,uint8
     
 }
 
+void SmgBlink_Colon_Function(uint8_t twobit,uint8_t threebit,uint8_t sel)
+{
+
+
+   
+	   TM1639_STB_SetLow();
+		TM1639_Write_OneByte(0X40);//To Address of fixed reg 0x44
+		TM1639_STB_SetHigh();
+	   
+	   TM1639_STB_SetLow();
+		TM1639_Write_OneByte(0X44);//To Address of fixed reg 0x44
+		TM1639_STB_SetHigh();
+
+
+	TM1639_Start();
+
+    TM1639_Write_OneByte(0xCB);//0xC1H->GRID_2->BIT_2
+  
+     if(sel==0){
+
+        TM1639_Write_OneByte(segNumber_High[twobit]|0x80|seg_h); 
+      }
+	  else {
+
+	      TM1639_Write_OneByte(segNumber_High[twobit]|0x80);	 
+     }
+
+	 
+    TM1639_Stop();
+
+
+	   //minute 
+    TM1639_Start();
+    TM1639_Write_OneByte(0xCD);//0xC2H->GRID_3->BIT_3
+    if(sel==0){
+	    TM1639_Write_OneByte(segNumber_High[threebit]|seg_h);//display ""
+
+	}//TM1639_Write_OneByte(OFFLED);//display "NULL"
+    else TM1639_Write_OneByte(segNumber_High[threebit]);
+	
+    TM1639_Stop();
+
+
+     //open diplay
+    TM1639_Start();
+    TM1639_Write_OneByte(OpenDispTM1639|0x8f);//0xC2H->GRID3->BIT_3
+    TM1639_Stop();
+    
+
+
+}
 /*******************************************************************************************************
     *
 *Function Name:void TM1639rite_2bit_HumData(uint8_t onebit,uint8_t twobit)
@@ -493,7 +546,7 @@ void TM1639_Write_2bit_SetUp_TempData(uint8_t onebit,uint8_t twobit,uint8_t sel)
      if(sel==0)
      	TM1639_Write_OneByte(segNumber_High[twobit]|seg_h);//display ""
      else{
-	    TM1639_Write_OneByte(0);
+	    TM1639_Write_OneByte(0|seg_h);
 
 	 }
      TM1639_Stop();

@@ -108,7 +108,7 @@ typedef struct __RUN{
   
    uint8_t gTimer_led_500ms;
 
-   uint8_t fan_off_60s;
+   
  
 
    uint8_t Timer_model_flag;
@@ -128,10 +128,10 @@ typedef struct __RUN{
    uint8_t gTimer_minute_Counter;
    uint8_t wifi_led_fast_blink_flag;
    uint8_t timer_timing_define_flag;
-   uint8_t disp_wind_speed_grade ;
+ 
    uint8_t wifi_orderByMainboard_label;
  
-   uint8_t wifi_set_temp_flag;
+  
    uint8_t 	gTimer_numbers_one_two_blink;
    uint8_t gTimer_temp_delay;
    uint8_t wifi_set_temperature;
@@ -158,7 +158,7 @@ typedef struct __RUN{
    uint8_t works_dispTime_minutes;
    uint8_t works_dispTime_hours;
 
-   
+   uint8_t gTimer_colon;
    
    
 
@@ -166,7 +166,7 @@ typedef struct __RUN{
 	int8_t dispTime_minutes;
 	int8_t dispTime_seconds;
    uint16_t send_app_timer_total_minutes_data;
-   uint16_t send_app_wokes_minutes_data;
+   uint16_t send_app_wokes_total_minutes_data;
 
 
    
