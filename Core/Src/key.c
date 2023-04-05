@@ -452,7 +452,7 @@ void SetTimer_Temperature_Number_Blink(void)
 		if(timing_flag > 3){
 			set_timer_flag=0;
 			timing_flag=0;
-		   	run_t.set_timer_special_value++ ;
+		   	run_t.set_timer_special_value=0 ;
 			run_t.dispTime_minutes=0;
 			run_t.temp_set_timer_timing_flag=0;
 			run_t.timer_timing_define_flag = timing_success;
@@ -475,7 +475,7 @@ void SetTimer_Temperature_Number_Blink(void)
 			TM1639_Write_4Bit_Time(m,	run_t.hours_two_bit,run_t.minutes_one_bit,q,0) ;
 		}
 	   }
-	
+	  /***********************************************************************************/
       //set temperature value is blink
       /**************************temperature value **************************/
 	  if(run_t.gTimer_key_temp_timing > 4 && run_t.set_temperature_flag==1 && run_t.set_temperature_special_value ==0 && run_t.gPower_On==1){
