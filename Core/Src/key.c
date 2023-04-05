@@ -478,14 +478,14 @@ void SetTimer_Temperature_Number_Blink(void)
 	
       //set temperature value is blink
       /**************************temperature value **************************/
-	  if(run_t.gTimer_key_temp_timing > 4 && run_t.set_temperature_flag==1 && set_temp_flag ==0 && run_t.gPower_On==1){
+	  if(run_t.gTimer_key_temp_timing > 4 && run_t.set_temperature_flag==1 && run_t.set_temperature_special_value ==0 && run_t.gPower_On==1){
 			set_temp_flag++;
-			set_temperature_flag = 1;
-
+			
+			run_t.set_temperature_special_value =1;
 			run_t.gTimer_set_temp_times =0; //couter time of smg blink timing 
 
 		 }
-	  if(set_temperature_flag ==1 && run_t.gPower_On==1){
+	  if(run_t.set_temperature_special_value ==1 && run_t.gPower_On==1){
 	  	
 	  	
 		  if(run_t.gTimer_set_temp_times < 15 ){ // 4
@@ -506,7 +506,7 @@ void SetTimer_Temperature_Number_Blink(void)
 
 
            if(counter_times > 3){
-			 set_temperature_flag =0;
+			 run_t.set_temperature_special_value=0;
 			 set_temp_flag=0;
 		     counter_times=0;
 		      run_t.set_temperature_flag =0;

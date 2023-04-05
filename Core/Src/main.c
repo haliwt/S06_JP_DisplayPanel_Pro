@@ -125,7 +125,8 @@ int main(void)
 		 }
 		
 		  RunPocess_Command_Handler();
-		 if((POWER_KEY_VALUE() !=1   && MODEL_KEY_VALUE()!=1 && DEC_KEY_VALUE() !=1 && ADD_KEY_VALUE()!=1 ) && run_t.decodeFlag ==0){
+		 if((POWER_KEY_VALUE() !=1   && MODEL_KEY_VALUE()!=1 && DEC_KEY_VALUE() !=1 && ADD_KEY_VALUE()!=1 ) && run_t.decodeFlag ==0 \
+		 	&& run_t.set_temperature_flag==0 && run_t.set_temperature_special_value==0){
             TimeColon_Smg_Blink_Fun();
 
 		 }

@@ -88,19 +88,6 @@ static void Timing_Handler(void)
 		
 		
 	   }
-	   
-//       if(run_t.gTimer_colon < 51){
-//		   Display_Colon_Blink_Function(run_t.dispTime_hours,run_t.dispTime_minutes,0);
-//        }
-//		else if(run_t.gTimer_colon >  49  &&  run_t.gTimer_colon < 101){
-//		   
-//	       Display_Colon_Blink_Function(run_t.dispTime_hours,run_t.dispTime_minutes,1);
-//
-//       }
-//	   else{
-//	      run_t.gTimer_colon =0;
-//
-//	   }
       
        
 	break;
@@ -128,19 +115,7 @@ static void Timing_Handler(void)
 	   }
 
 
-//       if(POWER_KEY_VALUE() !=1 && MODEL_KEY_VALUE()!=1 && DEC_KEY_VALUE() !=1 && ADD_KEY_VALUE()!=1 ){
-//	   if(run_t.gTimer_colon < 6){
-//		   Display_Colon_Blink_Function(run_t.works_dispTime_hours,run_t.works_dispTime_minutes,0);
-//        }
-//		else if(run_t.gTimer_colon >  5  &&  run_t.gTimer_colon < 11){
-//		    Display_Colon_Blink_Function(run_t.works_dispTime_hours,run_t.works_dispTime_minutes,1);
-//
-//       }
-//	   else{
-//	      run_t.gTimer_colon =0;
-//
-//	   }
-//       	}
+
 	
     break;
 
