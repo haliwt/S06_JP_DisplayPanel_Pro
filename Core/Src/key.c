@@ -255,13 +255,13 @@ void Process_Key_Handler(uint8_t keylabel)
 					
 
 					m = run_t.dispTime_hours /10 %10;
-					n = run_t.dispTime_hours  %10;
+					run_t.hours_two_bit =run_t.dispTime_hours  %10; //n = run_t.dispTime_hours  %10;
 					
-				    p=0;
+				    run_t.minutes_one_bit=0;//p=0;
 					q=0;
 				
 
-					 TM1639_Write_4Bit_Time(m,n,p,q,0) ; //timer is default 12 hours "12:00" 
+					 TM1639_Write_4Bit_Time(m,run_t.hours_two_bit, run_t.minutes_one_bit,q,0) ; //timer is default 12 hours "12:00" 
 
 				}	
 			}
@@ -298,12 +298,12 @@ void Process_Key_Handler(uint8_t keylabel)
 				}
 
                   m = run_t.dispTime_hours /10 %10;
-				  n = run_t.dispTime_hours  %10;
+				  run_t.hours_two_bit = run_t.dispTime_hours  %10;//n = run_t.dispTime_hours  %10;
 
-				  p = 0;
+				  run_t.minutes_one_bit=0;//p = 0;
 				  q = 0;
 
-				TM1639_Write_4Bit_Time(m,n,p,q,0) ; //timer is default 12 hours "12:00"    
+				TM1639_Write_4Bit_Time(m,run_t.hours_two_bit,run_t.minutes_one_bit,q,0) ; //timer is default 12 hours "12:00"    
 				}
 		}
 		keylabel= 0xff;
@@ -432,14 +432,16 @@ void SetTimer_Temperature_Number_Blink(void)
 		if(run_t.gTimer_smg_timing < 13){
 
 			m=run_t.dispTime_hours  /10%10;
-			n=run_t.dispTime_hours  %10;
-			p =0;
+			run_t.hours_two_bit=run_t.dispTime_hours  %10;//n=run_t.dispTime_hours  %10;
+			run_t.minutes_one_bit=0;//p =0;
 			q=  0;
-			TM1639_Write_4Bit_Time(m,n,p,q,0) ;
+			TM1639_Write_4Bit_Time(m,run_t.hours_two_bit,run_t.minutes_one_bit,q,0) ;
 
 		}
 		else if(run_t.gTimer_smg_timing > 12 && run_t.gTimer_smg_timing < 27){
-		  TM1639_Write_4Bit_Time(0,0,0,0,1) ;
+			run_t.hours_two_bit=0;
+			run_t.minutes_one_bit = 0;
+		  TM1639_Write_4Bit_Time(0,run_t.hours_two_bit,run_t.minutes_one_bit,0,1) ;
 		}
 		else{
 			run_t.gTimer_smg_timing=0;
@@ -467,9 +469,10 @@ void SetTimer_Temperature_Number_Blink(void)
             
 		 	
 		    SendData_Remaining_Time(run_t.send_app_timer_minutes_one, run_t.send_app_timer_minutes_two);
-			
+			run_t.hours_two_bit = n;
+			run_t.minutes_one_bit = p;
 		
-			TM1639_Write_4Bit_Time(m,n,p,q,0) ;
+			TM1639_Write_4Bit_Time(m,	run_t.hours_two_bit,run_t.minutes_one_bit,q,0) ;
 		}
 	   }
 	

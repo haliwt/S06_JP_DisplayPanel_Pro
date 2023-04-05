@@ -118,12 +118,17 @@ int main(void)
 	  else{
 	     keyvalue = KEY_Scan();//Scan_KeyMode();
 		 Process_Key_Handler(keyvalue);
+	  
 		 if(run_t.decodeFlag ==1){
 			run_t.decodeFlag =0;
 			Decode_Handler();
 		 }
 		
 		  RunPocess_Command_Handler();
+		 if((POWER_KEY_VALUE() !=1   && MODEL_KEY_VALUE()!=1 && DEC_KEY_VALUE() !=1 && ADD_KEY_VALUE()!=1 ) && run_t.decodeFlag ==0){
+            TimeColon_Smg_Blink_Fun();
+
+		 }
     
       }
      // Scan_KeyMode();

@@ -159,7 +159,8 @@ typedef struct __RUN{
    uint8_t works_dispTime_hours;
 
    uint8_t gTimer_colon;
-   
+   uint8_t hours_two_bit;
+   uint8_t minutes_one_bit;
    
 
 	int8_t dispTime_hours;

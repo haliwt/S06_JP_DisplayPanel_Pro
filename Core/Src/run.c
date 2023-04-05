@@ -121,9 +121,9 @@ void Receive_MainBoard_Data_Handler(uint8_t cmd)
 			
             p= (run_t.dispTime_minutes )/10;
             q = (run_t.dispTime_minutes )%10;
-			
-
-	       TM1639_Write_4Bit_Time(m,n,p,q,0) ; // timer   mode  "H0: xx"
+			run_t.hours_two_bit = n;
+            run_t.minutes_one_bit = p;
+	       TM1639_Write_4Bit_Time(m,run_t.hours_two_bit,run_t.minutes_one_bit,q,0) ; // timer   mode  "H0: xx"
 	      }
          
 		    
@@ -145,8 +145,10 @@ void Receive_MainBoard_Data_Handler(uint8_t cmd)
 
 			 n= (run_t.dispTime_hours ) %10;;
 			
-	   
-              TM1639_Write_4Bit_Time(m,n,p,q,0) ; // timer   mode  "H0: xx"
+	         run_t.hours_two_bit = n;
+			 run_t.minutes_one_bit = 0;
+			 
+              TM1639_Write_4Bit_Time(m,run_t.hours_two_bit,run_t.minutes_one_bit,0,0) ; // timer   mode  "H0: xx"
       
 
       break;
@@ -291,8 +293,10 @@ void Power_On_Fun(void)
 	  hour_decade=(run_t.dispTime_hours ) /10;
 	  hour_unit=(run_t.dispTime_hours ) %10;
 	  SMG_POWER_ON(); //WT.EDIT 2023.03.02
-	 
-	 TM1639_Write_4Bit_Time(hour_decade,hour_unit,0x0,0x0,0);
+
+	  run_t.hours_two_bit = hour_unit;
+	  run_t.minutes_one_bit = 0;
+	 TM1639_Write_4Bit_Time(hour_decade,run_t.hours_two_bit,run_t.minutes_one_bit,0x0,0);
 }
 
 /************************************************************************
