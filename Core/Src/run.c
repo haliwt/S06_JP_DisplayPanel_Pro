@@ -277,7 +277,7 @@ void Power_On_Fun(void)
 	
      Power_ON_Led();
 	
-     if(run_t.timer_timing_define_flag==timing_success){ //power on remeber last powr off of reference
+     if(run_t.timer_timing_define_flag==timing_success || run_t.temp_set_timer_timing_flag== 1){ //power on remeber last powr off of reference
 
 	     run_t.dispTime_hours = run_t.define_initialization_timer_time_hours ;
          run_t.send_app_timer_total_minutes_data = run_t.define_initialization_timer_time_hours * 60;
