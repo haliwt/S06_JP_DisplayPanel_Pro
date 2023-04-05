@@ -2,6 +2,14 @@
 #define __SINGLE_MODE_
 #include "main.h"
 
+typedef enum {
+    RUN_POWER_OFF,
+    RUN_POWER_ON,
+    UPDATE_DATA,
+    POWER_OFF_PROCESS
+
+}power_on_state_t;
+
 extern void (*single_ai_fun)(uint8_t cmd);
 extern void (*single_add_fun)(void);
 extern void (*sendAi_usart_fun)(uint8_t senddat);

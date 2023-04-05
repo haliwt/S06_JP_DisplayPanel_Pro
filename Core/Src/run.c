@@ -4,6 +4,7 @@
 #include "cmd_link.h"
 #include "led.h"
 #include "display.h"
+#include "single_mode.h"
 
 RUN_T run_t;
 
@@ -174,7 +175,8 @@ static void Receive_Wifi_Cmd(uint8_t cmd)
 		 	
             //  single_buzzer_fun();
               run_t.wifi_send_buzzer_sound = WIFI_POWER_ON_ITEM;
-              Power_On_Fun();
+              //Power_On_Fun();
+			  run_t.gRunCommand_label = RUN_POWER_ON;
 			  cmd=0xff;
 
 	         break;
@@ -184,7 +186,8 @@ static void Receive_Wifi_Cmd(uint8_t cmd)
 			    //single_buzzer_fun();
 			   run_t.wifi_send_buzzer_sound = WIFI_POWER_OFF_ITEM;
 				
-			    Power_Off_Fun();
+			   // Power_Off_Fun();
+			   run_t.gRunCommand_label = RUN_POWER_OFF;
 				
               cmd=0xff;
 
@@ -316,6 +319,8 @@ void Power_Off_Fun(void)
 		run_t.gBug =0;
 		
 		run_t.wifi_led_fast_blink_flag=0;
+		run_t.gTimer_set_temp_times=0; //conflict with send temperatur value 
+        run_t.gWifi =0;
       
 		run_t.power_key =2;
 	    run_t.gPower_On=0;

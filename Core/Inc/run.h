@@ -60,7 +60,7 @@ typedef struct __RUN{
    
    uint8_t keyAdd_continue;
    uint8_t keyDec_continue;
-  
+   uint8_t gRunCommand_label;
 
 
    uint8_t gTemperature;

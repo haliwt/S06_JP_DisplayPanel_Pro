@@ -166,26 +166,21 @@ void Process_Key_Handler(uint8_t keylabel)
 
       case POWER_KEY_ID:
 	 
-            power_flag = power_flag ^ 0x01;
-           if(power_flag ==1){ //turn on 
+           if(run_t.gPower_On ==0 || run_t.gPower_On == 0xff){
  			run_t.gTimer_set_temp_times=0; //conflict with send temperatur value 
 		 	  SendData_PowerOff(1);
-              HAL_Delay(100);
-		      Power_On_Fun();
+              HAL_Delay(200);
+		      run_t.gRunCommand_label = POWER_ON;
             
 
 		 }
 		 else{
 
 		    SendData_PowerOff(0);
-            HAL_Delay(100);
-		    run_t.gTimer_set_temp_times=0; //conflict with send temperatur value 
-            run_t.wifi_led_fast_blink_flag=0;
-   
-			run_t.gWifi =0;
-		//	run_t.temperature_set_flag =0;
+            HAL_Delay(200);
+		    run_t.gRunCommand_label = POWER_OFF;
 	
-		    Power_Off_Fun();
+		   
 
 
 		 }
@@ -247,13 +242,10 @@ void Process_Key_Handler(uint8_t keylabel)
 					 run_t.gTimer_key_timing =0;
 					 run_t.dispTime_hours ++;
 		                if(run_t.dispTime_hours > 24){
-							 
-						      run_t.dispTime_hours=0;
-						   }
+							 run_t.dispTime_hours=0;
+						}
 						
 							
-					
-
 					m = run_t.dispTime_hours /10 %10;
 					run_t.hours_two_bit =run_t.dispTime_hours  %10; //n = run_t.dispTime_hours  %10;
 					

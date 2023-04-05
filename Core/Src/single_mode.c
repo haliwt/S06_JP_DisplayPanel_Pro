@@ -182,9 +182,21 @@ static void DisplayPanel_DHT11_Value(void)
 ******************************************************************************/
 void RunPocess_Command_Handler(void)
 {
-	//key input run function
-   static uint8_t key_set_temp_flag,m,n;
-   if(run_t.gPower_On ==1 && run_t.decodeFlag ==0){
+	
+   switch(run_t.gRunCommand_label){
+
+      case RUN_POWER_ON:
+            Power_On_Fun();
+			run_t.gRunCommand_label= UPDATE_DATA;
+	  break;
+
+	  case RUN_POWER_OFF:
+           Power_Off_Fun();
+		   run_t.gRunCommand_label =POWER_OFF_PROCESS;
+	  break;
+
+	  case UPDATE_DATA:
+	   if(run_t.gPower_On ==1 && run_t.decodeFlag ==0){
    	
        RunLocal_Smg_Process();
 	   Timing_Handler();
@@ -194,16 +206,47 @@ void RunPocess_Command_Handler(void)
        Display_TimeColon_Blink_Fun();
 
 
-	 
-  }
-   
-  //POWER OFF 
-  if(run_t.gPower_On ==0 || run_t.gPower_On == 0xff){
+     }
+
+	  break;
+
+	  case POWER_OFF_PROCESS:
+
+	   if(run_t.gPower_On ==0 || run_t.gPower_On == 0xff){
 	 	run_t.gPower_On =0xff;
 	      Breath_Led();
 		  Power_Off();
 		 
-     }
+      }
+
+	  break;
+
+
+
+
+
+   }
+
+
+//    if(run_t.gPower_On ==1 && run_t.decodeFlag ==0){
+   	
+//        RunLocal_Smg_Process();
+// 	   Timing_Handler();
+//        SetTemperature_Function();  
+//    	   SetTimer_Temperature_Number_Blink();
+
+//        Display_TimeColon_Blink_Fun();
+
+
+//    }
+   
+//   //POWER OFF 
+//   if(run_t.gPower_On ==0 || run_t.gPower_On == 0xff){
+// 	 	run_t.gPower_On =0xff;
+// 	      Breath_Led();
+// 		  Power_Off();
+		 
+//      }
  
 
  }
@@ -218,7 +261,7 @@ void RunPocess_Command_Handler(void)
 static void RunLocal_Smg_Process(void)
 {
 
-	Panel_Led_OnOff_Function() ;//Lcd_PowerOn_Fun();
+	 Panel_Led_OnOff_Function() ;//Lcd_PowerOn_Fun();
 	
 	 DisplayPanel_DHT11_Value();
 
