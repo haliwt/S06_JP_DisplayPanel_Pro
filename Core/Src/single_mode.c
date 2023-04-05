@@ -190,6 +190,11 @@ void RunPocess_Command_Handler(void)
 	   Timing_Handler();
        SetTemperature_Function();  
    	   SetTimer_Temperature_Number_Blink();
+
+       Display_TimeColon_Blink_Fun();
+
+
+	 
   }
    
   //POWER OFF 

@@ -34,9 +34,9 @@ uint8_t KEY_Scan(void)
 		  key_t.read &= ~0x04; // 0xFf & 0xfB =  0xFB
 	}
     else if(ADD_KEY_VALUE() ==1 ) //ADD_KEY_ID = 0x08
-	  {
+	{
 		  key_t.read &= ~0x08; // 0x1f & 0xf7 =  0xF7
-	  }
+	 }
 	 else if(FAN_KEY_VALUE()   ==1 ) //FAN_KEY_ID = 0x10
 	{
 		  key_t.read &= ~0x10; // 0xFf & 0xEF =  0xEF

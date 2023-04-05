@@ -8,6 +8,7 @@
 
 
 
+static void TimeColon_Smg_Blink_Fun(void);
 
 
 /**********************************************************************
@@ -78,19 +79,8 @@ void Display_GMT(uint8_t hours,uint8_t minutes)
 }
 
 
-void Display_Colon_Blink_Function(uint8_t hours,uint8_t minutes,uint8_t sel)
-{
 
-	   static uint8_t m,n,p,q;
-		m = hours /10 %10;
-		n=	hours%10; 
-		p = minutes/10 %10;
-		q=	minutes%10;
-		SmgBlink_Colon_Function(n,p,sel);
-
-
-}
-void TimeColon_Smg_Blink_Fun(void)
+static void TimeColon_Smg_Blink_Fun(void)
 {
 	if(run_t.gTimer_colon < 2){
 		  SmgBlink_Colon_Function(run_t.hours_two_bit ,run_t.minutes_one_bit,0);
@@ -106,3 +96,16 @@ void TimeColon_Smg_Blink_Fun(void)
 }
 
 
+void Display_TimeColon_Blink_Fun(void)
+{
+
+if(FAN_KEY_VALUE()  !=1 && PLASMA_KEY_VALUE()  !=1 && DRY_KEY_VALUE()  !=1 && WIFI_KEY_VALUE()!=1){
+if((POWER_KEY_VALUE() !=1   && MODEL_KEY_VALUE()!=1 && DEC_KEY_VALUE() !=1 && ADD_KEY_VALUE()!=1 )\
+		 	&& run_t.set_temperature_flag==0 && run_t.set_temperature_special_value==0 \
+		 	&& run_t.set_timer_special_value==0 && run_t.temp_set_timer_timing_flag==0){
+            TimeColon_Smg_Blink_Fun();
+
+	  }
+
+}
+}
