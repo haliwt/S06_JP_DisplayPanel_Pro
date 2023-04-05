@@ -162,6 +162,7 @@ typedef struct __RUN{
    uint8_t hours_two_bit;
    uint8_t minutes_one_bit;
    uint8_t set_temperature_special_value;
+   uint8_t set_timer_special_value;
    
 
 	int8_t dispTime_hours;
