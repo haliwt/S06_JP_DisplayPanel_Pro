@@ -469,10 +469,10 @@ void SetTimer_Temperature_Number_Blink(void)
             
 		 	
 		    SendData_Remaining_Time(run_t.send_app_timer_minutes_one, run_t.send_app_timer_minutes_two);
-			run_t.hours_two_bit = n;
+			run_t.hours_two_bit = run_t.hours_two_bit=run_t.dispTime_hours  %10;
 			run_t.minutes_one_bit = p;
 		
-			TM1639_Write_4Bit_Time(m,	run_t.hours_two_bit,run_t.minutes_one_bit,q,0) ;
+			TM1639_Write_4Bit_Time(m,run_t.hours_two_bit,run_t.minutes_one_bit,q,0) ;
 		}
 	   }
 	  /***********************************************************************************/
