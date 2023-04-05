@@ -8,7 +8,7 @@
 #include "display.h"
 
 
-uint8_t send_works_times_flag;
+
 
 void (*single_ai_fun)(uint8_t cmd);
 void (*single_add_fun)(void);
@@ -98,18 +98,22 @@ static void Timing_Handler(void)
 			run_t.gTimes_time_seconds=0;
 			run_t.works_dispTime_minutes++; //1 minute 
 			run_t.send_app_wokes_total_minutes_data++;
+			run_t.send_app_wokes_minutes_two++;
 			if(run_t.works_dispTime_minutes> 59){ //1 hour
-			run_t.works_dispTime_minutes=0;
-			run_t.works_dispTime_hours++;
+				run_t.works_dispTime_minutes=0;
+				run_t.works_dispTime_hours++;
 			if(run_t.works_dispTime_hours > 24){
 			run_t.works_dispTime_hours =0;
 			}
 		}
 		
-		run_t.send_app_wokes_minutes_one=run_t.send_app_wokes_total_minutes_data >> 8;
-        run_t.send_app_wokes_minutes_two =run_t.send_app_wokes_total_minutes_data & 0x0ff;
+		if(run_t.send_app_wokes_total_minutes_data >255){
+               run_t.send_app_wokes_minutes_one++;
+               run_t.send_app_wokes_minutes_two=0;
+               run_t.send_app_wokes_total_minutes_data=0;
+           }
 		 SendData_Works_Time(run_t.send_app_wokes_minutes_one ,run_t.send_app_wokes_minutes_two);
-		
+		 HAL_Delay(100);
 		 Display_GMT(run_t.works_dispTime_hours,run_t.works_dispTime_minutes);
 			
 	   }
@@ -124,7 +128,7 @@ static void Timing_Handler(void)
     
     if(run_t.gTimes_time_seconds > 59 && run_t.timer_timing_define_flag ==timing_success ){
             run_t.gTimes_time_seconds=0;
-            send_works_times_flag=1;
+            run_t.send_works_times_to_app=1;
 			run_t.works_dispTime_minutes++; //1 minute 
 			run_t.send_app_wokes_total_minutes_data++;
             run_t.send_app_wokes_minutes_two++;
@@ -135,7 +139,7 @@ static void Timing_Handler(void)
 			run_t.works_dispTime_hours =0;
 			}
         
-            if(run_t.works_dispTime_minutes >255){
+            if(run_t.send_app_wokes_total_minutes_data >255){
                run_t.send_app_wokes_minutes_one++;
                run_t.send_app_wokes_minutes_two=0;
                run_t.send_app_wokes_total_minutes_data=0;
@@ -146,8 +150,8 @@ static void Timing_Handler(void)
             }
 	  
         }
-     while(send_works_times_flag==1){
-            send_works_times_flag=0;
+     while(run_t.send_works_times_to_app==1){
+            run_t.send_works_times_to_app=0;
         SendData_Works_Time(run_t.send_app_wokes_minutes_one ,run_t.send_app_wokes_minutes_two);
         }
 
@@ -227,35 +231,8 @@ void RunPocess_Command_Handler(void)
 
 	  break;
 
-
-
-
-
-   }
-
-
-//    if(run_t.gPower_On ==1 && run_t.decodeFlag ==0){
-   	
-//        RunLocal_Smg_Process();
-// 	   Timing_Handler();
-//        SetTemperature_Function();  
-//    	   SetTimer_Temperature_Number_Blink();
-
-//        Display_TimeColon_Blink_Fun();
-
-
-//    }
-   
-//   //POWER OFF 
-//   if(run_t.gPower_On ==0 || run_t.gPower_On == 0xff){
-// 	 	run_t.gPower_On =0xff;
-// 	      Breath_Led();
-// 		  Power_Off();
-		 
-//      }
- 
-
- }
+  }
+}
 /*******************************************************
 	*
 	*Function Name: static void RunLocal_Smg_Process(void)

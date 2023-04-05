@@ -84,7 +84,8 @@ void Receive_MainBoard_Data_Handler(uint8_t cmd)
 
 	 case WIFI_CMD:
 	 	 
-	 	 Receive_Wifi_Cmd(run_t.wifiCmd[0]);
+	    Receive_Wifi_Cmd(run_t.wifiCmd[0]);
+	  run_t.wifi_orderByMainboard_label=0xff;
 	 break;
 
 	 case WIFI_TEMP: //set temperature value
@@ -259,7 +260,7 @@ static void Receive_Wifi_Cmd(uint8_t cmd)
 void Power_On_Fun(void)
 {
                 
-   static uint8_t hour_decade,hour_unit;
+   static uint8_t hour_decade,hour_unit,minutes_one,minutes_two;
 
 	run_t.gPower_On=1;
     run_t.power_key =1;
@@ -287,22 +288,30 @@ void Power_On_Fun(void)
 		 SendData_Remaining_Time(run_t.send_app_timer_minutes_one, run_t.send_app_timer_minutes_two);
       }
       else{ //don't has timer timing 
-	     run_t.dispTime_hours =0;
-		 run_t.dispTime_minutes=0;
-	     run_t.works_dispTime_hours =0;
-		 run_t.works_dispTime_minutes =0 ;
-		 run_t.send_app_wokes_total_minutes_data=0;
+//	     run_t.dispTime_hours =0;
+//		 run_t.dispTime_minutes=0;
+//	     run_t.works_dispTime_hours =0;
+//		 run_t.works_dispTime_minutes =0 ;
+//		 run_t.send_app_wokes_total_minutes_data=0;
+         run_t.dispTime_hours = run_t.works_dispTime_hours;
+		 run_t.dispTime_minutes = run_t.works_dispTime_minutes;
 		 SendData_Works_Time(run_t.send_app_wokes_minutes_one, run_t.send_app_wokes_minutes_two);
-
+		 HAL_Delay(200);
+         
         }
 
 	  hour_decade=(run_t.dispTime_hours ) /10;
 	  hour_unit=(run_t.dispTime_hours ) %10;
+    
+	  minutes_one = run_t.dispTime_minutes /10;
+      minutes_two = run_t.dispTime_minutes %10;
+	  
+	  
 	  SMG_POWER_ON(); //WT.EDIT 2023.03.02
 
 	  run_t.hours_two_bit = hour_unit;
-	  run_t.minutes_one_bit = 0;
-	 TM1639_Write_4Bit_Time(hour_decade,run_t.hours_two_bit,run_t.minutes_one_bit,0x0,0);
+	  run_t.minutes_one_bit =  minutes_one;
+	 TM1639_Write_4Bit_Time(hour_decade,run_t.hours_two_bit,run_t.minutes_one_bit,minutes_two,0);
 }
 
 /************************************************************************
