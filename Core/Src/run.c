@@ -288,11 +288,7 @@ void Power_On_Fun(void)
 		 SendData_Remaining_Time(run_t.send_app_timer_minutes_one, run_t.send_app_timer_minutes_two);
       }
       else{ //don't has timer timing 
-//	     run_t.dispTime_hours =0;
-//		 run_t.dispTime_minutes=0;
-//	     run_t.works_dispTime_hours =0;
-//		 run_t.works_dispTime_minutes =0 ;
-//		 run_t.send_app_wokes_total_minutes_data=0;
+
          run_t.dispTime_hours = run_t.works_dispTime_hours;
 		 run_t.dispTime_minutes = run_t.works_dispTime_minutes;
 		 SendData_Works_Time(run_t.send_app_wokes_minutes_one, run_t.send_app_wokes_minutes_two);
