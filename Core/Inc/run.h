@@ -164,10 +164,12 @@ typedef struct __RUN{
    uint8_t set_temperature_special_value;
    uint8_t set_timer_special_value;
    
+ 
 
 	int8_t dispTime_hours;
 	int8_t dispTime_minutes;
 	int8_t dispTime_seconds;
+	
    uint16_t send_app_timer_total_minutes_data;
    uint16_t send_app_wokes_total_minutes_data;
 

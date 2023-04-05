@@ -18,6 +18,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
     run_t.gTimer_smg_timing++;
 	run_t.gTimer_set_temp_times++;
 	run_t.gTimer_led_500ms++;
+
    
 	
     if(tm0>99){ //100 *10ms = 1000ms = 1s

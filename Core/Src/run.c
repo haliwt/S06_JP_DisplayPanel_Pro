@@ -26,8 +26,11 @@ static void Receive_Wifi_Cmd(uint8_t cmd);
 *********************************************************************************************************/
 void Decode_Handler(void)
 {
-   
+   if(run_t.decodeFlag ==1){
+   run_t.decodeFlag =0;
    Receive_MainBoard_Data_Handler(run_t.wifi_orderByMainboard_label);
+
+   }
   
 }
 

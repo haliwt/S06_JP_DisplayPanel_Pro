@@ -48,7 +48,7 @@ static void Timing_Handler(void)
 		     run_t.dispTime_hours -- ;
 			 run_t.dispTime_minutes =59;
 
-			if(run_t.dispTime_hours == 0 ){
+			if(run_t.dispTime_hours <  0 || run_t.send_app_timer_total_minutes_data==0 ){
 
 	            run_t.dispTime_hours=0;
 				
@@ -182,7 +182,7 @@ static void DisplayPanel_DHT11_Value(void)
 ******************************************************************************/
 void RunPocess_Command_Handler(void)
 {
-	
+	static uint8_t power_Off_flag;
    switch(run_t.gRunCommand_label){
 
       case RUN_POWER_ON:
@@ -191,13 +191,14 @@ void RunPocess_Command_Handler(void)
 	  break;
 
 	  case RUN_POWER_OFF:
+           power_Off_flag=0;
            Power_Off_Fun();
 		   run_t.gRunCommand_label =POWER_OFF_PROCESS;
 	  break;
 
 	  case UPDATE_DATA:
-	   if(run_t.gPower_On ==1 && run_t.decodeFlag ==0){
-   	
+	   if(run_t.decodeFlag ==0){ //10 *10 =200ms
+
        RunLocal_Smg_Process();
 	   Timing_Handler();
        SetTemperature_Function();  
@@ -215,7 +216,12 @@ void RunPocess_Command_Handler(void)
 	   if(run_t.gPower_On ==0 || run_t.gPower_On == 0xff){
 	 	run_t.gPower_On =0xff;
 	      Breath_Led();
-		  Power_Off();
+          if(power_Off_flag ==0){
+             power_Off_flag ++; 
+		    Power_Off();
+              
+             
+          }
 		 
       }
 

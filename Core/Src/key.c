@@ -395,9 +395,12 @@ void SetTimer_Temperature_Number_Blink(void)
 			run_t.timer_timing_define_flag =timing_fail;
 			run_t.send_app_timer_minutes_one = 0;
 		    run_t.send_app_timer_minutes_two = 0;
+			
+			SendData_Time_Data(run_t.dispTime_hours);
+			HAL_Delay(200);
             
-		 	SendData_Remaining_Time(run_t.send_app_timer_minutes_one, run_t.send_app_timer_minutes_two);
-			HAL_Delay(100);
+		 	//SendData_Remaining_Time(run_t.send_app_timer_minutes_one, run_t.send_app_timer_minutes_two);
+			//HAL_Delay(200);
 			
 					
 			SendData_Works_Time(run_t.send_app_wokes_minutes_one ,run_t.send_app_wokes_minutes_two);
@@ -449,13 +452,13 @@ void SetTimer_Temperature_Number_Blink(void)
 			run_t.temp_set_timer_timing_flag=0;
 			run_t.timer_timing_define_flag = timing_success;
 			
-			run_t.define_initialization_timer_time_hours = run_t.dispTime_hours ;//* 60 ;//minutes
+			run_t.define_initialization_timer_time_hours = run_t.dispTime_hours ;//* 60 
 			run_t.send_app_timer_total_minutes_data = run_t.define_initialization_timer_time_hours*60;
 			
 			run_t.gTimer_Counter=0;
 			
 			SendData_Time_Data(run_t.dispTime_hours);
-			HAL_Delay(100);
+			HAL_Delay(200);
 			run_t.send_app_timer_minutes_one = run_t.send_app_timer_total_minutes_data >> 8;
 		    run_t.send_app_timer_minutes_two = run_t.send_app_timer_total_minutes_data & 0x00ff;
             

@@ -109,6 +109,8 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 	 //S06 -touch key 
+
+	 
       if(run_t.power_times == 0){
           run_t.power_times=1;
 		    HAL_Delay(500);
@@ -118,13 +120,9 @@ int main(void)
 	  else{
 	     keyvalue = KEY_Scan();//Scan_KeyMode();
 		 Process_Key_Handler(keyvalue);
-	  
-		 if(run_t.decodeFlag ==1){
-			run_t.decodeFlag =0;
-			Decode_Handler();
-		 }
-		
-		  RunPocess_Command_Handler();
+	     Decode_Handler();
+		 
+		 RunPocess_Command_Handler();
 		 
     
       }
