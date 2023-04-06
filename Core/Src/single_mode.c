@@ -93,7 +93,7 @@ static void Timing_Handler(void)
 	break;
 
 	case  timing_fail:
-		if(run_t.gTimes_time_seconds > 59){
+		if(run_t.gTimes_time_seconds > 59 && run_t.temp_set_timer_timing_flag ==0){
 
 			run_t.gTimes_time_seconds=0;
 			run_t.works_dispTime_minutes++; //1 minute 
@@ -126,7 +126,7 @@ static void Timing_Handler(void)
 	}
     
     
-    if(run_t.gTimes_time_seconds > 59 && run_t.timer_timing_define_flag ==timing_success ){
+    if(run_t.gTimes_time_seconds > 59 && run_t.timer_timing_define_flag ==timing_success && run_t.temp_set_timer_timing_flag ==0){
             run_t.gTimes_time_seconds=0;
             run_t.send_works_times_to_app=1;
 			run_t.works_dispTime_minutes++; //1 minute 
@@ -218,7 +218,7 @@ void RunPocess_Command_Handler(void)
 	  case POWER_OFF_PROCESS:
 
 	   if(run_t.gPower_On ==0 || run_t.gPower_On == 0xff){
-	 	run_t.gPower_On =0xff;
+	 	  run_t.gPower_On =0xff;
 	      Breath_Led();
           if(power_Off_flag ==0){
              power_Off_flag ++; 

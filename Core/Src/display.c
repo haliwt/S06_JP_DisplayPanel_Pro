@@ -98,16 +98,32 @@ static void TimeColon_Smg_Blink_Fun(void)
 
 void Display_TimeColon_Blink_Fun(void)
 {
+    static uint8_t  continue_flag=0, continue_2_flag=0;
 
 	if(FAN_KEY_VALUE()  !=1 && PLASMA_KEY_VALUE()  !=1 && DRY_KEY_VALUE()  !=1 && WIFI_KEY_VALUE()!=1){
-		if(POWER_KEY_VALUE() !=1 && MODEL_KEY_VALUE()!=1 && DEC_KEY_VALUE() !=1 && ADD_KEY_VALUE()!=1\
-			&& run_t.set_temperature_flag==0 && run_t.set_temperature_special_value==0\
-				&& run_t.set_timer_special_value==0 && run_t.temp_set_timer_timing_flag==0){	
-				 	
-		            TimeColon_Smg_Blink_Fun();
 
-			  }
+          continue_flag = 1;
+	}
+	
+
+	
+	if(POWER_KEY_VALUE() !=1 && MODEL_KEY_VALUE()!=1 && DEC_KEY_VALUE() !=1 && ADD_KEY_VALUE()!=1){
+
+	                 continue_2_flag = 1;
 
 	}
+	
+
+   if(run_t.set_temperature_flag==0 && run_t.set_temperature_special_value==0 && run_t.set_timer_special_value==0 && run_t.temp_set_timer_timing_flag==0\
+   	    && continue_flag==1 && continue_2_flag==1){	
+				 	
+                      continue_2_flag = 0;
+			         continue_flag=0;
+					TimeColon_Smg_Blink_Fun();
+					
+
+	}
+
 }
+
 
