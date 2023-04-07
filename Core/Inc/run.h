@@ -15,7 +15,9 @@ typedef enum WIFI_STATE_T{
     WIFI_PTC_OFF = 0x12,
     WIFI_SONIC_ON = 0x01,       //ultrasonic
     WIFI_SONIC_OFF = 0x11,
-    WIFI_TEMPERATURE = 0xA0
+    WIFI_TEMPERATURE = 0xA0,
+    WIFI_POWER_ON_NORMAL= 0xB0
+    
 
 
 }wifi_state_t;
@@ -24,7 +26,8 @@ typedef enum WIFI_STATE_T{
 typedef enum TIMING_T{
 
    timing_fail,
-   timing_success 
+   timing_success ,
+   timing_power_off
 }timing_t;
 
 
@@ -37,7 +40,8 @@ typedef enum _Signal{
 	WIFI_TEMP,
 	WIFI_CMD,
 	WIFI_BEIJING_TIME,
-	WIFI_SET_TIMING
+	WIFI_SET_TIMING,
+	WIFI_REF_DATA
 }signal_t;
 
 typedef enum _WIFI_POWER_STATE_{
@@ -128,13 +132,17 @@ typedef struct __RUN{
    uint8_t gTimer_minute_Counter;
    uint8_t wifi_led_fast_blink_flag;
    uint8_t timer_timing_define_flag;
- 
+   uint8_t wifi_power_on_flag;
    uint8_t wifi_orderByMainboard_label;
+   uint8_t wifi_normal_power_on_flag;
+   uint8_t first_hour_to_zero_flag;
+   uint8_t timer_counter_to_zero ;
  
-  
+   /***/
    uint8_t 	gTimer_numbers_one_two_blink;
    uint8_t gTimer_temp_delay;
    uint8_t wifi_set_temperature;
+   uint8_t gTimer_time_colon;
  
    uint8_t wifi_link_cloud_flag;
    uint8_t gTimer_wifi_connect_counter;
@@ -164,6 +172,7 @@ typedef struct __RUN{
    uint8_t set_temperature_special_value;
    uint8_t set_timer_special_value;
    uint8_t send_works_times_to_app;
+   uint8_t gTimer_smg_display;
    
  
 

@@ -4,7 +4,7 @@
 #include "smg.h"
 #include "cmd_link.h"
 #include "display.h"
-
+#include "single_mode.h"
 
 
 
@@ -106,7 +106,7 @@ uint8_t KEY_Scan(void)
 			}
 			else if(key_t.read == _KEY_ALL_OFF)  // loose hand 
 			{
-					if(++key_t.off_time>1) //20//30 don't holding key dithering
+					if(++key_t.off_time>4) //20//30 don't holding key dithering
 					{
 						key_t.value = key_t.buffer^_KEY_ALL_OFF; // key.value = 0x1E ^ 0x1f = 0x01
 						
@@ -129,7 +129,7 @@ uint8_t KEY_Scan(void)
 		{
 			if(key_t.read == _KEY_ALL_OFF)
 			{
-				if(++key_t.off_time>0)//10//50 //100
+				if(++key_t.off_time>2)//10//50 //100
 				{
 					key_t.state   = start;
                   
@@ -167,7 +167,8 @@ void Process_Key_Handler(uint8_t keylabel)
       case POWER_KEY_ID:
 	 
            if(run_t.gPower_On ==0 || run_t.gPower_On == 0xff){
- 			run_t.gTimer_set_temp_times=0; //conflict with send temperatur value 
+ 			run_t.gTimer_set_temp_times=0; //conflict with send temperatur value
+ 			run_t.wifi_power_on_flag = RUN_NULL ; //divisive app power on and key power on
 		 	  SendData_PowerOff(1);
               HAL_Delay(200);
 		      run_t.gRunCommand_label = POWER_ON;
@@ -180,10 +181,7 @@ void Process_Key_Handler(uint8_t keylabel)
             HAL_Delay(200);
 		    run_t.gRunCommand_label = POWER_OFF;
 	
-		   
-
-
-		 }
+		   }
 	  	 
 	   keylabel= 0xff;
 
@@ -241,9 +239,9 @@ void Process_Key_Handler(uint8_t keylabel)
 					
 					 run_t.gTimer_key_timing =0;
 					 run_t.dispTime_hours ++;
-		                if(run_t.dispTime_hours > 24){
-							 run_t.dispTime_hours=0;
-						}
+		             if(run_t.dispTime_hours > 24){
+							run_t.dispTime_hours=0;
+					}
 						
 							
 					m = run_t.dispTime_hours /10 %10;

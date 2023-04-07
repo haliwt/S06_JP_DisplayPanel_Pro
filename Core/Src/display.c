@@ -99,6 +99,10 @@ static void TimeColon_Smg_Blink_Fun(void)
 void Display_TimeColon_Blink_Fun(void)
 {
     static uint8_t  continue_flag=0, continue_2_flag=0;
+ 
+   if(run_t.gTimer_time_colon >20){ //10*20ms=300ms
+
+	   run_t.gTimer_time_colon =0;
 
 	if(FAN_KEY_VALUE()  !=1 && PLASMA_KEY_VALUE()  !=1 && DRY_KEY_VALUE()  !=1 && WIFI_KEY_VALUE()!=1){
 
@@ -122,6 +126,7 @@ void Display_TimeColon_Blink_Fun(void)
 					TimeColon_Smg_Blink_Fun();
 					
 
+	}
 	}
 
 }

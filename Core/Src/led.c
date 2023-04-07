@@ -187,6 +187,7 @@ void Panel_Led_OnOff_Function(void)
 	 else{
          ULTRASONIC_LED_OnOff(0);
 	 }
+	 
 
 	 if(run_t.time_led_flag ==1){
 	    TIME_LED_OnOff(1);
@@ -208,44 +209,77 @@ void Panel_Led_OnOff_Function(void)
 *
 *
 **************************************************************/
+//static void Power_BreathOnOff(void)
+//{
+//    
+//    
+//     static uint32_t k;
+//   
+//    k++;
+//	
+//
+//	if(k<40001){
+//
+//		LED_POWER_ON();
+//		LED_POWER_OFF();
+//
+//    }
+//          
+//   if(k>40000 && k <80002){//if(k>40000 && k <80000){
+//
+//	     LED_POWER_OFF();
+//		
+//
+//	}
+//	if(k>80000 && k< 160002){
+//
+//	    LED_POWER_TOGGLE();
+//		LED_POWER_OFF();
+//	 }
+//
+//	if(k>160000 && k< 320001){
+//		LED_POWER_OFF();
+//
+//        
+//	}
+//
+//	if(k > 320000){
+//	    k=0;
+//
+//
+//	}
+//
+//}
+
 static void Power_BreathOnOff(void)
 {
-    
     
      static uint32_t k;
    
     k++;
-	
 
-	if(k<80001){
+	if(k<40000){
 
-		LED_POWER_ON();
-		LED_POWER_OFF();
+	LED_POWER_ON();
 
     }
           
-   if(k>40000 && k <320000){//if(k>40000 && k <80000){
 
-	     LED_POWER_OFF();
-		
+	if(k>40000 && k <80000){
+
+	    LED_POWER_OFF();
 
 	}
-	if(k>80000 && k< 320000){
+	if(k>80000 && k< 120000){
 
-	    LED_POWER_TOGGLE();
-		LED_POWER_OFF();
-	 }
+	  LED_POWER_TOGGLE();
 
-	if(k>220000 && k< 460001){
-		LED_POWER_OFF();
 
-        
 	}
 
-	if(k > 460000){
-	    k=0;
+	if(k>120000){
 
-
+        k=0;
 	}
 
 }

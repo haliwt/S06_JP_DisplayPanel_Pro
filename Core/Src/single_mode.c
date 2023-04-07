@@ -36,7 +36,7 @@ static void SetTemperature_Function(void);
 static void Timing_Handler(void)
 {
 
- 
+  
 	switch(run_t.timer_timing_define_flag){
 
 	case timing_success:
@@ -44,47 +44,39 @@ static void Timing_Handler(void)
 	    run_t.gTimer_Counter =0;
 		run_t.dispTime_minutes -- ;
 		run_t.send_app_timer_total_minutes_data--;
-	    if(run_t.dispTime_minutes < 0){
-		     run_t.dispTime_hours -- ;
-			 run_t.dispTime_minutes =59;
+	    if(run_t.dispTime_minutes <  0 ){
+			 
+		   run_t.dispTime_hours -- ;
+		   run_t.dispTime_minutes =59;
+         }
 
-			if(run_t.dispTime_hours <  0 || run_t.send_app_timer_total_minutes_data==0 ){
+		
+		
+		 if(run_t.send_app_timer_total_minutes_data ==0){
+		 
+				run_t.timer_counter_to_zero =1;
 
-	            run_t.dispTime_hours=0;
+                run_t.gTimer_Counter= 60; //
+				run_t.dispTime_hours=0;
 				
 				run_t.dispTime_minutes=0;
-				run_t.send_app_timer_total_minutes_data=0;
-				run_t.gTimer_Cmd =0;	 //shut off timer of times
 
-			    run_t.timer_timing_define_flag =  timing_fail;
-				
+			    run_t.timer_timing_define_flag =  timing_power_off;
 
-			    
-			    SendData_PowerOff(0);
-				HAL_Delay(100);
 				run_t.gTimer_set_temp_times=0; //conflict with send temperatur value 
 				run_t.wifi_led_fast_blink_flag=0;
 	
 				run_t.gWifi =0;
-				//run_t.temperature_set_flag =0;
-		
-				Power_Off_Fun();
-				
-				
-		     }
+	
+			}
 
-	     }
-		   
-
+           run_t.send_app_timer_minutes_one = run_t.send_app_timer_total_minutes_data >> 8;
+		   run_t.send_app_timer_minutes_two = run_t.send_app_timer_total_minutes_data & 0x00ff;
 		 
-            run_t.send_app_timer_minutes_one = run_t.send_app_timer_total_minutes_data >> 8;
-		    run_t.send_app_timer_minutes_two = run_t.send_app_timer_total_minutes_data & 0x00ff;
-            
-		 	
-		    SendData_Remaining_Time(run_t.send_app_timer_minutes_one, run_t.send_app_timer_minutes_two);
-			
-		    Display_GMT(run_t.dispTime_hours,run_t.dispTime_minutes);
-            HAL_Delay(200);
+		   SendData_Remaining_Time(run_t.send_app_timer_minutes_one, run_t.send_app_timer_minutes_two);
+	   
+		   	Display_GMT(run_t.dispTime_hours,run_t.dispTime_minutes);
+            HAL_Delay(5);
 		
 		
 	   }
@@ -122,6 +114,21 @@ static void Timing_Handler(void)
 
 	
     break;
+
+	case timing_power_off:
+
+		HAL_Delay(100);
+		SendData_PowerOff(0);
+		
+		Power_Off_Fun();
+	    HAL_Delay(100);
+	
+
+	
+		run_t.gRunCommand_label = POWER_OFF_PROCESS; //POWER_OFF_PROCESS ;
+	   
+
+	break;
 
 	}
     
@@ -186,24 +193,27 @@ static void DisplayPanel_DHT11_Value(void)
 ******************************************************************************/
 void RunPocess_Command_Handler(void)
 {
-	static uint8_t power_Off_flag;
+
    switch(run_t.gRunCommand_label){
 
       case RUN_POWER_ON:
-            Power_On_Fun();
+           
+		    Power_On_Fun();
 			run_t.gRunCommand_label= UPDATE_DATA;
 	  break;
 
 	  case RUN_POWER_OFF:
-           power_Off_flag=0;
            Power_Off_Fun();
+	      
 		   run_t.gRunCommand_label =POWER_OFF_PROCESS;
 	  break;
 
 	  case UPDATE_DATA:
-	   if(run_t.decodeFlag ==0){ //10 *10 =200ms
-
-       RunLocal_Smg_Process();
+	   
+       if(run_t.gTimer_smg_display > 20){
+	   	 run_t.gTimer_smg_display=0;
+         RunLocal_Smg_Process();
+       }
 	   Timing_Handler();
        SetTemperature_Function();  
    	   SetTimer_Temperature_Number_Blink();
@@ -211,7 +221,8 @@ void RunPocess_Command_Handler(void)
        Display_TimeColon_Blink_Fun();
 
 
-     }
+     	
+	    run_t.gRunCommand_label= UPDATE_DATA; //bug 
 
 	  break;
 
@@ -220,14 +231,8 @@ void RunPocess_Command_Handler(void)
 	   if(run_t.gPower_On ==0 || run_t.gPower_On == 0xff){
 	 	  run_t.gPower_On =0xff;
 	      Breath_Led();
-          if(power_Off_flag ==0){
-             power_Off_flag ++; 
-		    Power_Off();
-              
-             
-          }
-		 
-      }
+          Power_Off();
+       }
 
 	  break;
 
@@ -244,6 +249,7 @@ void RunPocess_Command_Handler(void)
 static void RunLocal_Smg_Process(void)
 {
 
+     
 	 Panel_Led_OnOff_Function() ;//Lcd_PowerOn_Fun();
 	
 	 DisplayPanel_DHT11_Value();

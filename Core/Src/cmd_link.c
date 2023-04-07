@@ -223,7 +223,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 			break;
 		case 2://#2
 			if(inputBuf[0]=='D' || inputBuf[0]=='W'   || inputBuf[0]=='P' ||inputBuf[0] =='C' || inputBuf[0] == 'B' \
-			  || inputBuf[0]=='T') //'D'->data , 'W' ->wifi
+			  || inputBuf[0]=='T' || inputBuf[0]=='R') //'D'->data , 'W' ->wifi
 			{
 				
 				if(inputBuf[0]=='D') run_t.wifi_orderByMainboard_label=PANEL_DATA; //receive data is single data
@@ -232,6 +232,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 				else if(inputBuf[0]=='C') run_t.wifi_orderByMainboard_label = WIFI_CMD; //command 
 				else if(inputBuf[0]=='B') run_t.wifi_orderByMainboard_label = WIFI_BEIJING_TIME;
 				else if(inputBuf[0]=='T') run_t.wifi_orderByMainboard_label = WIFI_SET_TIMING;
+				else if(inputBuf[0]=='R') run_t.wifi_orderByMainboard_label = WIFI_REF_DATA;
 			    state=3;
 			}
 			else
@@ -284,6 +285,15 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
  
              break;
 
+			 case WIFI_REF_DATA:
+
+			    run_t.gDry = inputBuf[0];
+				state = 4; 
+				 
+			break;
+			 
+			 
+
          	}
 
             
@@ -301,24 +311,41 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 		     state=0;
 		     run_t.decodeFlag=1;
           }
+		 else if(run_t.wifi_orderByMainboard_label ==WIFI_REF_DATA ){
+
+            
+		     run_t.gPlasma = inputBuf[0];
+			 state = 5; 
+
+
+		 }
 
 		 break;
            
         case 5: 
-			if(run_t.wifi_orderByMainboard_label == WIFI_BEIJING_TIME){
+		if(run_t.wifi_orderByMainboard_label == WIFI_BEIJING_TIME){
 				 run_t.dispTime_seconds = inputBuf[0];
 				 run_t.send_app_timer_total_minutes_data = run_t.dispTime_seconds* 60;
 				 run_t.decodeFlag=1;
 			    state=0;
 		 }
+		 else if(run_t.wifi_orderByMainboard_label ==WIFI_REF_DATA ){
+
+            
+		     run_t.gUltrasonic = inputBuf[0];
+			  state=0;
+             run_t.decodeFlag=1; 
+
+
+		 }
+		 
             
         break;
 
 		
 		
 		default:
-			state=0;
-			run_t.decodeFlag=0;  //
+			
 		break;
 
 		}

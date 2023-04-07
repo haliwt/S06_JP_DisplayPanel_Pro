@@ -54,7 +54,7 @@ void Power_Off(void)
 			run_t.gPlasma=0;
 			run_t.gDry=0;
 			run_t.gUltrasonic =0;
-			run_t.gTimer_Cmd=0; //timer of command "1"->timer is start
+			
 
 				
 		}
@@ -92,12 +92,12 @@ void Receive_MainBoard_Data_Handler(uint8_t cmd)
 	       if(run_t.gPower_On ==1){
 		   	   run_t.set_temperature_flag=1;
            run_t.gTimer_key_temp_timing=0;
-        		m= run_t.wifi_set_temperature /10 ;
-			  		n= run_t.wifi_set_temperature %10;
+        	 m= run_t.wifi_set_temperature /10 ;
+			 n= run_t.wifi_set_temperature %10;
 		   
 	        TM1639_Write_2bit_SetUp_TempData(m,n,0);
 			}
-
+     run_t.wifi_orderByMainboard_label=0xff;
 	 break;
 
 	 case PANEL_DATA:
@@ -112,8 +112,9 @@ void Receive_MainBoard_Data_Handler(uint8_t cmd)
          //temperature 
           TM1639_Write_2bit_TempData(temp1,temp2);
 	      TM1639_Write_2bit_HumData(hum1,hum2);
-	
+	     HAL_Delay(2);
         }
+	  run_t.wifi_orderByMainboard_label=0xff;
 
       break;
 
@@ -129,10 +130,11 @@ void Receive_MainBoard_Data_Handler(uint8_t cmd)
 			run_t.hours_two_bit = n;
             run_t.minutes_one_bit = p;
 	       TM1639_Write_4Bit_Time(m,run_t.hours_two_bit,run_t.minutes_one_bit,q,0) ; // timer   mode  "H0: xx"
-	      }
+			HAL_Delay(2);
+		 }
          
 		    
-        
+        run_t.wifi_orderByMainboard_label=0xff;
  
       break;
 
@@ -154,7 +156,8 @@ void Receive_MainBoard_Data_Handler(uint8_t cmd)
 			 run_t.minutes_one_bit = 0;
 			 
               TM1639_Write_4Bit_Time(m,run_t.hours_two_bit,run_t.minutes_one_bit,0,0) ; // timer   mode  "H0: xx"
-      
+             HAL_Delay(2);
+	      run_t.wifi_orderByMainboard_label=0xff;
 
       break;
 
@@ -175,22 +178,30 @@ static void Receive_Wifi_Cmd(uint8_t cmd)
 	switch(cmd){
 
 
+
+          case WIFI_POWER_ON_NORMAL:
+
+                run_t.wifi_power_on_flag = RUN_WIFI_NORMAL_POWER_ON;
+				run_t.wifi_send_buzzer_sound = WIFI_POWER_ON_ITEM;
+		        run_t.gRunCommand_label = RUN_POWER_ON;
+			break;
+
 		   case WIFI_POWER_ON: //turn on 
 		 	
-            //  single_buzzer_fun();
-              run_t.wifi_send_buzzer_sound = WIFI_POWER_ON_ITEM;
-              //Power_On_Fun();
-			  run_t.gRunCommand_label = RUN_POWER_ON;
-			  cmd=0xff;
+				//  single_buzzer_fun();
+				run_t.wifi_send_buzzer_sound = WIFI_POWER_ON_ITEM;
+                run_t.wifi_power_on_flag = RUN_POWER_ON;
+				run_t.gRunCommand_label = RUN_POWER_ON;
+				cmd=0xff;
 
 	         break;
 
+			 
+			 
+
 			 case WIFI_POWER_OFF: //turn off 
                 
-			    //single_buzzer_fun();
 			   run_t.wifi_send_buzzer_sound = WIFI_POWER_OFF_ITEM;
-				
-			   // Power_Off_Fun();
 			   run_t.gRunCommand_label = RUN_POWER_OFF;
 				
               cmd=0xff;
@@ -199,7 +210,7 @@ static void Receive_Wifi_Cmd(uint8_t cmd)
 
 			 case WIFI_KILL_ON: //kill turn on plasma
 			  if(run_t.gPower_On==1){
-               run_t.gPlasma = 1;
+               	run_t.gPlasma = 1;
 			        
              } 
 			 break;
@@ -248,6 +259,7 @@ static void Receive_Wifi_Cmd(uint8_t cmd)
 			 break;
 
 
+
 	         default :
                   cmd =0;
 			 break;
@@ -262,13 +274,16 @@ void Power_On_Fun(void)
                 
    static uint8_t hour_decade,hour_unit,minutes_one,minutes_two;
 
-	run_t.gPower_On=1;
-    run_t.power_key =1;
-	run_t.gPlasma=1;
-	run_t.gDry =1;
-	run_t.gBug =1;
-   	run_t.time_led_flag=1;
-	run_t.gUltrasonic =1;
+   if(run_t.wifi_power_on_flag !=RUN_POWER_ON){
+	
+		run_t.gPlasma=1;
+		run_t.gDry =1;
+		run_t.gBug =1;
+	   	run_t.gUltrasonic =1;
+    }
+    run_t.gPower_On=1;
+	run_t.power_key =1;
+    run_t.time_led_flag=1;
 	
 	//run_t.temperature_set_flag = 0; //WT.EDIT 2023.01.31
    
@@ -289,10 +304,31 @@ void Power_On_Fun(void)
       }
       else{ //don't has timer timing 
 
-         run_t.dispTime_hours = run_t.works_dispTime_hours;
-		 run_t.dispTime_minutes = run_t.works_dispTime_minutes;
-		 SendData_Works_Time(run_t.send_app_wokes_minutes_one, run_t.send_app_wokes_minutes_two);
-		 HAL_Delay(200);
+		 if(run_t.timer_counter_to_zero ==1){
+
+		   run_t.timer_counter_to_zero =0;
+		   run_t.dispTime_hours=0;
+		   run_t.dispTime_minutes =0;
+		   run_t.send_app_timer_total_minutes_data=0;
+		   run_t.timer_timing_define_flag=timing_fail;
+		   run_t.dispTime_hours = 0;
+		   run_t.dispTime_minutes = 0;
+		   run_t.send_app_wokes_total_minutes_data =0;
+		   run_t.send_app_wokes_minutes_one=0;
+		   run_t.send_app_wokes_minutes_two=0;
+		   SendData_Remaining_Time(0,0);
+
+
+		 }
+		 else{
+	         run_t.dispTime_hours = 0;
+			 run_t.dispTime_minutes = 0;
+		     run_t.send_app_wokes_total_minutes_data =0;
+			 run_t.send_app_wokes_minutes_one=0;
+			 run_t.send_app_wokes_minutes_two=0;
+			 SendData_Works_Time(run_t.send_app_wokes_minutes_one, run_t.send_app_wokes_minutes_two);
+			 HAL_Delay(200);
+		 }
          
         }
 
@@ -334,6 +370,7 @@ void Power_Off_Fun(void)
 	    run_t.gPower_On=0;
 		
 		power_on_off_flag=1;
+		
         Power_Off_Led_Off();
 
   
