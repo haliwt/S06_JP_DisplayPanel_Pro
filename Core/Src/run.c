@@ -316,6 +316,8 @@ void Power_On_Fun(void)
 		   run_t.send_app_wokes_total_minutes_data =0;
 		   run_t.send_app_wokes_minutes_one=0;
 		   run_t.send_app_wokes_minutes_two=0;
+		   run_t.works_dispTime_hours=0;
+		   run_t.works_dispTime_minutes=0;
 		   SendData_Remaining_Time(0,0);
 
 
@@ -326,6 +328,8 @@ void Power_On_Fun(void)
 		     run_t.send_app_wokes_total_minutes_data =0;
 			 run_t.send_app_wokes_minutes_one=0;
 			 run_t.send_app_wokes_minutes_two=0;
+			 run_t.works_dispTime_hours=0;
+			 run_t.works_dispTime_minutes=0;
 			 SendData_Works_Time(run_t.send_app_wokes_minutes_one, run_t.send_app_wokes_minutes_two);
 			 HAL_Delay(200);
 		 }

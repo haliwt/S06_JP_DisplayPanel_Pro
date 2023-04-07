@@ -117,7 +117,9 @@ static void Timing_Handler(void)
 
 	case timing_power_off:
 
-		HAL_Delay(100);
+	    SendData_Remaining_Time(0x0,0x0);
+
+		HAL_Delay(500);
 		SendData_PowerOff(0);
 		
 		Power_Off_Fun();

@@ -118,11 +118,14 @@ int main(void)
 		  
 	  }
 	  else{
-	       keyvalue = KEY_Scan();//Scan_KeyMode();
-		   Process_Key_Handler(keyvalue);
-	       Decode_Handler();
-		 
-		   RunPocess_Command_Handler();
+	        Decode_Handler();
+		   if(run_t.decodeFlag ==0){
+
+			   keyvalue = KEY_Scan();//Scan_KeyMode();
+			   Process_Key_Handler(keyvalue);
+		       RunPocess_Command_Handler();
+
+		  }
 		 
     
       }
