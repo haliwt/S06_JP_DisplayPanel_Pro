@@ -52,7 +52,7 @@ static void Timing_Handler(void)
 
 		
 		
-		 if(run_t.send_app_timer_total_minutes_data ==0){
+		 if(run_t.dispTime_hours < 0){
 		 
 				run_t.timer_counter_to_zero =1;
 
@@ -69,6 +69,7 @@ static void Timing_Handler(void)
 				run_t.gWifi =0;
 	
 			}
+		   if(run_t.send_app_timer_total_minutes_data==0)run_t.gTimer_Counter=50;
 
            run_t.send_app_timer_minutes_one = run_t.send_app_timer_total_minutes_data >> 8;
 		   run_t.send_app_timer_minutes_two = run_t.send_app_timer_total_minutes_data & 0x00ff;
