@@ -31,7 +31,7 @@ void SendData_Buzzer(void);
 void SendData_Works_Time(uint8_t tdata,uint8_t tdata_2);
 
 void SendData_Remaining_Time(uint8_t tdata,uint8_t tdata_2);
-
+void USART1_Cmd_Error_Handler(void);
 
 
 #endif 

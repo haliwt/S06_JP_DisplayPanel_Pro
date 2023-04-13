@@ -52,14 +52,30 @@ static void Timing_Handler(void)
 
 		
 		
-		 if(run_t.dispTime_hours < 0){
+		 if(run_t.dispTime_hours < 0 ){
 		 
 				run_t.timer_counter_to_zero =1;
+				run_t.gTimer_Counter = 57 ;
 
-                run_t.gTimer_Counter= 60; //
+            
 				run_t.dispTime_hours=0;
 				
 				run_t.dispTime_minutes=0;
+
+			  
+	
+			}
+		    
+           
+	          run_t.send_app_timer_minutes_one = run_t.send_app_timer_total_minutes_data >> 8;
+			  run_t.send_app_timer_minutes_two = run_t.send_app_timer_total_minutes_data & 0x00ff;
+			 
+			   SendData_Remaining_Time(run_t.send_app_timer_minutes_one, run_t.send_app_timer_minutes_two);
+			   HAL_Delay(5);
+
+			if(run_t.send_app_timer_total_minutes_data == 0){
+
+			    SendData_Time_Data(0); //send timer timing is zero ,this is times is over
 
 			    run_t.timer_timing_define_flag =  timing_power_off;
 
@@ -67,14 +83,9 @@ static void Timing_Handler(void)
 				run_t.wifi_led_fast_blink_flag=0;
 	
 				run_t.gWifi =0;
-	
-			}
-		   if(run_t.send_app_timer_total_minutes_data==0)run_t.gTimer_Counter=50;
 
-           run_t.send_app_timer_minutes_one = run_t.send_app_timer_total_minutes_data >> 8;
-		   run_t.send_app_timer_minutes_two = run_t.send_app_timer_total_minutes_data & 0x00ff;
-		 
-		   SendData_Remaining_Time(run_t.send_app_timer_minutes_one, run_t.send_app_timer_minutes_two);
+		    }
+            
 	   
 		   	Display_GMT(run_t.dispTime_hours,run_t.dispTime_minutes);
             HAL_Delay(5);
@@ -85,57 +96,25 @@ static void Timing_Handler(void)
        
 	break;
 
-	case  timing_fail:
-		if(run_t.gTimes_time_seconds > 59 && run_t.temp_set_timer_timing_flag ==0){
-
-			run_t.gTimes_time_seconds=0;
-			run_t.works_dispTime_minutes++; //1 minute 
-			run_t.send_app_wokes_total_minutes_data++;
-			run_t.send_app_wokes_minutes_two++;
-			if(run_t.works_dispTime_minutes> 59){ //1 hour
-				run_t.works_dispTime_minutes=0;
-				run_t.works_dispTime_hours++;
-			if(run_t.works_dispTime_hours > 24){
-			run_t.works_dispTime_hours =0;
-			}
-		}
-		
-		if(run_t.send_app_wokes_total_minutes_data >255){
-               run_t.send_app_wokes_minutes_one++;
-               run_t.send_app_wokes_minutes_two=0;
-               run_t.send_app_wokes_total_minutes_data=0;
-           }
-		 SendData_Works_Time(run_t.send_app_wokes_minutes_one ,run_t.send_app_wokes_minutes_two);
-		 HAL_Delay(100);
-		 Display_GMT(run_t.works_dispTime_hours,run_t.works_dispTime_minutes);
-			
-	   }
-
-
-
-	
-    break;
 
 	case timing_power_off:
 
-	    SendData_Remaining_Time(0x0,0x0);
-
-		HAL_Delay(500);
-		SendData_PowerOff(0);
+        run_t.gPower_On =0;
 		
-		Power_Off_Fun();
+		SendData_PowerOff(0);
+		HAL_Delay(10);
+	    Power_Off_Fun();
 	    HAL_Delay(100);
-	
-
-	
-		run_t.gRunCommand_label = POWER_OFF_PROCESS; //POWER_OFF_PROCESS ;
-	   
+		
+		
+	  run_t.gRunCommand_label = POWER_OFF_PROCESS; //POWER_OFF_PROCESS ;
+	  run_t.timer_timing_define_flag = 0xff;
 
 	break;
 
 	}
     
-    
+    //send to APP works times every minute onece
     if(run_t.gTimes_time_seconds > 59 && run_t.timer_timing_define_flag ==timing_success && run_t.temp_set_timer_timing_flag ==0){
             run_t.gTimes_time_seconds=0;
             run_t.send_works_times_to_app=1;
@@ -211,21 +190,43 @@ void RunPocess_Command_Handler(void)
 		   run_t.gRunCommand_label =POWER_OFF_PROCESS;
 	  break;
 
-	  case UPDATE_DATA:
+	  case UPDATE_DATA: //3
 	   
-       if(run_t.gTimer_smg_display > 20){
-	   	 run_t.gTimer_smg_display=0;
-         RunLocal_Smg_Process();
-       }
+         
+	   SMG_POWER_ON(); //WT.EDIT 2023.03.02
+       RunLocal_Smg_Process();
+     
 	   Timing_Handler();
        SetTemperature_Function();  
    	   SetTimer_Temperature_Number_Blink();
 
        Display_TimeColon_Blink_Fun();
 
+	    if(run_t.timer_counter_to_zero ==1){
 
+		   run_t.timer_counter_to_zero =0;
+		   run_t.dispTime_hours=0;
+		   run_t.dispTime_minutes =0;
+		   run_t.send_app_timer_total_minutes_data=0;
+		   run_t.timer_timing_define_flag=timing_fail;
+		   run_t.dispTime_hours = 0;
+		   run_t.dispTime_minutes = 0;
+		   run_t.send_app_wokes_total_minutes_data =0;
+		   run_t.send_app_wokes_minutes_one=0;
+		   run_t.send_app_wokes_minutes_two=0;
+		   run_t.works_dispTime_hours=0;
+		   run_t.works_dispTime_minutes=0;
+		   run_t.send_app_timer_minutes_one = run_t.send_app_timer_total_minutes_data >> 8;
+		   run_t.send_app_timer_minutes_two = run_t.send_app_timer_total_minutes_data & 0x00ff;
+		  SendData_Remaining_Time(run_t.send_app_timer_minutes_one, run_t.send_app_timer_minutes_two);
+
+
+		 }
+
+        
+		SMG_POWER_ON(); //WT.EDIT 2023.03.02
      	
-	    run_t.gRunCommand_label= UPDATE_DATA; //bug 
+	   
 
 	  break;
 

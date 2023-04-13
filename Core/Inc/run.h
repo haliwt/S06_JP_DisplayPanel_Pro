@@ -137,6 +137,13 @@ typedef struct __RUN{
    uint8_t wifi_normal_power_on_flag;
    uint8_t first_hour_to_zero_flag;
    uint8_t timer_counter_to_zero ;
+   //usart ref
+    uint8_t process_run_guarantee_flag;
+    uint8_t iwdg_feed_success_flag ;
+    uint8_t gTimer_check_iwdg_flag ;
+    uint8_t gTimer_iwdg ;
+    uint8_t gTimer_usart_error;
+   
  
    /***/
    uint8_t 	gTimer_numbers_one_two_blink;

@@ -79,7 +79,7 @@ int main(void)
   /* MCU Configuration--------------------------------------------------------*/
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-  HAL_Init();
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           HAL_Init();
 
   /* USER CODE BEGIN Init */
 
@@ -115,17 +115,20 @@ int main(void)
           run_t.power_times=1;
           HAL_Delay(1000);
 	      run_t.gPower_On=0;
+		  run_t.gRunCommand_label =POWER_OFF_PROCESS;
 		  
 	  }
 	  else{
 	        Decode_Handler();
-		   if(run_t.decodeFlag ==0){
+		
+             if(run_t.decodeFlag==0){
+				 keyvalue = KEY_Scan();//Scan_KeyMode();
+				 Process_Key_Handler(keyvalue);
+			     RunPocess_Command_Handler();
+                 USART1_Cmd_Error_Handler();
+             }
 
-			   keyvalue = KEY_Scan();//Scan_KeyMode();
-			   Process_Key_Handler(keyvalue);
-		       RunPocess_Command_Handler();
-
-		  }
+		  
 		 
     
       }

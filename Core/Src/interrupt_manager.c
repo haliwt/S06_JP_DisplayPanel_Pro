@@ -37,6 +37,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		run_t.gTimer_key_temp_timing++ ;
 		run_t.gTimer_wifi_couter++;
 		run_t.gTimer_temp_delay++;
+        //usart
+        run_t.gTimer_check_iwdg_flag++;
+	   run_t.gTimer_iwdg++;
+	   run_t.gTimer_usart_error++;
 
 		if(run_t.gPower_On==1){
 		    run_t.gTimer_Counter ++;

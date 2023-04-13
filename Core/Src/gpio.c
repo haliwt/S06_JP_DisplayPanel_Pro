@@ -56,10 +56,17 @@ void MX_GPIO_Init(void)
 
   /*Configure GPIO pins : PAPin PAPin PAPin PAPin
                            PAPin PAPin */
-  GPIO_InitStruct.Pin = SMG_POWER_Pin|TM1639_STB_Pin|M1639_DIO_Pin|TM1639_SCLK_Pin
+  GPIO_InitStruct.Pin = TM1639_STB_Pin|M1639_DIO_Pin|TM1639_SCLK_Pin
                           |PLASMA_LED_EN_Pin|DRY_LED_EN_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+
+   GPIO_InitStruct.Pin = SMG_POWER_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 

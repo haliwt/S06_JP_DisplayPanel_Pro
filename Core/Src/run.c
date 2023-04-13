@@ -28,6 +28,7 @@ void Decode_Handler(void)
 {
    if(run_t.decodeFlag ==1){
    run_t.decodeFlag =0;
+   run_t.process_run_guarantee_flag =1;
    Receive_MainBoard_Data_Handler(run_t.wifi_orderByMainboard_label);
 
    }
@@ -282,7 +283,7 @@ void Power_On_Fun(void)
 	   	run_t.gUltrasonic =1;
     }
     run_t.gPower_On=1;
-	run_t.power_key =1;
+
     run_t.time_led_flag=1;
 	
 	//run_t.temperature_set_flag = 0; //WT.EDIT 2023.01.31
@@ -306,7 +307,7 @@ void Power_On_Fun(void)
 
 		 if(run_t.timer_counter_to_zero ==1){
 
-		   run_t.timer_counter_to_zero =0;
+		 //  run_t.timer_counter_to_zero =0;
 		   run_t.dispTime_hours=0;
 		   run_t.dispTime_minutes =0;
 		   run_t.send_app_timer_total_minutes_data=0;
@@ -318,7 +319,9 @@ void Power_On_Fun(void)
 		   run_t.send_app_wokes_minutes_two=0;
 		   run_t.works_dispTime_hours=0;
 		   run_t.works_dispTime_minutes=0;
-		   SendData_Remaining_Time(0,0);
+		   run_t.send_app_timer_minutes_one = run_t.send_app_timer_total_minutes_data >> 8;
+		   run_t.send_app_timer_minutes_two = run_t.send_app_timer_total_minutes_data & 0x00ff;
+		  SendData_Remaining_Time(run_t.send_app_timer_minutes_one, run_t.send_app_timer_minutes_two);
 
 
 		 }
@@ -370,7 +373,7 @@ void Power_Off_Fun(void)
 		run_t.gTimer_set_temp_times=0; //conflict with send temperatur value 
         run_t.gWifi =0;
       
-		run_t.power_key =2;
+	
 	    run_t.gPower_On=0;
 		
 		power_on_off_flag=1;
