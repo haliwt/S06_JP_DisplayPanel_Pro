@@ -112,6 +112,8 @@ static void Timing_Handler(void)
 
 	break;
 
+	
+
 	}
     
     //send to APP works times every minute onece
@@ -202,29 +204,7 @@ void RunPocess_Command_Handler(void)
 
        Display_TimeColon_Blink_Fun();
 
-	    if(run_t.timer_counter_to_zero ==1){
-
-		   run_t.timer_counter_to_zero =0;
-		   run_t.dispTime_hours=0;
-		   run_t.dispTime_minutes =0;
-		   run_t.send_app_timer_total_minutes_data=0;
-		   run_t.timer_timing_define_flag=timing_fail;
-		   run_t.dispTime_hours = 0;
-		   run_t.dispTime_minutes = 0;
-		   run_t.send_app_wokes_total_minutes_data =0;
-		   run_t.send_app_wokes_minutes_one=0;
-		   run_t.send_app_wokes_minutes_two=0;
-		   run_t.works_dispTime_hours=0;
-		   run_t.works_dispTime_minutes=0;
-		   run_t.send_app_timer_minutes_one = run_t.send_app_timer_total_minutes_data >> 8;
-		   run_t.send_app_timer_minutes_two = run_t.send_app_timer_total_minutes_data & 0x00ff;
-		  SendData_Remaining_Time(run_t.send_app_timer_minutes_one, run_t.send_app_timer_minutes_two);
-
-
-		 }
-
-        
-		SMG_POWER_ON(); //WT.EDIT 2023.03.02
+	   SMG_POWER_ON(); //WT.EDIT 2023.03.02
      	
 	   
 
