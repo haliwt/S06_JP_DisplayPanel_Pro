@@ -25,7 +25,7 @@ typedef enum WIFI_STATE_T{
 
 typedef enum TIMING_T{
 
-   timing_fail,
+   timing_donot,
    timing_success ,
    timing_power_off
 }timing_t;

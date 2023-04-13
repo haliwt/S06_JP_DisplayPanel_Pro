@@ -22,6 +22,7 @@ static void RunLocal_Smg_Process(void);
 
 static void DisplayPanel_DHT11_Value(void);
 static void SetTemperature_Function(void);
+static void Display_Works_Time_Fun(void);
 
 
 
@@ -54,7 +55,7 @@ static void Timing_Handler(void)
 		
 		 if(run_t.dispTime_hours < 0 ){
 		 
-				run_t.timer_counter_to_zero =1;
+				
 				run_t.gTimer_Counter = 57 ;
 
             
@@ -74,6 +75,8 @@ static void Timing_Handler(void)
 			   HAL_Delay(5);
 
 			if(run_t.send_app_timer_total_minutes_data == 0){
+
+			    run_t.timer_counter_to_zero =1;
 
 			    SendData_Time_Data(0); //send timer timing is zero ,this is times is over
 
@@ -109,6 +112,14 @@ static void Timing_Handler(void)
 		
 	  run_t.gRunCommand_label = POWER_OFF_PROCESS; //POWER_OFF_PROCESS ;
 	  run_t.timer_timing_define_flag = 0xff;
+
+	break;
+
+
+	case timing_donot:
+
+	     Display_Works_Time_Fun();
+	     
 
 	break;
 
@@ -205,7 +216,27 @@ void RunPocess_Command_Handler(void)
        Display_TimeColon_Blink_Fun();
 
 	   SMG_POWER_ON(); //WT.EDIT 2023.03.02
-     	
+       if(run_t.timer_counter_to_zero ==1){
+
+		   run_t.timer_counter_to_zero =0;
+		   run_t.dispTime_hours=0;
+		   run_t.dispTime_minutes =0;
+		   run_t.send_app_timer_total_minutes_data=0;
+		   
+		   run_t.send_app_wokes_total_minutes_data =0;
+		   run_t.timer_timing_define_flag=timing_donot;
+		   run_t.dispTime_hours = 0;
+		   run_t.dispTime_minutes = 0;
+		   
+		   run_t.send_app_wokes_minutes_one=0;
+		   run_t.send_app_wokes_minutes_two=0;
+		   run_t.works_dispTime_hours=0;
+		   run_t.works_dispTime_minutes=0;
+		
+		
+
+
+		 }
 	   
 
 	  break;
@@ -240,7 +271,14 @@ static void RunLocal_Smg_Process(void)
 
 
 }
-
+/*******************************************************
+	*
+	*Function Name: static void RunLocal_Smg_Process(void)
+	*Function : display pannel display conetent
+	*
+	*
+	*
+*******************************************************/
 static void SetTemperature_Function(void)
 {
 	 if(run_t.temperature_set_flag ==1 && run_t.gTimer_temp_delay >59){
@@ -289,6 +327,44 @@ static void SetTemperature_Function(void)
 
 }
 
+
+static void Display_Works_Time_Fun(void)
+{
+
+     if(run_t.gTimes_time_seconds > 59 ){
+            run_t.gTimes_time_seconds=0;
+            run_t.send_works_times_to_app=1;
+			run_t.works_dispTime_minutes++; //1 minute 
+			run_t.send_app_wokes_total_minutes_data++;
+            run_t.send_app_wokes_minutes_two++;
+			if(run_t.works_dispTime_minutes> 59){ //1 hour
+			run_t.works_dispTime_minutes=0;
+			run_t.works_dispTime_hours++;
+			if(run_t.works_dispTime_hours > 24){
+			run_t.works_dispTime_hours =0;
+			}
+        
+            if(run_t.send_app_wokes_total_minutes_data >255){
+               run_t.send_app_wokes_minutes_one++;
+               run_t.send_app_wokes_minutes_two=0;
+               run_t.send_app_wokes_total_minutes_data=0;
+            }
+		
+    
+          
+            }
+
+		Display_GMT(run_t.works_dispTime_hours,run_t.works_dispTime_minutes);
+	  
+        }
+
+	
+     while(run_t.send_works_times_to_app==1){
+            run_t.send_works_times_to_app=0;
+        SendData_Works_Time(run_t.send_app_wokes_minutes_one ,run_t.send_app_wokes_minutes_two);
+        }
+
+}
 
 
 /****************************************************************

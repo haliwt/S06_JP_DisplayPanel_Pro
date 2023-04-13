@@ -413,11 +413,11 @@ void SetTimer_Temperature_Number_Blink(void)
 		  
 			set_timer_flag=0;
 			timing_flag=0;
-			run_t.set_timer_special_value = timing_fail;
+			run_t.set_timer_special_value = timing_donot;
 
 			run_t.temp_set_timer_timing_flag=0;
 
-			run_t.timer_timing_define_flag =timing_fail;
+			run_t.timer_timing_define_flag =timing_donot;
 			run_t.send_app_timer_minutes_one = 0;
 		    run_t.send_app_timer_minutes_two = 0;
 			

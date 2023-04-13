@@ -311,7 +311,7 @@ void Power_On_Fun(void)
 		   run_t.dispTime_hours=0;
 		   run_t.dispTime_minutes =0;
 		   run_t.send_app_timer_total_minutes_data=0;
-		   run_t.timer_timing_define_flag=timing_fail;
+		   run_t.timer_timing_define_flag=timing_donot;
 		   run_t.dispTime_hours = 0;
 		   run_t.dispTime_minutes = 0;
 		   run_t.send_app_wokes_total_minutes_data =0;
