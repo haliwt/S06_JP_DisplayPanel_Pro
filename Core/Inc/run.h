@@ -32,8 +32,9 @@ typedef enum TIMING_T{
 
 
 typedef enum _Signal{
+    POWER_OFF= 0xFD,
 	POWER_ON=0x01,
-	POWER_OFF,
+	
 	PANEL_DATA,
 	WIFI_INFO,
 	WIFI_TIME,
@@ -142,8 +143,7 @@ typedef struct __RUN{
     uint8_t iwdg_feed_success_flag ;
     uint8_t gTimer_check_iwdg_flag ;
     uint8_t gTimer_iwdg ;
-    uint8_t gTimer_usart_error;
-   
+    
  
    /***/
    uint8_t 	gTimer_numbers_one_two_blink;
@@ -155,6 +155,7 @@ typedef struct __RUN{
    uint8_t gTimer_wifi_connect_counter;
    uint8_t temp_set_timer_timing_flag;
    uint8_t gTimer_key_timing;
+   uint8_t power_on_recoder_times;
 
    //timer timing 
    uint8_t gTimer_set_temp_times;
@@ -186,7 +187,9 @@ typedef struct __RUN{
 	int8_t dispTime_hours;
 	int8_t dispTime_minutes;
 	int8_t dispTime_seconds;
-	
+
+	uint16_t gTimer_usart_error;
+   
    uint16_t send_app_timer_total_minutes_data;
    uint16_t send_app_wokes_total_minutes_data;
 

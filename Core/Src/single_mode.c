@@ -23,6 +23,7 @@ static void RunLocal_Smg_Process(void);
 static void DisplayPanel_DHT11_Value(void);
 static void SetTemperature_Function(void);
 static void Display_Works_Time_Fun(void);
+static void Send_WorksTime_ToApp_DonotDisplay_Fun(void);
 
 
 
@@ -96,21 +97,19 @@ static void Timing_Handler(void)
 		
 	   }
       
-       
+      Send_WorksTime_ToApp_DonotDisplay_Fun();
 	break;
 
 
 	case timing_power_off:
-
-        run_t.gPower_On =0;
+         SendData_Time_Data(0); //send timer timing is zero ,this is times is over
+         HAL_Delay(10);
 		
 		SendData_PowerOff(0);
 		HAL_Delay(10);
-	    Power_Off_Fun();
-	    HAL_Delay(100);
 		
-		
-	  run_t.gRunCommand_label = POWER_OFF_PROCESS; //POWER_OFF_PROCESS ;
+	  run_t.power_on_recoder_times++; //this is data must be change if not don't "breath led"
+	  run_t.gRunCommand_label = RUN_POWER_OFF;//POWER_OFF_PROCESS; //POWER_OFF_PROCESS ;
 	  run_t.timer_timing_define_flag = 0xff;
 
 	break;
@@ -127,35 +126,7 @@ static void Timing_Handler(void)
 
 	}
     
-    //send to APP works times every minute onece
-    if(run_t.gTimes_time_seconds > 59 && run_t.timer_timing_define_flag ==timing_success && run_t.temp_set_timer_timing_flag ==0){
-            run_t.gTimes_time_seconds=0;
-            run_t.send_works_times_to_app=1;
-			run_t.works_dispTime_minutes++; //1 minute 
-			run_t.send_app_wokes_total_minutes_data++;
-            run_t.send_app_wokes_minutes_two++;
-			if(run_t.works_dispTime_minutes> 59){ //1 hour
-			run_t.works_dispTime_minutes=0;
-			run_t.works_dispTime_hours++;
-			if(run_t.works_dispTime_hours > 24){
-			run_t.works_dispTime_hours =0;
-			}
-        
-            if(run_t.send_app_wokes_total_minutes_data >255){
-               run_t.send_app_wokes_minutes_one++;
-               run_t.send_app_wokes_minutes_two=0;
-               run_t.send_app_wokes_total_minutes_data=0;
-            }
-		
-    
-          
-            }
-	  
-        }
-     while(run_t.send_works_times_to_app==1){
-            run_t.send_works_times_to_app=0;
-        SendData_Works_Time(run_t.send_app_wokes_minutes_one ,run_t.send_app_wokes_minutes_two);
-        }
+   
 
 
 	
@@ -188,7 +159,7 @@ static void DisplayPanel_DHT11_Value(void)
 ******************************************************************************/
 void RunPocess_Command_Handler(void)
 {
-
+   static uint8_t power_off_flag=0xff;
    switch(run_t.gRunCommand_label){
 
       case RUN_POWER_ON:
@@ -205,47 +176,51 @@ void RunPocess_Command_Handler(void)
 
 	  case UPDATE_DATA: //3
 	   
-         
-	
-       RunLocal_Smg_Process();
+//        if(run_t.timer_counter_to_zero ==1){
+//
+//		   run_t.timer_counter_to_zero =0;
+//		   run_t.dispTime_hours=0;
+//		   run_t.dispTime_minutes =0;
+//		   run_t.send_app_timer_total_minutes_data=0;
+//		   
+//		   run_t.send_app_wokes_total_minutes_data =0;
+//		   run_t.timer_timing_define_flag=timing_donot;
+//		   run_t.dispTime_hours = 0;
+//		   run_t.dispTime_minutes = 0;
+//		   
+//		   run_t.send_app_wokes_minutes_one=0;
+//		   run_t.send_app_wokes_minutes_two=0;
+//		   run_t.works_dispTime_hours=0;
+//		   run_t.works_dispTime_minutes=0;
+//		
+//	    }
+	   RunLocal_Smg_Process();
      
 	   Timing_Handler();
        SetTemperature_Function();  
    	   SetTimer_Temperature_Number_Blink();
 
        Display_TimeColon_Blink_Fun();
-
-       if(run_t.timer_counter_to_zero ==1){
-
-		   run_t.timer_counter_to_zero =0;
-		   run_t.dispTime_hours=0;
-		   run_t.dispTime_minutes =0;
-		   run_t.send_app_timer_total_minutes_data=0;
-		   
-		   run_t.send_app_wokes_total_minutes_data =0;
-		   run_t.timer_timing_define_flag=timing_donot;
-		   run_t.dispTime_hours = 0;
-		   run_t.dispTime_minutes = 0;
-		   
-		   run_t.send_app_wokes_minutes_one=0;
-		   run_t.send_app_wokes_minutes_two=0;
-		   run_t.works_dispTime_hours=0;
-		   run_t.works_dispTime_minutes=0;
-		
-		
-
-
-		 }
 	   
 
 	  break;
 
 	  case POWER_OFF_PROCESS:
 
-	   if(run_t.gPower_On ==0 || run_t.gPower_On == 0xff){
-	 	  run_t.gPower_On =0xff;
-	      Breath_Led();
-          Power_Off();
+	   if(run_t.gPower_On ==POWER_OFF || run_t.gPower_On == 0xff){
+
+	      if(power_off_flag !=run_t.power_on_recoder_times){
+		  	  power_off_flag = run_t.power_on_recoder_times;
+	 	  	run_t.gPower_On =0xff;
+		    Breath_Led();
+          
+	      }
+		  else if(run_t.gPower_On ==0xff){
+				Breath_Led();
+		  }
+		  else{
+            run_t.gPower_On = POWER_ON;
+		  }
        }
 
 	  break;
@@ -365,7 +340,38 @@ static void Display_Works_Time_Fun(void)
 
 }
 
-
+static void Send_WorksTime_ToApp_DonotDisplay_Fun(void)
+{
+//send to APP works times every minute onece
+   if(run_t.gTimes_time_seconds > 59 && run_t.timer_timing_define_flag ==timing_success && run_t.temp_set_timer_timing_flag ==0){
+		   run_t.gTimes_time_seconds=0;
+		   run_t.send_works_times_to_app=1;
+		   run_t.works_dispTime_minutes++; //1 minute 
+		   run_t.send_app_wokes_total_minutes_data++;
+		   run_t.send_app_wokes_minutes_two++;
+		   if(run_t.works_dispTime_minutes> 59){ //1 hour
+		   run_t.works_dispTime_minutes=0;
+		   run_t.works_dispTime_hours++;
+		   if(run_t.works_dispTime_hours > 24){
+		   run_t.works_dispTime_hours =0;
+		   }
+	   
+		   if(run_t.send_app_wokes_total_minutes_data >255){
+			  run_t.send_app_wokes_minutes_one++;
+			  run_t.send_app_wokes_minutes_two=0;
+			  run_t.send_app_wokes_total_minutes_data=0;
+		   }
+	   
+   
+		 
+		   }
+	 
+	   }
+	while(run_t.send_works_times_to_app==1){
+		   run_t.send_works_times_to_app=0;
+	   SendData_Works_Time(run_t.send_app_wokes_minutes_one ,run_t.send_app_wokes_minutes_two);
+	   }
+}
 /****************************************************************
  * 
  * Function Name:

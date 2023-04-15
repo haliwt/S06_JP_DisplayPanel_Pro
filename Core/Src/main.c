@@ -79,7 +79,8 @@ int main(void)
   /* MCU Configuration--------------------------------------------------------*/
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           HAL_Init();
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               HAL_Init();
 
   /* USER CODE BEGIN Init */
 
@@ -110,28 +111,35 @@ int main(void)
     /* USER CODE BEGIN 3 */
 	 //S06 -touch key 
 
-	 
-      if(run_t.power_times == 0){
-          run_t.power_times=1;
-          HAL_Delay(10);
-	      run_t.gPower_On=0;
-		  run_t.gRunCommand_label =POWER_OFF_PROCESS;
-		  
-	  }
-	  else{
-	        Decode_Handler();
-		
-            
-				 keyvalue = KEY_Scan();//Scan_KeyMode();
-				 Process_Key_Handler(keyvalue);
-			     RunPocess_Command_Handler();
-                 USART1_Cmd_Error_Handler();
-             
 
-		  
-		 
-    
-      }
+
+	  switch(run_t.power_times){
+
+          case 0:
+		
+				run_t.gPower_On=POWER_OFF;
+				run_t.gRunCommand_label =POWER_OFF_PROCESS;
+				run_t.power_times=1;
+
+	      break;
+
+		  case 1:
+	           keyvalue = KEY_Scan();//Scan_KeyMode();
+			   Process_Key_Handler(keyvalue);
+		       Decode_Handler();
+			   RunPocess_Command_Handler();
+			   USART1_Cmd_Error_Handler();
+
+
+		  break;
+
+		  default:
+
+		  break;
+  
+
+       }
+     
      // Scan_KeyMode();
   }
   /* USER CODE END 3 */

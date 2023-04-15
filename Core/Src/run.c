@@ -47,11 +47,10 @@ void Decode_Handler(void)
 **********************************************************************/
 void Power_Off(void)
 {
-    	 if(run_t.gPower_On ==0){
+    	 if(run_t.gPower_On ==POWER_OFF){
 
-			run_t.gPower_On =0xff;
 			Smg_AllOff();
-
+            SMG_POWER_OFF()	;
 			run_t.gPlasma=0;
 			run_t.gDry=0;
 			run_t.gUltrasonic =0;
@@ -59,8 +58,8 @@ void Power_Off(void)
 
 				
 		}
-		Breath_Led();
-		SMG_POWER_OFF()	;
+	
+		
 		
 		
 	      
@@ -204,6 +203,7 @@ static void Receive_Wifi_Cmd(uint8_t cmd)
                 
 			   run_t.wifi_send_buzzer_sound = WIFI_POWER_OFF_ITEM;
 			   run_t.gRunCommand_label = RUN_POWER_OFF;
+			   run_t.power_on_recoder_times++;
 				
               cmd=0xff;
 
@@ -292,22 +292,10 @@ void Power_On_Fun(void)
 
 	
      Power_ON_Led();
-	
-     if(run_t.timer_timing_define_flag==timing_success || run_t.temp_set_timer_timing_flag== 1){ //power on remeber last powr off of reference
 
-	     run_t.dispTime_hours = run_t.define_initialization_timer_time_hours ;
-         run_t.send_app_timer_total_minutes_data = run_t.define_initialization_timer_time_hours * 60;
-		 run_t.gTimer_minute_Counter =0;
-		 run_t.dispTime_minutes =0;
-		 run_t.send_app_timer_minutes_one = run_t.send_app_timer_total_minutes_data >> 8;
-		 run_t.send_app_timer_minutes_two = run_t.send_app_timer_total_minutes_data & 0x00ff;
-		 SendData_Remaining_Time(run_t.send_app_timer_minutes_one, run_t.send_app_timer_minutes_two);
-      }
-      else{ //don't has timer timing 
+	 if(run_t.timer_counter_to_zero ==1){
 
-		 if(run_t.timer_counter_to_zero ==1){
-
-		 //  run_t.timer_counter_to_zero =0;
+	       run_t.timer_counter_to_zero++;
 		   run_t.dispTime_hours=0;
 		   run_t.dispTime_minutes =0;
 		   run_t.send_app_timer_total_minutes_data=0;
@@ -319,13 +307,20 @@ void Power_On_Fun(void)
 		   run_t.send_app_wokes_minutes_two=0;
 		   run_t.works_dispTime_hours=0;
 		   run_t.works_dispTime_minutes=0;
-		   run_t.send_app_timer_minutes_one = run_t.send_app_timer_total_minutes_data >> 8;
-		   run_t.send_app_timer_minutes_two = run_t.send_app_timer_total_minutes_data & 0x00ff;
-		  SendData_Remaining_Time(run_t.send_app_timer_minutes_one, run_t.send_app_timer_minutes_two);
+		   SendData_Time_Data(0); 
 
+		}
+	    else if(run_t.timer_timing_define_flag==timing_success || run_t.temp_set_timer_timing_flag== 1){ //power on remeber last powr off of reference
 
-		 }
-		 else{
+	     run_t.dispTime_hours = run_t.define_initialization_timer_time_hours ;
+         run_t.send_app_timer_total_minutes_data = run_t.define_initialization_timer_time_hours * 60;
+		 run_t.gTimer_minute_Counter =0;
+		 run_t.dispTime_minutes =0;
+		 run_t.send_app_timer_minutes_one = run_t.send_app_timer_total_minutes_data >> 8;
+		 run_t.send_app_timer_minutes_two = run_t.send_app_timer_total_minutes_data & 0x00ff;
+		 SendData_Remaining_Time(run_t.send_app_timer_minutes_one, run_t.send_app_timer_minutes_two);
+       }
+       else{
 	         run_t.dispTime_hours = 0;
 			 run_t.dispTime_minutes = 0;
 		     run_t.send_app_wokes_total_minutes_data =0;
@@ -335,9 +330,9 @@ void Power_On_Fun(void)
 			 run_t.works_dispTime_minutes=0;
 			 SendData_Works_Time(run_t.send_app_wokes_minutes_one, run_t.send_app_wokes_minutes_two);
 			 HAL_Delay(200);
-		 }
+		}
          
-        }
+        
 
 	  hour_decade=(run_t.dispTime_hours ) /10;
 	  hour_unit=(run_t.dispTime_hours ) %10;

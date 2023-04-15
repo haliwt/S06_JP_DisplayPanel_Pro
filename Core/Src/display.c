@@ -121,7 +121,7 @@ void Display_TimeColon_Blink_Fun(void)
    if(run_t.set_temperature_flag==0 && run_t.set_temperature_special_value==0 && run_t.set_timer_special_value==0 && run_t.temp_set_timer_timing_flag==0\
    	    && continue_flag==1 && continue_2_flag==1){	
 				 	
-                      continue_2_flag = 0;
+                     continue_2_flag = 0;
 			         continue_flag=0;
 					TimeColon_Smg_Blink_Fun();
 					

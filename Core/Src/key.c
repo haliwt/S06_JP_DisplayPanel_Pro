@@ -22,15 +22,8 @@ uint8_t KEY_Scan(void)
 {
   uint8_t  reval = 0;
   key_t.read = _KEY_ALL_OFF; //0xFF 
-   if(POWER_KEY_VALUE() ==1 ) //POWER_KEY_ID = 0x01
-	{
-		key_t.read &= ~0x01; // 0xff & 0xfe =  0xFE
-	}
-    else if(MODEL_KEY_VALUE() ==1 )
-	{
-		key_t.read &= ~0x02; // 0xFf & 0xfd =  0xFD
-	}
-    else if(DEC_KEY_VALUE()  ==1 ) //DEC_KEY_ID = 0x04
+  
+    if(DEC_KEY_VALUE()  ==1 ) //DEC_KEY_ID = 0x04
 	{
 		  key_t.read &= ~0x04; // 0xFf & 0xfB =  0xFB
 	}
@@ -54,7 +47,16 @@ uint8_t KEY_Scan(void)
 	{
 		key_t.read &= ~0x80; // 0x1f & 0x7F =  0x7F
 	 }
-
+	
+	else if(MODEL_KEY_VALUE() ==1 )
+	 {
+		   key_t.read &= ~0x02; // 0xFf & 0xfd =  0xFD
+	 }
+	else if(POWER_KEY_VALUE() ==1 ) //POWER_KEY_ID = 0x01
+	{
+		key_t.read &= ~0x01; // 0xff & 0xfe =  0xFE
+	}
+   
     switch(key_t.state )
 	{
 		case start:
@@ -74,9 +76,9 @@ uint8_t KEY_Scan(void)
 		{
 			if(key_t.read == key_t.buffer) //  short  key be down ->continunce be pressed key
 			{
-				if(++key_t.on_time> 2500 ) //10000  0.5us
+				if(++key_t.on_time> 2500 && ++key_t.on_time <45000 ) //10000  0.5us
 				{
-					run_t.power_times++;
+					//run_t.power_times++;
                     key_t.value = key_t.buffer^_KEY_ALL_OFF; // key.value = 0xFE ^ 0xFF = 0x01
 					key_t.on_time = 0;                      //key .value = 0xEF ^ 0XFF = 0X10
                     key_t.state   = second;
@@ -107,7 +109,7 @@ uint8_t KEY_Scan(void)
 			}
 			else if(key_t.read == _KEY_ALL_OFF)  // loose hand 
 			{
-					if(++key_t.off_time>0) //20//30 don't holding key dithering
+					if(++key_t.off_time>20) //20//30 don't holding key dithering
 					{
 						key_t.value = key_t.buffer^_KEY_ALL_OFF; // key.value = 0x1E ^ 0x1f = 0x01
 						
@@ -130,7 +132,7 @@ uint8_t KEY_Scan(void)
 		{
 			if(key_t.read == _KEY_ALL_OFF)
 			{
-				if(++key_t.off_time>0)//10//50 //100
+				if(++key_t.off_time>10)//10//50 //100
 				{
 					key_t.state   = start;
                   
@@ -181,7 +183,7 @@ void Process_Key_Handler(uint8_t keylabel)
 		    SendData_PowerOff(0);
             HAL_Delay(200);
 		    run_t.gRunCommand_label =RUN_POWER_OFF;
-	
+	        run_t.power_on_recoder_times++ ;
 		   }
 	  	 
 	   keylabel= 0xff;
