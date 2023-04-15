@@ -22,15 +22,9 @@ uint8_t KEY_Scan(void)
 {
   uint8_t  reval = 0;
   key_t.read = _KEY_ALL_OFF; //0xFF 
-   if(POWER_KEY_VALUE() ==1 ) //POWER_KEY_ID = 0x01
-	{
-		key_t.read &= ~0x01; // 0xff & 0xfe =  0xFE
-	}
-    else if(MODEL_KEY_VALUE() ==1 )
-	{
-		key_t.read &= ~0x02; // 0xFf & 0xfd =  0xFD
-	}
-    else if(DEC_KEY_VALUE()  ==1 ) //DEC_KEY_ID = 0x04
+   
+   
+    if(DEC_KEY_VALUE()  ==1 ) //DEC_KEY_ID = 0x04
 	{
 		  key_t.read &= ~0x04; // 0xFf & 0xfB =  0xFB
 	}
@@ -54,6 +48,14 @@ uint8_t KEY_Scan(void)
 	{
 		key_t.read &= ~0x80; // 0x1f & 0x7F =  0x7F
 	 }
+	else if(POWER_KEY_VALUE() ==1 ) //POWER_KEY_ID = 0x01
+	{
+		key_t.read &= ~0x01; // 0xff & 0xfe =  0xFE
+	}
+	else if(MODEL_KEY_VALUE() ==1 )
+	{
+		key_t.read &= ~0x02; // 0xFf & 0xfd =  0xFD
+	}
 
     switch(key_t.state )
 	{
@@ -107,7 +109,7 @@ uint8_t KEY_Scan(void)
 			}
 			else if(key_t.read == _KEY_ALL_OFF)  // loose hand 
 			{
-					if(++key_t.off_time>0) //20//30 don't holding key dithering
+					if(++key_t.off_time>6) //20//30 don't holding key dithering
 					{
 						key_t.value = key_t.buffer^_KEY_ALL_OFF; // key.value = 0x1E ^ 0x1f = 0x01
 						
@@ -130,7 +132,7 @@ uint8_t KEY_Scan(void)
 		{
 			if(key_t.read == _KEY_ALL_OFF)
 			{
-				if(++key_t.off_time>0)//10//50 //100
+				if(++key_t.off_time>5)//10//50 //100
 				{
 					key_t.state   = start;
                   

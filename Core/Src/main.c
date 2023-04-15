@@ -113,8 +113,8 @@ int main(void)
 	 
       if(run_t.power_times == 0){
           run_t.power_times=1;
-          HAL_Delay(1000);
-	      run_t.gPower_On=0;
+          HAL_Delay(200);
+	      run_t.gPower_On= POWER_OFF;
 		  run_t.gRunCommand_label =POWER_OFF_PROCESS;
 		  
 	  }
