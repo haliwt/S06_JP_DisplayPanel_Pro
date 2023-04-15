@@ -368,7 +368,7 @@ void Power_Off_Fun(void)
         run_t.gWifi =0;
       
 	
-	    run_t.gPower_On=0;
+	    run_t.gPower_On=POWER_OFF;
 		
 		power_on_off_flag=1;
 		
