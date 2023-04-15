@@ -314,6 +314,7 @@ void Power_Off_Led_Off(void)
    LED_PLASMA_OFF();
    LED_FAN_OFF();
    LED_POWER_OFF();
+   SMG_POWER_OFF();
 
 }
 
@@ -325,5 +326,6 @@ void Power_ON_Led(void)
    LED_PLASMA_ON();
    LED_FAN_ON();
    LED_POWER_ON();
+   SMG_POWER_ON();
 
 }

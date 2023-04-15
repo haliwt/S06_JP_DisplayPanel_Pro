@@ -22,9 +22,15 @@ uint8_t KEY_Scan(void)
 {
   uint8_t  reval = 0;
   key_t.read = _KEY_ALL_OFF; //0xFF 
-   
-   
-    if(DEC_KEY_VALUE()  ==1 ) //DEC_KEY_ID = 0x04
+   if(POWER_KEY_VALUE() ==1 ) //POWER_KEY_ID = 0x01
+	{
+		key_t.read &= ~0x01; // 0xff & 0xfe =  0xFE
+	}
+    else if(MODEL_KEY_VALUE() ==1 )
+	{
+		key_t.read &= ~0x02; // 0xFf & 0xfd =  0xFD
+	}
+    else if(DEC_KEY_VALUE()  ==1 ) //DEC_KEY_ID = 0x04
 	{
 		  key_t.read &= ~0x04; // 0xFf & 0xfB =  0xFB
 	}
@@ -48,14 +54,6 @@ uint8_t KEY_Scan(void)
 	{
 		key_t.read &= ~0x80; // 0x1f & 0x7F =  0x7F
 	 }
-	else if(POWER_KEY_VALUE() ==1 ) //POWER_KEY_ID = 0x01
-	{
-		key_t.read &= ~0x01; // 0xff & 0xfe =  0xFE
-	}
-	else if(MODEL_KEY_VALUE() ==1 )
-	{
-		key_t.read &= ~0x02; // 0xFf & 0xfd =  0xFD
-	}
 
     switch(key_t.state )
 	{
@@ -109,7 +107,7 @@ uint8_t KEY_Scan(void)
 			}
 			else if(key_t.read == _KEY_ALL_OFF)  // loose hand 
 			{
-					if(++key_t.off_time>6) //20//30 don't holding key dithering
+					if(++key_t.off_time>0) //20//30 don't holding key dithering
 					{
 						key_t.value = key_t.buffer^_KEY_ALL_OFF; // key.value = 0x1E ^ 0x1f = 0x01
 						
@@ -132,7 +130,7 @@ uint8_t KEY_Scan(void)
 		{
 			if(key_t.read == _KEY_ALL_OFF)
 			{
-				if(++key_t.off_time>5)//10//50 //100
+				if(++key_t.off_time>0)//10//50 //100
 				{
 					key_t.state   = start;
                   
@@ -176,8 +174,7 @@ void Process_Key_Handler(uint8_t keylabel)
 		 	  SendData_PowerOff(1);
               HAL_Delay(200);
 		      run_t.gRunCommand_label =RUN_POWER_ON;
-              SMG_POWER_ON();
-
+              
 		 }
 		 else{
 
@@ -293,7 +290,7 @@ void Process_Key_Handler(uint8_t keylabel)
 			 HAL_Delay(100);
 		      run_t.set_temperature_flag=1;
 			  run_t.gTimer_key_temp_timing=0;
-			  SMG_POWER_ON()	;
+			 
 	    	
 		   break;
 
@@ -317,7 +314,7 @@ void Process_Key_Handler(uint8_t keylabel)
 
 				TM1639_Write_4Bit_Time(m,run_t.hours_two_bit,run_t.minutes_one_bit,q,0) ; //timer is default 12 hours "12:00"    
                 HAL_Delay(100);
-				SMG_POWER_ON()	;
+	
 			
 		  
 		  break;

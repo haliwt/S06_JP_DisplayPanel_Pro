@@ -102,7 +102,7 @@ static void Timing_Handler(void)
 
 	case timing_power_off:
 
-        run_t.gPower_On =POWER_OFF;
+        run_t.gPower_On =0;
 		
 		SendData_PowerOff(0);
 		HAL_Delay(10);
@@ -206,7 +206,7 @@ void RunPocess_Command_Handler(void)
 	  case UPDATE_DATA: //3
 	   
          
-	   SMG_POWER_ON(); //WT.EDIT 2023.03.02
+	
        RunLocal_Smg_Process();
      
 	   Timing_Handler();
@@ -215,7 +215,6 @@ void RunPocess_Command_Handler(void)
 
        Display_TimeColon_Blink_Fun();
 
-	   SMG_POWER_ON(); //WT.EDIT 2023.03.02
        if(run_t.timer_counter_to_zero ==1){
 
 		   run_t.timer_counter_to_zero =0;
@@ -243,7 +242,7 @@ void RunPocess_Command_Handler(void)
 
 	  case POWER_OFF_PROCESS:
 
-	   if(run_t.gPower_On ==POWER_OFF || run_t.gPower_On == 0xff){
+	   if(run_t.gPower_On ==0 || run_t.gPower_On == 0xff){
 	 	  run_t.gPower_On =0xff;
 	      Breath_Led();
           Power_Off();

@@ -47,7 +47,7 @@ void Decode_Handler(void)
 **********************************************************************/
 void Power_Off(void)
 {
-    	 if(run_t.gPower_On ==POWER_OFF){
+    	 if(run_t.gPower_On ==0){
 
 			run_t.gPower_On =0xff;
 			Smg_AllOff();
@@ -58,10 +58,9 @@ void Power_Off(void)
 			
 
 				
-		
+		}
 		Breath_Led();
 		SMG_POWER_OFF()	;
-    	}
 		
 		
 	      

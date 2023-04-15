@@ -113,20 +113,20 @@ int main(void)
 	 
       if(run_t.power_times == 0){
           run_t.power_times=1;
-          HAL_Delay(200);
-	      run_t.gPower_On= POWER_OFF;
+          HAL_Delay(10);
+	      run_t.gPower_On=0;
 		  run_t.gRunCommand_label =POWER_OFF_PROCESS;
 		  
 	  }
 	  else{
 	        Decode_Handler();
 		
-             if(run_t.decodeFlag==0){
+            
 				 keyvalue = KEY_Scan();//Scan_KeyMode();
 				 Process_Key_Handler(keyvalue);
 			     RunPocess_Command_Handler();
                  USART1_Cmd_Error_Handler();
-             }
+             
 
 		  
 		 
