@@ -531,8 +531,9 @@ void SetTimer_Temperature_Number_Blink(void)
 			 set_temp_flag=0;
 		     counter_times=0;
 		      run_t.set_temperature_flag =0;
-              run_t.gTimer_temp_delay=0;
 			  run_t.temperature_set_flag =1;
+			  
+			  run_t.gTimer_temp_delay = 70; //at once shut down ptc  funciton
 			  m =  run_t.wifi_set_temperature / 10 %10;
 			  n =  run_t.wifi_set_temperature % 10; //
 			  TM1639_Write_2bit_SetUp_TempData(m,n,0);

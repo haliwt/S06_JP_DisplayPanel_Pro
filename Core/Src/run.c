@@ -286,7 +286,6 @@ void Power_On_Fun(void)
 
     run_t.time_led_flag=1;
 	
-	//run_t.temperature_set_flag = 0; //WT.EDIT 2023.01.31
    
 	run_t.wifi_send_buzzer_sound=0xff;
 
