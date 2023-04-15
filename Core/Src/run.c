@@ -85,7 +85,7 @@ void Receive_MainBoard_Data_Handler(uint8_t cmd)
 	 case WIFI_CMD:
 	 	 
 	    Receive_Wifi_Cmd(run_t.wifiCmd[0]);
-	  run_t.wifi_orderByMainboard_label=0xff;
+	 
 	 break;
 
 	 case WIFI_TEMP: //set temperature value
@@ -97,7 +97,7 @@ void Receive_MainBoard_Data_Handler(uint8_t cmd)
 		   
 	        TM1639_Write_2bit_SetUp_TempData(m,n,0);
 			}
-     run_t.wifi_orderByMainboard_label=0xff;
+    
 	 break;
 
 	 case PANEL_DATA:
@@ -114,7 +114,7 @@ void Receive_MainBoard_Data_Handler(uint8_t cmd)
 	      TM1639_Write_2bit_HumData(hum1,hum2);
 	     HAL_Delay(2);
         }
-	  run_t.wifi_orderByMainboard_label=0xff;
+	  
 
       break;
 
@@ -134,7 +134,7 @@ void Receive_MainBoard_Data_Handler(uint8_t cmd)
 		 }
          
 		    
-        run_t.wifi_orderByMainboard_label=0xff;
+       
  
       break;
 
@@ -157,7 +157,7 @@ void Receive_MainBoard_Data_Handler(uint8_t cmd)
 			 
               TM1639_Write_4Bit_Time(m,run_t.hours_two_bit,run_t.minutes_one_bit,0,0) ; // timer   mode  "H0: xx"
              HAL_Delay(2);
-	      run_t.wifi_orderByMainboard_label=0xff;
+	   
 
       break;
 
@@ -192,7 +192,7 @@ static void Receive_Wifi_Cmd(uint8_t cmd)
 				run_t.wifi_send_buzzer_sound = WIFI_POWER_ON_ITEM;
                 run_t.wifi_power_on_flag = RUN_POWER_ON;
 				run_t.gRunCommand_label = RUN_POWER_ON;
-				cmd=0xff;
+				
 
 	         break;
 
@@ -205,7 +205,7 @@ static void Receive_Wifi_Cmd(uint8_t cmd)
 			   run_t.gRunCommand_label = RUN_POWER_OFF;
 			   run_t.power_on_recoder_times++;
 				
-              cmd=0xff;
+            
 
 			 break;
 

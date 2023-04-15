@@ -80,7 +80,7 @@ static void Timing_Handler(void)
 			    run_t.timer_counter_to_zero =1;
 
 			    SendData_Time_Data(0); //send timer timing is zero ,this is times is over
-
+                 HAL_Delay(300);
 			    run_t.timer_timing_define_flag =  timing_power_off;
 
 				run_t.gTimer_set_temp_times=0; //conflict with send temperatur value 
@@ -102,11 +102,11 @@ static void Timing_Handler(void)
 
 
 	case timing_power_off:
-         SendData_Time_Data(0); //send timer timing is zero ,this is times is over
-         HAL_Delay(10);
+        
+       
 		
 		SendData_PowerOff(0);
-		HAL_Delay(10);
+		HAL_Delay(200);
 		
 	  run_t.power_on_recoder_times++; //this is data must be change if not don't "breath led"
 	  run_t.gRunCommand_label = RUN_POWER_OFF;//POWER_OFF_PROCESS; //POWER_OFF_PROCESS ;
@@ -202,6 +202,7 @@ void RunPocess_Command_Handler(void)
 		  }
 		  else{
             run_t.gPower_On = POWER_ON;
+			run_t.gRunCommand_label= UPDATE_DATA;
 		  }
        }
 
