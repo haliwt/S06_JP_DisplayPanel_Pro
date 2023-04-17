@@ -500,8 +500,12 @@ void SetTimer_Temperature_Number_Blink(void)
 	
 	  break;
 
+	}
+
+	switch(run_t.set_temperature_flag){
+
 	  case TEMPERATURE_BE_SETUP:
-	  if(run_t.gTimer_key_temp_timing > 4 && run_t.set_temperature_flag==1 && run_t.set_temperature_special_value ==0 && run_t.gPower_On==1){
+	  if(run_t.gTimer_key_temp_timing > 4 && run_t.set_temperature_special_value ==0 && run_t.gPower_On==1){
 			set_temp_flag++;
 			
 			run_t.set_temperature_special_value =1;

@@ -108,11 +108,19 @@ typedef enum{
 }key_item_t;
 
 typedef enum{
-	TEMPERATURE_BE_SETUP,
+	TIMER_TIMING_DONOT_VALUE,
 	TIMER_TIMING
 
 
-}set_timer_temp_state;
+}set_timer_state;
+
+
+typedef enum{
+	TEMPERATURE_BE_SETUP_DONOT,
+	TEMPERATURE_BE_SETUP
+
+
+}set_temperature_state;
 
 
 typedef  struct  _state_

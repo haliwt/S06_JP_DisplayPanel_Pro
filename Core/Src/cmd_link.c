@@ -277,7 +277,6 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
              break;
 
              case WIFI_SET_TIMING:
-			 	run_t.temp_set_timer_timing_flag =1; //WT.EDIT 2023.04.06
              	run_t.dispTime_hours  = inputBuf[0];
 				run_t.gTimer_key_timing=0;
              		 state=0;
