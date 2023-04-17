@@ -34,8 +34,7 @@ typedef enum TIMING_T{
 typedef enum _Signal{
     POWER_OFF= 0xFD,
 	POWER_ON=0x01,
-	
-	PANEL_DATA,
+    PANEL_DATA,
 	WIFI_INFO,
 	WIFI_TIME,
 	WIFI_TEMP,

@@ -93,7 +93,7 @@ void Receive_MainBoard_Data_Handler(uint8_t cmd)
 		   	   run_t.set_temperature_flag=1;
 			  
 			   
-           run_t.gTimer_key_temp_timing=0;
+           	run_t.gTimer_key_temp_timing=0;
         	 m= run_t.wifi_set_temperature /10 ;
 			 n= run_t.wifi_set_temperature %10;
 		   
@@ -102,7 +102,7 @@ void Receive_MainBoard_Data_Handler(uint8_t cmd)
     
 	 break;
 
-	 case PANEL_DATA:
+	 case PANEL_DATA://0X02
 	   
         if(run_t.gPower_On ==1){
         hum1 =  run_t.gReal_humtemp[0]/10 %10;  //Humidity 
@@ -132,7 +132,7 @@ void Receive_MainBoard_Data_Handler(uint8_t cmd)
 			run_t.hours_two_bit = n;
             run_t.minutes_one_bit = p;
 	       TM1639_Write_4Bit_Time(m,run_t.hours_two_bit,run_t.minutes_one_bit,q,0) ; // timer   mode  "H0: xx"
-			HAL_Delay(2);
+			
 		 }
          
 		    
@@ -158,8 +158,8 @@ void Receive_MainBoard_Data_Handler(uint8_t cmd)
 	         run_t.hours_two_bit = n;
 			 run_t.minutes_one_bit = 0;
 			 
-              TM1639_Write_4Bit_Time(m,run_t.hours_two_bit,run_t.minutes_one_bit,0,0) ; // timer   mode  "H0: xx"
-             HAL_Delay(2);
+             TM1639_Write_4Bit_Time(m,run_t.hours_two_bit,run_t.minutes_one_bit,0,0) ; // timer   mode  "H0: xx"
+            
 	   
 
       break;
