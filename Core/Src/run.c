@@ -91,6 +91,8 @@ void Receive_MainBoard_Data_Handler(uint8_t cmd)
 	 case WIFI_TEMP: //set temperature value
 	       if(run_t.gPower_On ==1){
 		   	   run_t.set_temperature_flag=1;
+			  
+			   
            run_t.gTimer_key_temp_timing=0;
         	 m= run_t.wifi_set_temperature /10 ;
 			 n= run_t.wifi_set_temperature %10;
@@ -144,6 +146,7 @@ void Receive_MainBoard_Data_Handler(uint8_t cmd)
             run_t.dispTime_minutes = 0;
              
             run_t.temp_set_timer_timing_flag= 1;
+	   
 			run_t.gTimer_key_timing=0;
 		    
             

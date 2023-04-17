@@ -208,7 +208,8 @@ void Process_Key_Handler(uint8_t keylabel)
 
 	  case MODEL_KEY_ID://model_key:
 		if(run_t.gPower_On ==1){
-			run_t.temp_set_timer_timing_flag=1;//run_t.gModel =2;
+			run_t.temp_set_timer_timing_flag=1;
+			
 			SendData_Buzzer();//single_buzzer_fun();
 			
 			run_t.gTimer_key_timing=0;
@@ -226,10 +227,7 @@ void Process_Key_Handler(uint8_t keylabel)
 		  switch(run_t.temp_set_timer_timing_flag){
 
 		    case 0:  //set temperature value 
-
-			if(run_t.temp_set_timer_timing_flag==0){
-
-				run_t.wifi_set_temperature ++;
+                run_t.wifi_set_temperature ++;
 	            if(run_t.wifi_set_temperature < 20){
 				    run_t.wifi_set_temperature=20;
 				}
@@ -244,8 +242,8 @@ void Process_Key_Handler(uint8_t keylabel)
 			
 				   run_t.set_temperature_flag=1;
 				   run_t.gTimer_key_temp_timing=0;
-				   SMG_POWER_ON();	
-				}
+				   
+			
 			break;
 
 			case 1: //set timer timing value 
@@ -265,7 +263,7 @@ void Process_Key_Handler(uint8_t keylabel)
 
 					 TM1639_Write_4Bit_Time(m,run_t.hours_two_bit, run_t.minutes_one_bit,q,0) ; //timer is default 12 hours "12:00" 
 				    HAL_Delay(100);
-                  SMG_POWER_ON();	
+                
 				
 	  	    }
 	  	 }
@@ -405,7 +403,10 @@ void SetTimer_Temperature_Number_Blink(void)
     static uint8_t timing_flag,set_timer_flag,set_temp_flag,define_timer_times;
 	
 	//set timer timing value 
-	if(run_t.gTimer_key_timing > 4 && run_t.temp_set_timer_timing_flag==1 && set_timer_flag ==0 && run_t.gPower_On==1){
+	switch(run_t.temp_set_timer_timing_flag){
+
+	case TIMER_TIMING:
+	if(run_t.gTimer_key_timing > 4  && set_timer_flag ==0 && run_t.gPower_On==1){
 				
 		set_timer_flag++;
 		run_t.gTimer_key_timing =0;
@@ -496,9 +497,10 @@ void SetTimer_Temperature_Number_Blink(void)
 			TM1639_Write_4Bit_Time(m,run_t.hours_two_bit,run_t.minutes_one_bit,q,0) ;
 		}
 	   }
-	  /***********************************************************************************/
-      //set temperature value is blink
-      /**************************temperature value **************************/
+	
+	  break;
+
+	  case TEMPERATURE_BE_SETUP:
 	  if(run_t.gTimer_key_temp_timing > 4 && run_t.set_temperature_flag==1 && run_t.set_temperature_special_value ==0 && run_t.gPower_On==1){
 			set_temp_flag++;
 			
@@ -540,8 +542,8 @@ void SetTimer_Temperature_Number_Blink(void)
 	          SendData_Temp_Data(run_t.wifi_set_temperature);
 	       }
 	  }
-	
-	  
+	  break;
+		}
 
 }
 
