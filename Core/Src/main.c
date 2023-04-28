@@ -125,10 +125,11 @@ int main(void)
 	      break;
 
 		  case 1:
-		  	        Decode_Handler();
+		  	       
 				
 		           run_t.keyvalue = KEY_Scan();//Scan_KeyMode();
 				   Process_Key_Handler(run_t.keyvalue);
+		           Decode_Handler();
 			      
 				   RunPocess_Command_Handler();
 				   USART1_Cmd_Error_Handler();
