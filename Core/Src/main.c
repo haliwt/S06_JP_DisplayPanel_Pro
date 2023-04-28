@@ -120,7 +120,7 @@ int main(void)
 				run_t.gPower_On=POWER_OFF;
 				run_t.gRunCommand_label =POWER_OFF_PROCESS;
 				run_t.power_times=1;
-                 run_t.first_power_on_times=1;
+                run_t.first_power_on_times=1;
 
 	      break;
 
