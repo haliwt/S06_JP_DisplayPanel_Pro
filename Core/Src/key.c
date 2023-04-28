@@ -23,7 +23,12 @@ uint8_t KEY_Scan(void)
   uint8_t  reval = 0;
   key_t.read = _KEY_ALL_OFF; //0xFF 
   
-    if(DEC_KEY_VALUE()  ==1 ) //DEC_KEY_ID = 0x04
+
+	 if(POWER_KEY_VALUE() ==1 ) //POWER_KEY_ID = 0x01
+	{
+		key_t.read &= ~0x01; // 0xff & 0xfe =  0xFE
+	}
+    else if(DEC_KEY_VALUE()  ==1 ) //DEC_KEY_ID = 0x04
 	{
 		  key_t.read &= ~0x04; // 0xFf & 0xfB =  0xFB
 	}
@@ -52,10 +57,7 @@ uint8_t KEY_Scan(void)
 	 {
 		   key_t.read &= ~0x02; // 0xFf & 0xfd =  0xFD
 	 }
-	else if(POWER_KEY_VALUE() ==1 ) //POWER_KEY_ID = 0x01
-	{
-		key_t.read &= ~0x01; // 0xff & 0xfe =  0xFE
-	}
+	
    
     switch(key_t.state )
 	{
@@ -185,7 +187,7 @@ void Process_Key_Handler(uint8_t keylabel)
 	        run_t.power_on_recoder_times++ ;
 		   }
 	  	 
-	   keylabel= 0xff;
+	   run_t.keyvalue = 0xff;
 
 	  break;
 
@@ -202,7 +204,7 @@ void Process_Key_Handler(uint8_t keylabel)
 			run_t.gTimer_wifi_connect_counter=0;
 	       
 		 }
-		keylabel= 0xff;
+		 run_t.keyvalue = 0xff;
 	  break;
 
 	  case MODEL_KEY_ID://model_key:
@@ -215,7 +217,7 @@ void Process_Key_Handler(uint8_t keylabel)
 			
 				
 		 }
-	  keylabel= 0xff;
+	   run_t.keyvalue = 0xff;
 
 	  break;
 
@@ -266,7 +268,7 @@ void Process_Key_Handler(uint8_t keylabel)
 				
 	  	    }
 	  	 }
-	  	keylabel= 0xff;
+	  	 run_t.keyvalue = 0xff;
 	  break;
 
 	  case DEC_KEY_ID://dec_key:
@@ -319,7 +321,7 @@ void Process_Key_Handler(uint8_t keylabel)
 		  break;
 	   	  }
 	   	}
-		keylabel= 0xff;
+		 run_t.keyvalue = 0xff;
 	  break;
 
 	   case DRY_KEY_ID://0x02: //CIN6  ->DRY KEY 
@@ -353,7 +355,7 @@ void Process_Key_Handler(uint8_t keylabel)
 				   
 		       
 			 }
-           keylabel= 0xff; 
+           run_t.keyvalue = 0xff;
         break;
 
 		 case ULTRASONIC_KEY_ID: //0x08: //Fan KEY 
@@ -374,12 +376,12 @@ void Process_Key_Handler(uint8_t keylabel)
 				  
 				 
 			}
-			keylabel= 0xff;	
+			 run_t.keyvalue = 0xff;
 		 break;
 
 
 	  default:
-           keylabel=0xff;
+          
 	  break;
 
 	}

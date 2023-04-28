@@ -32,7 +32,7 @@
 #include "interrupt_manager.h"
 //#include "delay.h"
 
-uint8_t keyvalue;
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -127,8 +127,8 @@ int main(void)
 		  case 1:
 		  	        Decode_Handler();
 				
-		           keyvalue = KEY_Scan();//Scan_KeyMode();
-				   Process_Key_Handler(keyvalue);
+		           run_t.keyvalue = KEY_Scan();//Scan_KeyMode();
+				   Process_Key_Handler(run_t.keyvalue);
 			      
 				   RunPocess_Command_Handler();
 				   USART1_Cmd_Error_Handler();

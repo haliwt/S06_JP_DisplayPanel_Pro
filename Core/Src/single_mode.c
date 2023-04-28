@@ -184,14 +184,18 @@ void RunPocess_Command_Handler(void)
 	  break;
 
 	  case UPDATE_DATA: //3
-	   
+
 	   RunLocal_Smg_Process();
      
 	   Timing_Handler();
-       SetTemperature_Function();  
+	  
+       SetTemperature_Function(); 
+	   
    	   SetTimer_Temperature_Number_Blink();
-
+      
        Display_TimeColon_Blink_Fun();
+
+		
 	   
 
 	  break;
