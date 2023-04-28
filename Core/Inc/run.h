@@ -111,7 +111,7 @@ typedef struct __RUN{
    uint8_t gTimer_display_dht11;
   
    uint8_t gTimer_led_500ms;
-
+   uint8_t first_power_on_times;
    
  
 

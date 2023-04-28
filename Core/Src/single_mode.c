@@ -141,7 +141,11 @@ static void Timing_Handler(void)
 ******************************************************************************/
 static void DisplayPanel_DHT11_Value(void)
 {
-
+  if(run_t.first_power_on_times==1){
+      run_t.first_power_on_times++;
+       Display_DHT11_Value();
+  
+  }
   if(run_t.gTimer_display_dht11 > 10 && run_t.set_temperature_flag==0){
 	    run_t.gTimer_display_dht11=0;
        	Display_DHT11_Value();
@@ -159,16 +163,21 @@ static void DisplayPanel_DHT11_Value(void)
 ******************************************************************************/
 void RunPocess_Command_Handler(void)
 {
-   static uint8_t power_off_flag=0xff;
+   static uint8_t power_off_flag=0xff,power_on_first;
    switch(run_t.gRunCommand_label){
 
       case RUN_POWER_ON:
-           
+          do{
+              power_on_first=0;
+		 	  SendData_PowerOff(1);
+              HAL_Delay(20);
+            }while(power_on_first !=0);
 		    Power_On_Fun();
 			run_t.gRunCommand_label= UPDATE_DATA;
 	  break;
 
 	  case RUN_POWER_OFF:
+          
            Power_Off_Fun();
 	      
 		   run_t.gRunCommand_label =POWER_OFF_PROCESS;

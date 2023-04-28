@@ -187,14 +187,16 @@ static void Receive_Wifi_Cmd(uint8_t cmd)
                 run_t.wifi_power_on_flag = RUN_WIFI_NORMAL_POWER_ON;
 				run_t.wifi_send_buzzer_sound = WIFI_POWER_ON_ITEM;
 		        run_t.gRunCommand_label = RUN_POWER_ON;
+				run_t.wifi_link_cloud_flag =WIFI_CLOUD_SUCCESS;
 			break;
 
 		   case WIFI_POWER_ON: //turn on 
 		 	
-				//  single_buzzer_fun();
+				
 				run_t.wifi_send_buzzer_sound = WIFI_POWER_ON_ITEM;
                 run_t.wifi_power_on_flag = RUN_POWER_ON;
 				run_t.gRunCommand_label = RUN_POWER_ON;
+				run_t.wifi_link_cloud_flag =WIFI_CLOUD_SUCCESS;
 				
 
 	         break;
@@ -207,6 +209,7 @@ static void Receive_Wifi_Cmd(uint8_t cmd)
 			   run_t.wifi_send_buzzer_sound = WIFI_POWER_OFF_ITEM;
 			   run_t.gRunCommand_label = RUN_POWER_OFF;
 			   run_t.power_on_recoder_times++;
+			   run_t.wifi_link_cloud_flag =WIFI_CLOUD_SUCCESS;
 				
             
 
@@ -342,12 +345,21 @@ void Power_On_Fun(void)
 	  minutes_one = run_t.dispTime_minutes /10;
       minutes_two = run_t.dispTime_minutes %10;
 	  
-	  
-	  SMG_POWER_ON(); //WT.EDIT 2023.03.02
+	   SMG_POWER_ON(); //WT.EDIT 2023.03.02
+       HAL_Delay(50);  
 
+//      if(run_t.first_power_on_times == 1){
+//          run_t.first_power_on_times++;
+//          run_t.gReal_humtemp[0]=0;
+//           run_t.gReal_humtemp[1]=0;
+//              Display_DHT11_Value();
+//      }
 	  run_t.hours_two_bit = hour_unit;
 	  run_t.minutes_one_bit =  minutes_one;
+      
 	 TM1639_Write_4Bit_Time(hour_decade,run_t.hours_two_bit,run_t.minutes_one_bit,minutes_two,0);
+      Display_DHT11_Value();
+    
 }
 
 /************************************************************************
