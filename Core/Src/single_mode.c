@@ -170,7 +170,7 @@ void RunPocess_Command_Handler(void)
           do{
               power_on_first=0;
 		 	  SendData_PowerOff(1);
-              HAL_Delay(20);
+              HAL_Delay(200);
             }while(power_on_first !=0);
 		    Power_On_Fun();
 			run_t.gRunCommand_label= UPDATE_DATA;

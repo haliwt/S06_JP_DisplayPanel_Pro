@@ -116,7 +116,7 @@ int main(void)
 	  switch(run_t.power_times){
 
           case 0:
-		        HAL_Delay(100);
+		        HAL_Delay(2000);
 				run_t.gPower_On=POWER_OFF;
 				run_t.gRunCommand_label =POWER_OFF_PROCESS;
 				run_t.power_times=1;
@@ -126,10 +126,11 @@ int main(void)
 
 		  case 1:
 		  	       
-				
+				   Decode_Handler();
+                   
 		           run_t.keyvalue = KEY_Scan();//Scan_KeyMode();
 				   Process_Key_Handler(run_t.keyvalue);
-		           Decode_Handler();
+		          
 			      
 				   RunPocess_Command_Handler();
 				   USART1_Cmd_Error_Handler();
