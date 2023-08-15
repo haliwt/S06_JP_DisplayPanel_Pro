@@ -334,7 +334,7 @@ void Power_On_Fun(void)
 			 run_t.works_dispTime_hours=0;
 			 run_t.works_dispTime_minutes=0;
 			 SendData_Works_Time(run_t.send_app_wokes_minutes_one, run_t.send_app_wokes_minutes_two);
-			 HAL_Delay(200);
+			 HAL_Delay(5);
 		}
          
         
@@ -346,14 +346,9 @@ void Power_On_Fun(void)
       minutes_two = run_t.dispTime_minutes %10;
 	  
 	   SMG_POWER_ON(); //WT.EDIT 2023.03.02
-       HAL_Delay(50);  
+       HAL_Delay(5);  
 
-//      if(run_t.first_power_on_times == 1){
-//          run_t.first_power_on_times++;
-//          run_t.gReal_humtemp[0]=0;
-//           run_t.gReal_humtemp[1]=0;
-//              Display_DHT11_Value();
-//      }
+
 	  run_t.hours_two_bit = hour_unit;
 	  run_t.minutes_one_bit =  minutes_one;
       

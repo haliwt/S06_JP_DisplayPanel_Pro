@@ -120,6 +120,11 @@ typedef struct __RUN{
 
    uint8_t gTimes_time_seconds;
    uint8_t set_temperature_flag;
+   //command from mainboard 
+   uint8_t wifi_receive_power_off_flag;
+   uint8_t wifi_receive_power_on_flag ;
+   //interrupt
+   uint8_t power_key_interrupt_flag;
   
 	
    uint8_t gReal_humtemp[2];

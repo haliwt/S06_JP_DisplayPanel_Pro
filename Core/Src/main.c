@@ -7,7 +7,7 @@
   * @attention
   *
   * S06 display panel by s03 mainboard to tencent cloud order
-  *
+  * for mass version 1.2 .DATA.2023-08-12
   *
   .
   *
@@ -121,19 +121,21 @@ int main(void)
 				run_t.gRunCommand_label =POWER_OFF_PROCESS;
 				run_t.power_times=1;
                 run_t.first_power_on_times=1;
+               
 
 	      break;
 
 		  case 1:
 		  	       
-				   Decode_Handler();
-                   
-		           run_t.keyvalue = KEY_Scan();//Scan_KeyMode();
-				   Process_Key_Handler(run_t.keyvalue);
-		          
-			      
-				   RunPocess_Command_Handler();
-				   USART1_Cmd_Error_Handler();
+		   Decode_Handler();
+           if(run_t.power_key_interrupt_flag==0){ 
+            run_t.keyvalue = KEY_Scan();//Scan_KeyMode();
+           }
+		   Process_Key_Handler(run_t.keyvalue);
+          
+	      
+		   RunPocess_Command_Handler();
+		   USART1_Cmd_Error_Handler();
 			   
 
 

@@ -78,7 +78,7 @@ uint8_t KEY_Scan(void)
 		{
 			if(key_t.read == key_t.buffer) //  short  key be down ->continunce be pressed key
 			{
-				if(++key_t.on_time>300 && ++key_t.on_time <15000 )// //10000  0.5us
+				if(++key_t.on_time>300  )// //10000  0.5us
 				{
 					//run_t.power_times++;
                     key_t.value = key_t.buffer^_KEY_ALL_OFF; // key.value = 0xFE ^ 0xFF = 0x01
@@ -112,7 +112,7 @@ uint8_t KEY_Scan(void)
 			}
 			else if(key_t.read == _KEY_ALL_OFF)  // loose hand 
 			{
-					if(++key_t.off_time> 1) //20//30 don't holding key dithering
+					if(++key_t.off_time> 5) //20//30 don't holding key dithering
 					{
 						key_t.value = key_t.buffer^_KEY_ALL_OFF; // key.value = 0x1E ^ 0x1f = 0x01
 						
@@ -135,7 +135,7 @@ uint8_t KEY_Scan(void)
 		{
 			if(key_t.read == _KEY_ALL_OFF)
 			{
-				if(++key_t.off_time>0)//5//10//50 //100
+				if(++key_t.off_time>5)//5//10//50 //100
 				{
 					key_t.state   = start;
                   
@@ -168,21 +168,27 @@ void Process_Key_Handler(uint8_t keylabel)
 {
    static uint8_t m,n,p,q,power_on_off_flag;
    static uint8_t power_flag;
-    switch(keylabel){
+   uint8_t wifi_look_for;
+   switch(keylabel){
 
       case POWER_KEY_ID:
 	 
-           power_on_off_flag = power_on_off_flag ^ 0x01;
-	       if(power_on_off_flag ==1){
- 			run_t.gTimer_set_temp_times=0; //conflict with send temperatur value
- 			run_t.wifi_power_on_flag = RUN_NULL ; //divisive app power on and key power on
+        if(run_t.gRunCommand_label ==RUN_POWER_OFF || run_t.gRunCommand_label==POWER_OFF_PROCESS){
+	     
+	         SendData_PowerOnOff(1);
+            HAL_Delay(20);
+            run_t.gTimer_set_temp_times=0; //conflict with send temperatur value
+ 				run_t.wifi_power_on_flag = RUN_NULL ; //divisive app power on and key power on
             run_t.gRunCommand_label =RUN_POWER_ON;
+            run_t.wifi_receive_power_off_flag=0;
+            run_t.power_key_interrupt_flag=0;
               
 		 }
 		 else{
+            run_t.wifi_receive_power_on_flag=0;
 
-		    SendData_PowerOff(0);
-            HAL_Delay(200);
+		    SendData_PowerOnOff(0);
+            HAL_Delay(1);
 		    run_t.gRunCommand_label =RUN_POWER_OFF;
 	        run_t.power_on_recoder_times++ ;
 		   }
@@ -193,13 +199,30 @@ void Process_Key_Handler(uint8_t keylabel)
 
 	  case LINK_WIFI_KEY_ID:
 	  	if(run_t.gPower_On ==1){
-
-		    SendData_Set_Wifi(0x01);
-			HAL_Delay(50);
+       
+            
+            SendData_Set_Wifi(0x01);
+			HAL_Delay(1);
 		  	run_t.gWifi =1;
 			run_t.gTimer_set_temp_times=0; //conflict with send temperatur value 
+			do{
+
+               if(run_t.wifi_led_fast_blink_flag==0){
+
+                  SendData_Set_Wifi(0x01);
+                  HAL_Delay(1);
+                  wifi_look_for =1;
+
+               }
+               else{
+                  wifi_look_for =0;
+
+               }
+
+
+            }while(wifi_look_for);
          
-			run_t.wifi_led_fast_blink_flag=1;
+			//run_t.wifi_led_fast_blink_flag=1;
 			run_t.wifi_link_cloud_flag =0;
 			run_t.gTimer_wifi_connect_counter=0;
 	       

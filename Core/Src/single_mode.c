@@ -105,7 +105,7 @@ static void Timing_Handler(void)
         
        
 		
-		SendData_PowerOff(0);
+		SendData_PowerOnOff(0);
 		HAL_Delay(200);
 		
 	  run_t.power_on_recoder_times++; //this is data must be change if not don't "breath led"
@@ -163,21 +163,42 @@ static void DisplayPanel_DHT11_Value(void)
 ******************************************************************************/
 void RunPocess_Command_Handler(void)
 {
-   static uint8_t power_off_flag=0xff,power_on_first;
+   static uint8_t power_off_flag=0xff;
+   uint8_t power_on_first,power_off_id;
    switch(run_t.gRunCommand_label){
 
       case RUN_POWER_ON:
+    
           do{
-              power_on_first=0;
-		 	  SendData_PowerOff(1);
-              HAL_Delay(200);
-            }while(power_on_first !=0);
+              
+              if(run_t.wifi_receive_power_on_flag ==0){
+		 	   SendData_PowerOnOff(1);
+               HAL_Delay(1);
+               power_on_first=1;
+              }
+              else{
+                  power_on_first=0;
+              }
+              
+          }while(power_on_first);
 		    Power_On_Fun();
 			run_t.gRunCommand_label= UPDATE_DATA;
 	  break;
 
 	  case RUN_POWER_OFF:
-          
+       
+           do{
+              
+             if(run_t.wifi_receive_power_off_flag ==0){
+		 	   SendData_PowerOnOff(0);
+               HAL_Delay(1);
+               power_off_id=1;
+             }
+             else{
+                 power_off_id=0;
+             }
+              
+            }while(power_off_id);
            Power_Off_Fun();
 	      
 		   run_t.gRunCommand_label =POWER_OFF_PROCESS;

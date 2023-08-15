@@ -22,7 +22,7 @@ uint8_t inputBuf[MAX_BUFFER_SIZE];
 *Return Ref:NO
 *
 ****************************************************************************************************/
-void SendData_PowerOff(uint8_t index)
+void SendData_PowerOnOff(uint8_t index)
 {
 	
    //crc=0x55;
@@ -247,13 +247,58 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
                  state = 4;  
             break;
             case WIFI_INFO :
-                  if(inputBuf[0]==0x01)
-                     run_t.wifi_link_cloud_flag =WIFI_CLOUD_SUCCESS;
-                   else 
-                      run_t.wifi_link_cloud_flag =WIFI_CLOUD_FAIL;
+
+                 switch(inputBuf[0]){
+
+                  case 0x01:
+                 
+                    run_t.wifi_link_cloud_flag =WIFI_CLOUD_SUCCESS;
+                    state=0;
+                    run_t.decodeFlag=1;
+
+                 break;
+
+                 case 0x0:
+                  
+                    run_t.wifi_link_cloud_flag =WIFI_CLOUD_FAIL;
                    
                     state=0;
                     run_t.decodeFlag=1;
+
+                 break;
+
+                 case 0x52: // link tencent cloud receive return data flag
+				
+					//run_t.wifi_receive_led_fast_led_flag =1;
+                    run_t.wifi_led_fast_blink_flag=1;
+                    state=0;
+		            run_t.decodeFlag=0;
+                    
+				  
+                 break;
+
+                 case 0x54 : //power on return confirm flag
+                
+                    
+                      run_t.wifi_receive_power_on_flag =1;
+                       state=0;
+		            run_t.decodeFlag=0;
+
+                 break;
+
+                 case 0x53: //power off return confirm flag
+              
+                    
+                    run_t.wifi_receive_power_off_flag =1;
+                     state=0;
+		            run_t.decodeFlag=0;
+
+                  
+                 break;
+
+                 
+
+                 }
              
             break;
 
