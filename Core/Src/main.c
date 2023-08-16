@@ -110,17 +110,15 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 	 //S06 -touch key 
-
-
-
-	  switch(run_t.power_times){
+    switch(run_t.power_times){
 
           case 0:
-		        HAL_Delay(2000);
-				run_t.gPower_On=0xff;
-				run_t.gRunCommand_label =POWER_OFF_PROCESS;
-				run_t.power_times=1;
-                run_t.first_power_on_times=1;
+	        HAL_Delay(2000);
+			run_t.gPower_On=0xff;
+			run_t.gRunCommand_label =POWER_OFF_PROCESS;
+            run_t.power_off_recoder_times =0; //WT.EDIT 2023.08.16
+			run_t.power_times=1;
+            run_t.first_power_on_times=1;
                
 
 	      break;
@@ -134,8 +132,9 @@ int main(void)
            }
 		   
            Power_OnOff_Key_Handler();
-	       if(POWER_KEY_VALUE()==0)
+	       if(POWER_KEY_VALUE()==0){
 		       RunPocess_Command_Handler();
+           }
            
 		   USART1_Cmd_Error_Handler();
 			   

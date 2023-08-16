@@ -8,7 +8,7 @@
 
 RUN_T run_t;
 
-uint8_t power_on_off_flag;
+
 
 void Power_Off(void);
 
@@ -208,6 +208,7 @@ static void Receive_Wifi_Cmd(uint8_t cmd)
                 
 			   run_t.wifi_send_buzzer_sound = WIFI_POWER_OFF_ITEM;
 			   run_t.gRunCommand_label = POWER_OFF_PROCESS; //RUN_POWER_OFF; //WT.EDIT 2023.08-16
+			   run_t.power_off_recoder_times=0; //WT.EDIT 2023.08.16
 			   run_t.power_on_recoder_times++;
 			   run_t.wifi_link_cloud_flag =WIFI_CLOUD_SUCCESS;
 				
@@ -380,7 +381,7 @@ void Power_Off_Fun(void)
 	
 	    run_t.gPower_On=POWER_OFF;
 		
-		power_on_off_flag=1;
+
 		
         Power_Off_Led_Off();
 

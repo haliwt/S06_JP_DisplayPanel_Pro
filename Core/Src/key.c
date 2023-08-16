@@ -79,7 +79,7 @@ uint8_t KEY_Scan(void)
 		{
 			if(key_t.read == key_t.buffer) //  short  key be down ->continunce be pressed key
 			{
-				if(++key_t.on_time>10  )//300 //10000  0.5us
+				if(++key_t.on_time>3  )//300 //10000  0.5us
 				{
 					//run_t.power_times++;
                     key_t.value = key_t.buffer^_KEY_ALL_OFF; // key.value = 0xFE ^ 0xFF = 0x01
@@ -167,47 +167,11 @@ uint8_t KEY_Scan(void)
 ************************************************************************/
 void Process_Key_Handler(uint8_t keylabel)
 {
-   static uint8_t m,n,p,q,power_on_off_flag;
-   static uint8_t power_flag;
+   static uint8_t m,n,q;
    uint8_t wifi_look_for;
    switch(keylabel){
 
-     #if 0
-
-      case KEY_POWER_ON:
-	 
-       
-	        run_t.wifi_receive_power_off_flag=0;
-	        SendData_PowerOnOff(1);
-            HAL_Delay(10);
-            run_t.gTimer_set_temp_times=0; //conflict with send temperatur value
- 				run_t.wifi_power_on_flag = RUN_NULL ; //divisive app power on and key power on
-            run_t.gRunCommand_label =RUN_POWER_ON;
-            
-            run_t.power_key_interrupt_flag=0;
-            run_t.power_on_recoder_times++ ;
-              
-		 
-		
-	  	 
-	   run_t.keyvalue = 0xff;
-
-	  break;
-
-      case KEY_POWER_OFF:
-        
-            run_t.wifi_receive_power_on_flag=0;
-
-		    SendData_PowerOnOff(0);
-            HAL_Delay(10);
-		    run_t.gRunCommand_label =RUN_POWER_OFF;
-	        run_t.power_on_recoder_times++ ;
-            run_t.power_key_interrupt_flag=0;
-		   
-        run_t.keyvalue = 0xff;
-
-      break;
-     #endif 
+  
      
 	  case LINK_WIFI_KEY_ID:
 	  	if(run_t.gPower_On ==1){
@@ -274,7 +238,7 @@ void Process_Key_Handler(uint8_t keylabel)
 				n =  run_t.wifi_set_temperature % 10; //
    
                 TM1639_Write_2bit_SetUp_TempData(m,n,0);
-				HAL_Delay(100);
+				HAL_Delay(10);
 			
 				   run_t.set_temperature_flag=1;
 				   run_t.gTimer_key_temp_timing=0;
@@ -298,7 +262,7 @@ void Process_Key_Handler(uint8_t keylabel)
 				
 
 					 TM1639_Write_4Bit_Time(m,run_t.hours_two_bit, run_t.minutes_one_bit,q,0) ; //timer is default 12 hours "12:00" 
-				    HAL_Delay(100);
+				    HAL_Delay(10);
                 
 				
 	  	    }
@@ -323,7 +287,7 @@ void Process_Key_Handler(uint8_t keylabel)
 
 			
 			 TM1639_Write_2bit_SetUp_TempData(m,n,0);
-			 HAL_Delay(100);
+			 HAL_Delay(10);
 		      run_t.set_temperature_flag=1;
 			  run_t.gTimer_key_temp_timing=0;
 			 
@@ -349,7 +313,7 @@ void Process_Key_Handler(uint8_t keylabel)
 				  q = 0;
 
 				TM1639_Write_4Bit_Time(m,run_t.hours_two_bit,run_t.minutes_one_bit,q,0) ; //timer is default 12 hours "12:00"    
-                HAL_Delay(100);
+                HAL_Delay(10);
 	
 			
 		  
@@ -444,7 +408,7 @@ void Power_OnOff_Key_Handler(void)
             else{
 	        run_t.wifi_receive_power_off_flag=0;
 	        SendData_PowerOnOff(1);
-            HAL_Delay(5);
+            HAL_Delay(10);
             run_t.gTimer_set_temp_times=0; //conflict with send temperatur value
  				run_t.wifi_power_on_flag = RUN_NULL ; //divisive app power on and key power on
             run_t.gRunCommand_label =RUN_POWER_ON;
@@ -456,7 +420,7 @@ void Power_OnOff_Key_Handler(void)
       break;
 
       case KEY_POWER_OFF:
-
+            
             if(run_t.power_key_interrupt_flag==0){
                 run_t.key_power_tag=0xff;
             }
@@ -465,13 +429,17 @@ void Power_OnOff_Key_Handler(void)
             run_t.wifi_receive_power_on_flag=0;
 
 		    SendData_PowerOnOff(0);
-            HAL_Delay(5);
+            HAL_Delay(10);
 		    run_t.gRunCommand_label =RUN_POWER_OFF;
 	        run_t.power_on_recoder_times++ ;
             run_t.power_key_interrupt_flag=0;
 		   
             }
 
+      break;
+            
+      default:
+          
       break;
 
      }
@@ -489,8 +457,8 @@ void Power_OnOff_Key_Handler(void)
 void SetTimer_Temperature_Number_Blink(void)
 {
 
-    static uint8_t m,n,p,q,counter_timesb,send_timing_value,counter_times;
-    static uint8_t timing_flag,set_timer_flag,set_temp_flag,define_timer_times;
+    static uint8_t m,n,p,q,send_timing_value,counter_times;
+    static uint8_t timing_flag,set_timer_flag,set_temp_flag;
 	
 	//set timer timing value 
 	switch(run_t.temp_set_timer_timing_flag){
@@ -514,14 +482,14 @@ void SetTimer_Temperature_Number_Blink(void)
 		    run_t.send_app_timer_minutes_two = 0;
 			
 			SendData_Time_Data(run_t.dispTime_hours);
-			HAL_Delay(100);
+			HAL_Delay(10);
             
 		 	//SendData_Remaining_Time(run_t.send_app_timer_minutes_one, run_t.send_app_timer_minutes_two);
 			//HAL_Delay(200);
 			
 					
 			SendData_Works_Time(run_t.send_app_wokes_minutes_one ,run_t.send_app_wokes_minutes_two);
-			HAL_Delay(100);
+			HAL_Delay(10);
 	        run_t.dispTime_hours = run_t.works_dispTime_hours;
 			run_t.dispTime_minutes = run_t.works_dispTime_minutes;
 			Display_GMT(run_t.dispTime_hours,run_t.dispTime_minutes);
@@ -577,7 +545,7 @@ void SetTimer_Temperature_Number_Blink(void)
 			while(send_timing_value == 1){
 			   send_timing_value++;
 			   SendData_Time_Data(run_t.dispTime_hours);
-			   HAL_Delay(50);
+			   HAL_Delay(10);
 			}
 			run_t.send_app_timer_minutes_one = run_t.send_app_timer_total_minutes_data >> 8;
 		    run_t.send_app_timer_minutes_two = run_t.send_app_timer_total_minutes_data & 0x00ff;
@@ -637,7 +605,7 @@ void SetTimer_Temperature_Number_Blink(void)
 			  n =  run_t.wifi_set_temperature % 10; //
 			  TM1639_Write_2bit_SetUp_TempData(m,n,0);
 	          SendData_Temp_Data(run_t.wifi_set_temperature);
-               HAL_Delay(50);
+               HAL_Delay(10);
 	       }
 	  }
 	  break;

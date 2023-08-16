@@ -126,6 +126,9 @@ typedef struct __RUN{
    //interrupt
    uint8_t power_key_interrupt_flag;
    uint8_t key_power_tag;
+
+   //power on or off
+    uint8_t power_off_recoder_times;
   
 	
    uint8_t gReal_humtemp[2];

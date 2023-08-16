@@ -110,6 +110,7 @@ static void Timing_Handler(void)
 		
 	  run_t.power_on_recoder_times++; //this is data must be change if not don't "breath led"
 	  run_t.gRunCommand_label = POWER_OFF_PROCESS; //POWER_OFF ; //WT.EDIT 2023.08-16
+	  run_t.power_off_recoder_times=0; //WT.EDIT 2023.08.16
 	  run_t.timer_timing_define_flag = 0xff;
 
 	break;
@@ -168,7 +169,7 @@ void RunPocess_Command_Handler(void)
    switch(run_t.gRunCommand_label){
 
       case RUN_POWER_ON: //2
-         power_off_recoder_times=0;
+         run_t.power_off_recoder_times=0;
           do{
               
               if(run_t.wifi_receive_power_on_flag ==0){
@@ -178,6 +179,7 @@ void RunPocess_Command_Handler(void)
               }
               else{
                   power_on_first=0;
+                 
               }
               
           }while(power_on_first);
@@ -200,7 +202,7 @@ void RunPocess_Command_Handler(void)
              }
               
             }while(power_off_id);
-          power_off_recoder_times=0;
+          run_t.power_off_recoder_times=0;
 	      
 		   run_t.gRunCommand_label =POWER_OFF_PROCESS;
 	  break;
@@ -224,8 +226,8 @@ void RunPocess_Command_Handler(void)
 
 	  case POWER_OFF_PROCESS: //4
      
-       if(power_off_recoder_times ==0){
-         power_off_recoder_times++;
+       if(run_t.power_off_recoder_times ==0){
+         run_t.power_off_recoder_times++;
          Power_Off_Fun();
 
        }
