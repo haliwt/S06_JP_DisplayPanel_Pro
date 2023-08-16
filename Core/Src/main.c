@@ -130,9 +130,10 @@ int main(void)
 		   Decode_Handler();
            if(run_t.power_key_interrupt_flag==0){ 
             run_t.keyvalue = KEY_Scan();//Scan_KeyMode();
+            Process_Key_Handler(run_t.keyvalue);
            }
-		   Process_Key_Handler(run_t.keyvalue);
-          
+		   
+           Power_OnOff_Handler();
 	       if(POWER_KEY_VALUE()==0)
 		       RunPocess_Command_Handler();
            

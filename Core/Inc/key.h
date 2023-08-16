@@ -95,6 +95,8 @@ typedef enum
 
 typedef enum{
 
+   KEY_POWER_OFF = 0xA0,
+   KEY_POWER_ON  = 0xA1,
    POWER_KEY_ID = 0x01,
    MODEL_KEY_ID = 0x02,
    DEC_KEY_ID = 0x04,
@@ -154,6 +156,7 @@ void Process_Key_Handler(uint8_t keylabel);
 
 void SetTimer_Temperature_Number_Blink(void);
 
+void Power_OnOff_Handler(void);
 
 #endif 
 
