@@ -24,10 +24,14 @@ uint8_t KEY_Scan(void)
   key_t.read = _KEY_ALL_OFF; //0xFF 
   
 
-	 if(POWER_KEY_VALUE() ==1 ) //POWER_KEY_ID = 0x01
-	{
-		key_t.read &= ~0x01; // 0xff & 0xfe =  0xFE
-	}
+//	 if(POWER_KEY_VALUE() ==1 ) //POWER_KEY_ID = 0x01
+//	{
+//		key_t.read &= ~0x01; // 0xff & 0xfe =  0xFE
+//	}
+    if(MODEL_KEY_VALUE() ==1 )
+    {
+        key_t.read &= ~0x02; // 0xFf & 0xfd =  0xFD
+    }
     else if(DEC_KEY_VALUE()  ==1 ) //DEC_KEY_ID = 0x04
 	{
 		  key_t.read &= ~0x04; // 0xFf & 0xfB =  0xFB
@@ -53,10 +57,7 @@ uint8_t KEY_Scan(void)
 		key_t.read &= ~0x80; // 0x1f & 0x7F =  0x7F
 	 }
 	
-	else if(MODEL_KEY_VALUE() ==1 )
-	 {
-		   key_t.read &= ~0x02; // 0xFf & 0xfd =  0xFD
-	 }
+	
 	
    
     switch(key_t.state )
@@ -78,7 +79,7 @@ uint8_t KEY_Scan(void)
 		{
 			if(key_t.read == key_t.buffer) //  short  key be down ->continunce be pressed key
 			{
-				if(++key_t.on_time>300  )// //10000  0.5us
+				if(++key_t.on_time>100  )//300 //10000  0.5us
 				{
 					//run_t.power_times++;
                     key_t.value = key_t.buffer^_KEY_ALL_OFF; // key.value = 0xFE ^ 0xFF = 0x01
@@ -112,7 +113,7 @@ uint8_t KEY_Scan(void)
 			}
 			else if(key_t.read == _KEY_ALL_OFF)  // loose hand 
 			{
-					if(++key_t.off_time> 5) //20//30 don't holding key dithering
+					if(++key_t.off_time> 3) //20//30 don't holding key dithering
 					{
 						key_t.value = key_t.buffer^_KEY_ALL_OFF; // key.value = 0x1E ^ 0x1f = 0x01
 						
@@ -135,7 +136,7 @@ uint8_t KEY_Scan(void)
 		{
 			if(key_t.read == _KEY_ALL_OFF)
 			{
-				if(++key_t.off_time>5)//5//10//50 //100
+				if(++key_t.off_time>3)//5//10//50 //100
 				{
 					key_t.state   = start;
                   
@@ -188,9 +189,10 @@ void Process_Key_Handler(uint8_t keylabel)
             run_t.wifi_receive_power_on_flag=0;
 
 		    SendData_PowerOnOff(0);
-            HAL_Delay(1);
+            HAL_Delay(20);
 		    run_t.gRunCommand_label =RUN_POWER_OFF;
 	        run_t.power_on_recoder_times++ ;
+            run_t.power_key_interrupt_flag=0;
 		   }
 	  	 
 	   run_t.keyvalue = 0xff;

@@ -186,12 +186,12 @@ void EXTI4_15_IRQHandler(void)
   if(POWER_KEY_VALUE() ==1 && run_t.power_times==1){
 			
 	
-    if(run_t.gRunCommand_label==POWER_OFF_PROCESS){
+   // if(run_t.gRunCommand_label==POWER_OFF_PROCESS){
 		
         run_t.power_key_interrupt_flag=1;
 	    run_t.keyvalue =POWER_KEY_ID;//RUN_POWER_ON;
 
-    }
+   // }
     
     
    }
