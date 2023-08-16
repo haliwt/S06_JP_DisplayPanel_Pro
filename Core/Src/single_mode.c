@@ -106,10 +106,10 @@ static void Timing_Handler(void)
        
 		
 		SendData_PowerOnOff(0);
-		HAL_Delay(200);
+		HAL_Delay(2);
 		
 	  run_t.power_on_recoder_times++; //this is data must be change if not don't "breath led"
-	  run_t.gRunCommand_label = RUN_POWER_OFF;//POWER_OFF_PROCESS; //POWER_OFF_PROCESS ;
+	  run_t.gRunCommand_label = POWER_OFF_PROCESS; //POWER_OFF ; //WT.EDIT 2023.08-16
 	  run_t.timer_timing_define_flag = 0xff;
 
 	break;
@@ -163,12 +163,12 @@ static void DisplayPanel_DHT11_Value(void)
 ******************************************************************************/
 void RunPocess_Command_Handler(void)
 {
-   static uint8_t power_off_flag=0xff;
+   static uint8_t power_off_flag=0xff,power_off_recoder_times;
    uint8_t power_on_first,power_off_id;
    switch(run_t.gRunCommand_label){
 
-      case RUN_POWER_ON:
-    
+      case RUN_POWER_ON: //2
+         power_off_recoder_times=0;
           do{
               
               if(run_t.wifi_receive_power_on_flag ==0){
@@ -182,10 +182,11 @@ void RunPocess_Command_Handler(void)
               
           }while(power_on_first);
 		    Power_On_Fun();
+            
 			run_t.gRunCommand_label= UPDATE_DATA;
 	  break;
 
-	  case RUN_POWER_OFF:
+	  case RUN_POWER_OFF: //1
        
            do{
               
@@ -199,7 +200,7 @@ void RunPocess_Command_Handler(void)
              }
               
             }while(power_off_id);
-           Power_Off_Fun();
+          power_off_recoder_times=0;
 	      
 		   run_t.gRunCommand_label =POWER_OFF_PROCESS;
 	  break;
@@ -221,7 +222,13 @@ void RunPocess_Command_Handler(void)
 
 	  break;
 
-	  case POWER_OFF_PROCESS:
+	  case POWER_OFF_PROCESS: //4
+     
+       if(power_off_recoder_times ==0){
+         power_off_recoder_times++;
+         Power_Off_Fun();
+
+       }
 
 	   if(run_t.gPower_On ==POWER_OFF || run_t.gPower_On == 0xff){
 
@@ -231,7 +238,8 @@ void RunPocess_Command_Handler(void)
 		    Breath_Led();
           
 	      }
-		  else if(run_t.gPower_On ==0xff){
+          
+		  if(run_t.gPower_On ==0xff || run_t.gPower_On ==POWER_OFF){
 				Breath_Led();
 		  }
 		  else{

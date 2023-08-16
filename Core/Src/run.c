@@ -207,7 +207,7 @@ static void Receive_Wifi_Cmd(uint8_t cmd)
 			 case WIFI_POWER_OFF: //turn off 
                 
 			   run_t.wifi_send_buzzer_sound = WIFI_POWER_OFF_ITEM;
-			   run_t.gRunCommand_label = RUN_POWER_OFF;
+			   run_t.gRunCommand_label = POWER_OFF_PROCESS; //RUN_POWER_OFF; //WT.EDIT 2023.08-16
 			   run_t.power_on_recoder_times++;
 			   run_t.wifi_link_cloud_flag =WIFI_CLOUD_SUCCESS;
 				
