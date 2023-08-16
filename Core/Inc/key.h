@@ -156,7 +156,7 @@ void Process_Key_Handler(uint8_t keylabel);
 
 void SetTimer_Temperature_Number_Blink(void);
 
-void Power_OnOff_Handler(void);
+void Power_OnOff_Key_Handler(void);
 
 #endif 
 

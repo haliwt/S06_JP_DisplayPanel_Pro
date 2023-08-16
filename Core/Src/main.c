@@ -133,7 +133,7 @@ int main(void)
             Process_Key_Handler(run_t.keyvalue);
            }
 		   
-           Power_OnOff_Handler();
+           Power_OnOff_Key_Handler();
 	       if(POWER_KEY_VALUE()==0)
 		       RunPocess_Command_Handler();
            
