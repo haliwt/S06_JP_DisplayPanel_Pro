@@ -79,7 +79,7 @@ uint8_t KEY_Scan(void)
 		{
 			if(key_t.read == key_t.buffer) //  short  key be down ->continunce be pressed key
 			{
-				if(++key_t.on_time>50  )//300 //10000  0.5us
+				if(++key_t.on_time>10  )//300 //10000  0.5us
 				{
 					//run_t.power_times++;
                     key_t.value = key_t.buffer^_KEY_ALL_OFF; // key.value = 0xFE ^ 0xFF = 0x01
@@ -113,7 +113,7 @@ uint8_t KEY_Scan(void)
 			}
 			else if(key_t.read == _KEY_ALL_OFF)  // loose hand 
 			{
-					if(++key_t.off_time> 2) //20//30 don't holding key dithering
+					if(++key_t.off_time> 0) //20//30 don't holding key dithering
 					{
 						key_t.value = key_t.buffer^_KEY_ALL_OFF; // key.value = 0x1E ^ 0x1f = 0x01
 						
@@ -136,7 +136,7 @@ uint8_t KEY_Scan(void)
 		{
 			if(key_t.read == _KEY_ALL_OFF)
 			{
-				if(++key_t.off_time>2)//5//10//50 //100
+				if(++key_t.off_time>0)//5//10//50 //100
 				{
 					key_t.state   = start;
                   
@@ -444,7 +444,7 @@ void Power_OnOff_Key_Handler(void)
             else{
 	        run_t.wifi_receive_power_off_flag=0;
 	        SendData_PowerOnOff(1);
-            HAL_Delay(20);
+            HAL_Delay(5);
             run_t.gTimer_set_temp_times=0; //conflict with send temperatur value
  				run_t.wifi_power_on_flag = RUN_NULL ; //divisive app power on and key power on
             run_t.gRunCommand_label =RUN_POWER_ON;
@@ -465,7 +465,7 @@ void Power_OnOff_Key_Handler(void)
             run_t.wifi_receive_power_on_flag=0;
 
 		    SendData_PowerOnOff(0);
-            HAL_Delay(20);
+            HAL_Delay(5);
 		    run_t.gRunCommand_label =RUN_POWER_OFF;
 	        run_t.power_on_recoder_times++ ;
             run_t.power_key_interrupt_flag=0;
