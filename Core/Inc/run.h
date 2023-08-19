@@ -70,6 +70,8 @@ typedef struct __RUN{
    uint8_t gTemperature;
  
    uint8_t gTimer_Counter;
+   //key
+   uint8_t key_power_on_flag;
    
   
   
@@ -129,6 +131,7 @@ typedef struct __RUN{
 
    //power on or off
     uint8_t power_off_recoder_times;
+    uint8_t power_on_run_update_data_flag;
   
 	
    uint8_t gReal_humtemp[2];

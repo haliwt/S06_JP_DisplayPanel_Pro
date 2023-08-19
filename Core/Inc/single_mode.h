@@ -8,7 +8,9 @@ typedef enum {
     UPDATE_DATA,
     POWER_OFF_PROCESS,
     RUN_WIFI_NORMAL_POWER_ON,
-    RUN_NULL
+    RUN_WIFI_TIMER_POWER_ON,
+    RUN_NULL,
+    RUN_POWER_OFF_NULL,
 
 }power_on_state_t;
 

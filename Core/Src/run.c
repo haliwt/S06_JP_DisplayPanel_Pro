@@ -82,13 +82,13 @@ void Receive_MainBoard_Data_Handler(uint8_t cmd)
     switch(cmd){
 
 
-	 case WIFI_CMD:
+	 case WIFI_CMD: //0x06
 	 	 
 	    Receive_Wifi_Cmd(run_t.wifiCmd[0]);
 	 
 	 break;
 
-	 case WIFI_TEMP: //set temperature value
+	 case WIFI_TEMP: //5->set temperature value
 	       if(run_t.gPower_On ==1){
 		   	   run_t.set_temperature_flag=1;
 			  
@@ -182,20 +182,23 @@ static void Receive_Wifi_Cmd(uint8_t cmd)
 
 
 
-          case WIFI_POWER_ON_NORMAL:
+          case WIFI_POWER_ON_NORMAL: //0xB0
 
                 run_t.wifi_power_on_flag = RUN_WIFI_NORMAL_POWER_ON;
 				run_t.wifi_send_buzzer_sound = WIFI_POWER_ON_ITEM;
 		        run_t.gRunCommand_label = RUN_POWER_ON;
+                run_t.power_on_run_update_data_flag=0;
 				run_t.wifi_link_cloud_flag =WIFI_CLOUD_SUCCESS;
 			break;
 
-		   case WIFI_POWER_ON: //turn on 
+		   case WIFI_POWER_ON: //turn on 0x80
 		 	
 				
 				run_t.wifi_send_buzzer_sound = WIFI_POWER_ON_ITEM;
-                run_t.wifi_power_on_flag = RUN_POWER_ON;
+                run_t.wifi_power_on_flag =  RUN_WIFI_TIMER_POWER_ON;
+                run_t.power_on_run_update_data_flag =0;
 				run_t.gRunCommand_label = RUN_POWER_ON;
+                run_t.power_on_run_update_data_flag=0;
 				run_t.wifi_link_cloud_flag =WIFI_CLOUD_SUCCESS;
 				
 
@@ -210,6 +213,8 @@ static void Receive_Wifi_Cmd(uint8_t cmd)
 			   run_t.gRunCommand_label = POWER_OFF_PROCESS; //RUN_POWER_OFF; //WT.EDIT 2023.08-16
 			   run_t.power_off_recoder_times=0; //WT.EDIT 2023.08.16
 			   run_t.power_on_recoder_times++;
+               run_t.power_on_run_update_data_flag=0;
+               run_t.wifi_power_on_flag = RUN_POWER_OFF_NULL;
 			   run_t.wifi_link_cloud_flag =WIFI_CLOUD_SUCCESS;
 				
             
@@ -282,7 +287,7 @@ void Power_On_Fun(void)
                 
    static uint8_t hour_decade,hour_unit,minutes_one,minutes_two;
 
-   if(run_t.wifi_power_on_flag !=RUN_POWER_ON){
+   if(run_t.wifi_power_on_flag ==RUN_WIFI_NORMAL_POWER_ON || run_t.key_power_on_flag==1){
 	
 		run_t.gPlasma=1;
 		run_t.gDry =1;

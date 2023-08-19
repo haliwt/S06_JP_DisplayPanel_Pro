@@ -183,7 +183,9 @@ void RunPocess_Command_Handler(void)
               }
               
           }while(power_on_first);
-		    Power_On_Fun();
+		 //   Power_On_Fun();
+		 run_t.power_on_run_update_data_flag=0;
+      
             
 			run_t.gRunCommand_label= UPDATE_DATA;
 	  break;
@@ -203,11 +205,18 @@ void RunPocess_Command_Handler(void)
               
             }while(power_off_id);
           run_t.power_off_recoder_times=0;
+          run_t.power_on_run_update_data_flag=0;
 	      
 		   run_t.gRunCommand_label =POWER_OFF_PROCESS;
 	  break;
 
+
 	  case UPDATE_DATA: //3
+      if(run_t.power_on_run_update_data_flag ==0){
+        run_t.power_on_run_update_data_flag++;
+
+        Power_On_Fun();
+       }
 
 	   RunLocal_Smg_Process();
      
@@ -225,7 +234,7 @@ void RunPocess_Command_Handler(void)
 	  break;
 
 	  case POWER_OFF_PROCESS: //4
-     
+      run_t.power_on_run_update_data_flag=0;
        if(run_t.power_off_recoder_times ==0){
          run_t.power_off_recoder_times++;
          Power_Off_Fun();

@@ -130,9 +130,11 @@ int main(void)
             run_t.keyvalue = KEY_Scan();//Scan_KeyMode();
             Process_Key_Handler(run_t.keyvalue);
            }
-		   
-           Power_OnOff_Key_Handler();
-	       if(POWER_KEY_VALUE()==0){
+
+           if(POWER_KEY_VALUE()==1){
+            Power_OnOff_Key_Handler();
+           }
+	       else {
 		       RunPocess_Command_Handler();
            }
            
