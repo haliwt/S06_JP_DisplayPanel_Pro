@@ -164,12 +164,14 @@ static void DisplayPanel_DHT11_Value(void)
 ******************************************************************************/
 void RunPocess_Command_Handler(void)
 {
-   static uint8_t power_off_flag=0xff,power_off_recoder_times;
+   static uint8_t power_off_flag=0xff,power_off_recoder_times,timer_timing_flag;
    uint8_t power_on_first,power_off_id;
+   
    switch(run_t.gRunCommand_label){
 
       case RUN_POWER_ON: //2
          run_t.power_off_recoder_times=0;
+         timer_timing_flag =0;
           do{
               
               if(run_t.wifi_receive_power_on_flag ==0){
@@ -217,7 +219,19 @@ void RunPocess_Command_Handler(void)
 
         Power_On_Fun();
        }
+       if(timer_timing_flag == 0){
+            timer_timing_flag++;
+            run_t.dispTime_hours=0;
+            run_t.works_dispTime_hours=0;
+            run_t.works_dispTime_minutes=0;
+            run_t.send_app_wokes_minutes_one=0;
+            run_t.send_app_wokes_minutes_two=0;
+            SendData_Time_Data(run_t.dispTime_hours);
+            HAL_Delay(2);
+            SendData_Works_Time(run_t.send_app_wokes_minutes_one ,run_t.send_app_wokes_minutes_two);
+            HAL_Delay(2);
 
+       }
 	   RunLocal_Smg_Process();
      
 	   Timing_Handler();
@@ -235,8 +249,10 @@ void RunPocess_Command_Handler(void)
 
 	  case POWER_OFF_PROCESS: //4
       run_t.power_on_run_update_data_flag=0;
+      timer_timing_flag=0;
        if(run_t.power_off_recoder_times ==0){
          run_t.power_off_recoder_times++;
+         
          Power_Off_Fun();
 
        }

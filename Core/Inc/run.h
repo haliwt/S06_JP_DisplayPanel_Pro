@@ -16,8 +16,8 @@ typedef enum WIFI_STATE_T{
     WIFI_SONIC_ON = 0x01,       //ultrasonic
     WIFI_SONIC_OFF = 0x11,
     WIFI_TEMPERATURE = 0xA0,
-    WIFI_POWER_ON_NORMAL= 0xB0
-    
+    WIFI_POWER_ON_NORMAL= 0xB0, 
+    WIFI_POWER_ON_TIMER =0xB1
 
 
 }wifi_state_t;

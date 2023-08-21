@@ -204,6 +204,16 @@ static void Receive_Wifi_Cmd(uint8_t cmd)
 
 	         break;
 
+             case WIFI_POWER_ON_TIMER: //0xB1 //WT.EDIT 2023.08.21
+
+                run_t.wifi_power_on_flag = RUN_WIFI_TIMER_POWER_ON;
+             
+				run_t.wifi_send_buzzer_sound = WIFI_POWER_ON_ITEM;
+		        run_t.gRunCommand_label = RUN_POWER_ON;
+                run_t.power_on_run_update_data_flag=0;
+				run_t.wifi_link_cloud_flag =WIFI_CLOUD_SUCCESS;
+			break;
+
 			 
 			 
 
