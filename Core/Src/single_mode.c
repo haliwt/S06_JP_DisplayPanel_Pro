@@ -208,6 +208,11 @@ void RunPocess_Command_Handler(void)
             }while(power_off_id);
           run_t.power_off_recoder_times=0;
           run_t.power_on_run_update_data_flag=0;
+          run_t.timer_timing_define_flag = timing_donot;
+          run_t.temp_set_timer_timing_flag=0;
+          run_t.define_initialization_timer_time_hours=0;
+          run_t.set_timer_special_value = timing_donot;
+          run_t.send_works_times_to_app=0;
 	      
 		   run_t.gRunCommand_label =POWER_OFF_PROCESS;
 	  break;
@@ -221,15 +226,23 @@ void RunPocess_Command_Handler(void)
        }
        if(timer_timing_flag == 0){
             timer_timing_flag++;
+            run_t.wifi_power_on_flag = RUN_NULL;
+            run_t.timer_timing_define_flag = timing_donot;
+            run_t.send_works_times_to_app=0;
+           
             run_t.dispTime_hours=0;
             run_t.works_dispTime_hours=0;
             run_t.works_dispTime_minutes=0;
             run_t.send_app_wokes_minutes_one=0;
             run_t.send_app_wokes_minutes_two=0;
+            run_t.send_app_timer_minutes_one=0;
+            run_t.send_app_timer_minutes_two=0;
             SendData_Time_Data(run_t.dispTime_hours);
-            HAL_Delay(2);
+            HAL_Delay(5);
             SendData_Works_Time(run_t.send_app_wokes_minutes_one ,run_t.send_app_wokes_minutes_two);
-            HAL_Delay(2);
+            HAL_Delay(5);
+            SendData_Remaining_Time(run_t.send_app_timer_minutes_one, run_t.send_app_timer_minutes_two);
+            HAL_Delay(5);
 
        }
 	   RunLocal_Smg_Process();
@@ -249,6 +262,9 @@ void RunPocess_Command_Handler(void)
 
 	  case POWER_OFF_PROCESS: //4
       run_t.power_on_run_update_data_flag=0;
+      run_t.wifi_power_on_flag = RUN_NULL;
+       run_t.define_initialization_timer_time_hours=0;
+      
       timer_timing_flag=0;
        if(run_t.power_off_recoder_times ==0){
          run_t.power_off_recoder_times++;
