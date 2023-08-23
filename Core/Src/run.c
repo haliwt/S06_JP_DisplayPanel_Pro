@@ -28,7 +28,7 @@ void Decode_Handler(void)
 {
    if(run_t.decodeFlag ==1){
    run_t.decodeFlag =0;
-   run_t.process_run_guarantee_flag =1;
+  
    Receive_MainBoard_Data_Handler(run_t.wifi_orderByMainboard_label);
 
    }
