@@ -426,13 +426,6 @@ void Power_OnOff_Key_Handler(void)
             run_t.power_key_interrupt_flag=0;
 
             run_t.wifi_receive_power_on_flag=0;
-            
-//            if(run_t.power_key_interrupt_flag==0){
-//                run_t.key_power_tag=0xff;
-//            }
-//            else{
-        
-            run_t.wifi_receive_power_on_flag=0;
 
 		    SendData_PowerOnOff(0);
             HAL_Delay(10);
