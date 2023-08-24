@@ -131,12 +131,12 @@ int main(void)
             Process_Key_Handler(run_t.keyvalue);
            }
 
-           if(POWER_KEY_VALUE()==1){
+           if(run_t.power_key_interrupt_flag==1){//if(POWER_KEY_VALUE()==1){
             Power_OnOff_Key_Handler();
            }
-	       else {
-		       RunPocess_Command_Handler();
-           }
+	      
+		   RunPocess_Command_Handler();
+           
            
 		   USART1_Cmd_Error_Handler();
 			   

@@ -185,7 +185,7 @@ void RunPocess_Command_Handler(void)
               }
               
           }while(power_on_first);
-		 //   Power_On_Fun();
+		 run_t.wifi_receive_power_off_flag=0;
 		 run_t.power_on_run_update_data_flag=0;
       
             
@@ -206,6 +206,7 @@ void RunPocess_Command_Handler(void)
              }
               
             }while(power_off_id);
+          run_t.wifi_receive_power_on_flag = 0;
           run_t.power_off_recoder_times=0;
           run_t.power_on_run_update_data_flag=0;
           run_t.timer_timing_define_flag = timing_donot;
@@ -221,7 +222,6 @@ void RunPocess_Command_Handler(void)
 	  case UPDATE_DATA: //3
       if(run_t.power_on_run_update_data_flag ==0){
         run_t.power_on_run_update_data_flag++;
-
         Power_On_Fun();
        }
        if(timer_timing_flag == 0){
@@ -264,6 +264,7 @@ void RunPocess_Command_Handler(void)
       run_t.power_on_run_update_data_flag=0;
       run_t.wifi_power_on_flag = RUN_NULL;
        run_t.define_initialization_timer_time_hours=0;
+
       
       timer_timing_flag=0;
        if(run_t.power_off_recoder_times ==0){

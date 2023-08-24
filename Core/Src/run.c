@@ -189,20 +189,10 @@ static void Receive_Wifi_Cmd(uint8_t cmd)
 		        run_t.gRunCommand_label = RUN_POWER_ON;
                 run_t.power_on_run_update_data_flag=0;
 				run_t.wifi_link_cloud_flag =WIFI_CLOUD_SUCCESS;
+                run_t.wifi_receive_power_on_flag = 1;
+                run_t.wifi_receive_power_off_flag =0;
 			break;
 
-		   case WIFI_POWER_ON: //turn on 0x80
-		 	
-				
-				run_t.wifi_send_buzzer_sound = WIFI_POWER_ON_ITEM;
-                run_t.wifi_power_on_flag =  RUN_WIFI_TIMER_POWER_ON;
-                run_t.power_on_run_update_data_flag =0;
-				run_t.gRunCommand_label = RUN_POWER_ON;
-                run_t.power_on_run_update_data_flag=0;
-				run_t.wifi_link_cloud_flag =WIFI_CLOUD_SUCCESS;
-				
-
-	         break;
 
              case WIFI_POWER_ON_TIMER: //0xB1 //WT.EDIT 2023.08.21
 
@@ -212,6 +202,8 @@ static void Receive_Wifi_Cmd(uint8_t cmd)
 		        run_t.gRunCommand_label = RUN_POWER_ON;
                 run_t.power_on_run_update_data_flag=0;
 				run_t.wifi_link_cloud_flag =WIFI_CLOUD_SUCCESS;
+                run_t.wifi_receive_power_on_flag =1;
+                run_t.wifi_receive_power_off_flag =0;
 			break;
 
 			 
@@ -226,7 +218,8 @@ static void Receive_Wifi_Cmd(uint8_t cmd)
                run_t.power_on_run_update_data_flag=0;
                run_t.wifi_power_on_flag = RUN_POWER_OFF_NULL;
 			   run_t.wifi_link_cloud_flag =WIFI_CLOUD_SUCCESS;
-				
+			   run_t.wifi_receive_power_off_flag =1;
+               run_t.wifi_receive_power_on_flag =0;
             
 
 			 break;

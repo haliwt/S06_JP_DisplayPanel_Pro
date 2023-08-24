@@ -189,7 +189,9 @@ void EXTI4_15_IRQHandler(void)
     if(run_t.gPower_On ==POWER_OFF || run_t.gRunCommand_label==POWER_OFF_PROCESS || run_t.gPower_On ==0xff){
 		
         run_t.power_key_interrupt_flag=1;
+        run_t.wifi_receive_power_on_flag=0;
 	    run_t.key_power_tag=KEY_POWER_ON;//RUN_POWER_ON;
+	    
 
    }
    else{
