@@ -165,26 +165,15 @@ static void DisplayPanel_DHT11_Value(void)
 void RunPocess_Command_Handler(void)
 {
    static uint8_t power_off_flag=0xff,power_off_recoder_times,timer_timing_flag;
-   uint8_t power_on_first,power_off_id;
+   static uint8_t the_firs_dc_power_on;
    
    switch(run_t.gRunCommand_label){
 
       case RUN_POWER_ON: //2
          run_t.power_off_recoder_times=0;
-         timer_timing_flag =0;
-          do{
-              
-              if(run_t.wifi_receive_power_on_flag ==0){
-		 	   SendData_PowerOnOff(1);
-               HAL_Delay(1);
-               power_on_first=1;
-              }
-              else{
-                  power_on_first=0;
-                 
-              }
-              
-          }while(power_on_first);
+
+         the_firs_dc_power_on=2;
+
 		 run_t.wifi_receive_power_off_flag=0;
 		 run_t.power_on_run_update_data_flag=0;
       
@@ -194,18 +183,18 @@ void RunPocess_Command_Handler(void)
 
 	  case RUN_POWER_OFF: //1
        
-           do{
-              
-             if(run_t.wifi_receive_power_off_flag ==0){
-		 	   SendData_PowerOnOff(0);
-               HAL_Delay(1);
-               power_off_id=1;
-             }
-             else{
-                 power_off_id=0;
-             }
-              
-            }while(power_off_id);
+//           do{
+//              
+//             if(run_t.wifi_receive_power_off_flag ==0){
+//		 	   SendData_PowerOnOff(0);
+//               HAL_Delay(1);
+//               power_off_id=1;
+//             }
+//             else{
+//                 power_off_id=0;
+//             }
+//              
+//            }while(power_off_id);
           run_t.wifi_receive_power_on_flag = 0;
           run_t.power_off_recoder_times=0;
           run_t.power_on_run_update_data_flag=0;
@@ -220,6 +209,13 @@ void RunPocess_Command_Handler(void)
 
 
 	  case UPDATE_DATA: //3
+
+       if(run_t.wifi_receive_power_on_flag ==0){
+		 	   SendData_PowerOnOff(1);
+               HAL_Delay(5);
+              
+       }
+      
       if(run_t.power_on_run_update_data_flag ==0){
         run_t.power_on_run_update_data_flag++;
         Power_On_Fun();
@@ -266,7 +262,18 @@ void RunPocess_Command_Handler(void)
        run_t.define_initialization_timer_time_hours=0;
 
       
-      timer_timing_flag=0;
+       timer_timing_flag=0;
+       if(the_firs_dc_power_on==0){
+
+            the_firs_dc_power_on++;
+       }
+       else if(run_t.wifi_receive_power_off_flag ==0 && the_firs_dc_power_on !=1){
+		 	 SendData_PowerOnOff(0);
+             HAL_Delay(5);
+               
+        }
+
+      
        if(run_t.power_off_recoder_times ==0){
          run_t.power_off_recoder_times++;
          

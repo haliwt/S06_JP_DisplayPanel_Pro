@@ -401,11 +401,7 @@ void Power_OnOff_Key_Handler(void)
      switch(run_t.key_power_tag){
 
       case KEY_POWER_ON:
-	 
-//            if(run_t.power_key_interrupt_flag==0){
-//                run_t.key_power_tag=0xff;
-//            }
-//            else{
+
                 run_t.power_key_interrupt_flag=0;
     	        run_t.wifi_receive_power_off_flag=0;
                 
