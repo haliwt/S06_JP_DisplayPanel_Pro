@@ -225,8 +225,13 @@ void RunPocess_Command_Handler(void)
             run_t.wifi_power_on_flag = RUN_NULL;
             run_t.timer_timing_define_flag = timing_donot;
             run_t.send_works_times_to_app=0;
-           
-            run_t.dispTime_hours=0;
+			//WT.EDIT 2025.03.14
+            if(run_t.wifi_power_on_flag == RUN_WIFI_TIMER_POWER_ON)
+			{
+				run_t.timer_timing_define_flag =timing_success ;
+			}
+		    else run_t.dispTime_hours=0;
+			
             run_t.works_dispTime_hours=0;
             run_t.works_dispTime_minutes=0;
             run_t.send_app_wokes_minutes_one=0;
