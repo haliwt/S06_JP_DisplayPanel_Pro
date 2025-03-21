@@ -181,7 +181,34 @@ void RunPocess_Command_Handler(void)
 			run_t.gRunCommand_label= UPDATE_DATA;
 	  break;
 
-	 case UPDATE_DATA: //3
+	  case RUN_POWER_OFF: //1
+       
+//           do{
+//              
+//             if(run_t.wifi_receive_power_off_flag ==0){
+//		 	   SendData_PowerOnOff(0);
+//               HAL_Delay(1);
+//               power_off_id=1;
+//             }
+//             else{
+//                 power_off_id=0;
+//             }
+//              
+//            }while(power_off_id);
+          run_t.wifi_receive_power_on_flag = 0;
+          run_t.power_off_recoder_times=0;
+          run_t.power_on_run_update_data_flag=0;
+          run_t.timer_timing_define_flag = timing_donot;
+          run_t.temp_set_timer_timing_flag=0;
+          run_t.define_initialization_timer_time_hours=0;
+          run_t.set_timer_special_value = timing_donot;
+          run_t.send_works_times_to_app=0;
+	      
+		   run_t.gRunCommand_label =POWER_OFF_PROCESS;
+	  break;
+
+
+	  case UPDATE_DATA: //3
 
        if(run_t.wifi_receive_power_on_flag ==0){
 		 	   SendData_PowerOnOff(1);
@@ -198,13 +225,8 @@ void RunPocess_Command_Handler(void)
             run_t.wifi_power_on_flag = RUN_NULL;
             run_t.timer_timing_define_flag = timing_donot;
             run_t.send_works_times_to_app=0;
-			//WT.EDIT 2025.03.14
-            if(run_t.wifi_power_on_flag == RUN_WIFI_TIMER_POWER_ON)
-			{
-				run_t.timer_timing_define_flag =timing_success ;
-			}
-		    else run_t.dispTime_hours=0;
-			
+           
+            run_t.dispTime_hours=0;
             run_t.works_dispTime_hours=0;
             run_t.works_dispTime_minutes=0;
             run_t.send_app_wokes_minutes_one=0;
@@ -232,22 +254,6 @@ void RunPocess_Command_Handler(void)
 		
 	   
 
-	  break;
-
-
-	   case RUN_POWER_OFF: //1
-       
-
-          run_t.wifi_receive_power_on_flag = 0;
-          run_t.power_off_recoder_times=0;
-          run_t.power_on_run_update_data_flag=0;
-          run_t.timer_timing_define_flag = timing_donot;
-          run_t.temp_set_timer_timing_flag=0;
-          run_t.define_initialization_timer_time_hours=0;
-          run_t.set_timer_special_value = timing_donot;
-          run_t.send_works_times_to_app=0;
-	      
-		   run_t.gRunCommand_label =POWER_OFF_PROCESS;
 	  break;
 
 	  case POWER_OFF_PROCESS: //4
