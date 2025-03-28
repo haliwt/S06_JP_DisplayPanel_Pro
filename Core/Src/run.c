@@ -204,6 +204,8 @@ static void Receive_Wifi_Cmd(uint8_t cmd)
 				run_t.wifi_link_cloud_flag =WIFI_CLOUD_SUCCESS;
                 run_t.wifi_receive_power_on_flag =1;
                 run_t.wifi_receive_power_off_flag =0;
+				run_t.phone_timer_on_mouse_flag=1;
+				
 			break;
 
 			 
@@ -220,6 +222,7 @@ static void Receive_Wifi_Cmd(uint8_t cmd)
 			   run_t.wifi_link_cloud_flag =WIFI_CLOUD_SUCCESS;
 			   run_t.wifi_receive_power_off_flag =1;
                run_t.wifi_receive_power_on_flag =0;
+			   
             
 
 			 break;

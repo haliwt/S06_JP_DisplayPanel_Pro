@@ -161,13 +161,18 @@ void Panel_Led_OnOff_Function(void)
 		WIFI_LED_OnOff(1);
 	 
 	  
-    if(run_t.gDry==1){
+    
+
+     if(run_t.gDry==1){
 		 
 	     DRY_LED_OnOff(1);
 
      }
 	 else{
-	    DRY_LED_OnOff(0);
+
+	   
+	     DRY_LED_OnOff(0);
+		
 
 	 }
 

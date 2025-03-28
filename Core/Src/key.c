@@ -242,7 +242,7 @@ void Process_Key_Handler(uint8_t keylabel)
 			
 				   run_t.set_temperature_flag=1;
 				   run_t.gTimer_key_temp_timing=0;
-				   
+				   run_t.g_manul_shutoff_flag =0;
 			
 			break;
 
@@ -290,6 +290,7 @@ void Process_Key_Handler(uint8_t keylabel)
 			 HAL_Delay(10);
 		      run_t.set_temperature_flag=1;
 			  run_t.gTimer_key_temp_timing=0;
+			  run_t.g_manul_shutoff_flag =0;
 			 
 	    	
 		   break;
@@ -327,10 +328,12 @@ void Process_Key_Handler(uint8_t keylabel)
           if(run_t.gPower_On ==1){
 		
 			  if(run_t.gDry== 1){
+			  	    run_t.g_manul_shutoff_flag =1;
 				    run_t.gDry =0;
 					SendData_Set_Command(DRY_OFF);
                }
                else{
+			   	    run_t.g_manul_shutoff_flag =0;
                     run_t.gDry =1;
 					SendData_Set_Command(DRY_ON);
                  }  

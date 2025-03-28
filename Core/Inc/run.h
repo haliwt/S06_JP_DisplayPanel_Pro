@@ -41,7 +41,8 @@ typedef enum _Signal{
 	WIFI_CMD,
 	WIFI_BEIJING_TIME,
 	WIFI_SET_TIMING,
-	WIFI_REF_DATA
+	WIFI_REF_DATA,
+	WIFI_REF_MOUSE
 }signal_t;
 
 typedef enum _WIFI_POWER_STATE_{
@@ -96,6 +97,8 @@ typedef struct __RUN{
    uint8_t  gWifi;
 
    uint8_t  gUltrasonic;
+   uint8_t  phone_timer_on_mouse_flag;
+   uint8_t  g_manul_shutoff_flag ;
   
   
    

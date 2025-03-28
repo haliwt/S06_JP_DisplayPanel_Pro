@@ -223,7 +223,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 			break;
 		case 2://#2
 			if(inputBuf[0]=='D' || inputBuf[0]=='W'   || inputBuf[0]=='P' ||inputBuf[0] =='C' || inputBuf[0] == 'B' \
-			  || inputBuf[0]=='T' || inputBuf[0]=='R') //'D'->data , 'W' ->wifi
+			  || inputBuf[0]=='T' || inputBuf[0]=='R'|| inputBuf[0]=='U' ) //'D'->data , 'W' ->wifi
 			{
 				
 				if(inputBuf[0]=='D') run_t.wifi_orderByMainboard_label=PANEL_DATA; //receive data is single data
@@ -233,6 +233,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 				else if(inputBuf[0]=='B') run_t.wifi_orderByMainboard_label = WIFI_BEIJING_TIME;
 				else if(inputBuf[0]=='T') run_t.wifi_orderByMainboard_label = WIFI_SET_TIMING;
 				else if(inputBuf[0]=='R') run_t.wifi_orderByMainboard_label = WIFI_REF_DATA;
+				else if(inputBuf[0]=='U') run_t.wifi_orderByMainboard_label = WIFI_REF_MOUSE;
 			    state=3;
 			}
 			else
@@ -296,6 +297,8 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
                   
                  break;
 
+				 
+
                  
 
                  }
@@ -304,6 +307,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 
             case WIFI_TEMP ://4 //wifi modify temperature of value
                  run_t.wifi_set_temperature=inputBuf[0]; 
+				  run_t.g_manul_shutoff_flag =0;
                  
                  state=0;
                  run_t.decodeFlag=1;
@@ -332,8 +336,19 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 			 case WIFI_REF_DATA:
 
 			    run_t.gDry = inputBuf[0];
+				if(inputBuf[0]==0)
+				   run_t.g_manul_shutoff_flag =1;
 				state = 4; 
 				 
+			break;
+
+			case WIFI_REF_MOUSE: 
+
+			  run_t.gUltrasonic = inputBuf[0];
+			  state=0;
+             
+				
+
 			break;
 			 
 			 
@@ -345,23 +360,33 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
         
 		case 4: //
 
-		 if(run_t.wifi_orderByMainboard_label == WIFI_BEIJING_TIME){
+		  switch(run_t.wifi_orderByMainboard_label){
+
+				case WIFI_BEIJING_TIME:
 		 	  run_t.dispTime_minutes = inputBuf[0];
 				state =5;
-		 }
-		 else if(run_t.wifi_orderByMainboard_label==PANEL_DATA){
+		 
+		 break;
+
+		 case PANEL_DATA:
+		
               run_t.gReal_humtemp[1]=inputBuf[0]; //temperature value
 			
 		     state=0;
 		     run_t.decodeFlag=1;
-          }
-		 else if(run_t.wifi_orderByMainboard_label ==WIFI_REF_DATA ){
+          
+		 break;
+
+		 case WIFI_REF_DATA :
+		
 
             
 		     run_t.gPlasma = inputBuf[0];
 			 state = 5; 
 
 
+		 
+		 break;
 		 }
 
 		 break;

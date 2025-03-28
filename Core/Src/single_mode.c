@@ -176,39 +176,14 @@ void RunPocess_Command_Handler(void)
 
 		 run_t.wifi_receive_power_off_flag=0;
 		 run_t.power_on_run_update_data_flag=0;
+		 run_t.g_manul_shutoff_flag =0;
       
             
 			run_t.gRunCommand_label= UPDATE_DATA;
 	  break;
 
-	  case RUN_POWER_OFF: //1
-       
-//           do{
-//              
-//             if(run_t.wifi_receive_power_off_flag ==0){
-//		 	   SendData_PowerOnOff(0);
-//               HAL_Delay(1);
-//               power_off_id=1;
-//             }
-//             else{
-//                 power_off_id=0;
-//             }
-//              
-//            }while(power_off_id);
-          run_t.wifi_receive_power_on_flag = 0;
-          run_t.power_off_recoder_times=0;
-          run_t.power_on_run_update_data_flag=0;
-          run_t.timer_timing_define_flag = timing_donot;
-          run_t.temp_set_timer_timing_flag=0;
-          run_t.define_initialization_timer_time_hours=0;
-          run_t.set_timer_special_value = timing_donot;
-          run_t.send_works_times_to_app=0;
-	      
-		   run_t.gRunCommand_label =POWER_OFF_PROCESS;
-	  break;
 
-
-	  case UPDATE_DATA: //3
+      case UPDATE_DATA: //3
 
        if(run_t.wifi_receive_power_on_flag ==0){
 		 	   SendData_PowerOnOff(1);
@@ -254,6 +229,34 @@ void RunPocess_Command_Handler(void)
 		
 	   
 
+	  break;
+
+	 case RUN_POWER_OFF: //1
+       
+//           do{
+//              
+//             if(run_t.wifi_receive_power_off_flag ==0){
+//		 	   SendData_PowerOnOff(0);
+//               HAL_Delay(1);
+//               power_off_id=1;
+//             }
+//             else{
+//                 power_off_id=0;
+//             }
+//              
+//            }while(power_off_id);
+		  run_t.g_manul_shutoff_flag =0;
+
+          run_t.wifi_receive_power_on_flag = 0;
+          run_t.power_off_recoder_times=0;
+          run_t.power_on_run_update_data_flag=0;
+          run_t.timer_timing_define_flag = timing_donot;
+          run_t.temp_set_timer_timing_flag=0;
+          run_t.define_initialization_timer_time_hours=0;
+          run_t.set_timer_special_value = timing_donot;
+          run_t.send_works_times_to_app=0;
+	      
+		   run_t.gRunCommand_label =POWER_OFF_PROCESS;
 	  break;
 
 	  case POWER_OFF_PROCESS: //4
@@ -345,9 +348,11 @@ static void SetTemperature_Function(void)
                 
 		  }
 		  else if((run_t.wifi_set_temperature -3) > run_t.gReal_humtemp[1] ||  run_t.gReal_humtemp[1] < 37){
-	  
-		     run_t.gDry = 1;
-	         SendData_Set_Command(DRY_ON_NO_BUZZER); //PTC turn On
+	         if(run_t.g_manul_shutoff_flag ==0){
+		        run_t.gDry = 1;
+	           SendData_Set_Command(DRY_ON_NO_BUZZER); //PTC turn On
+
+	          }
 				 
 		  }
 	  
@@ -362,10 +367,12 @@ static void SetTemperature_Function(void)
 
              }
              
-             if(run_t.gReal_humtemp[1] < 36 && run_t.auto_model_shut_off_ptc_flag ==1 &&  run_t.gTimer_temp_delay >119){
+             if(run_t.gReal_humtemp[1] < 38 && run_t.auto_model_shut_off_ptc_flag ==1 &&  run_t.gTimer_temp_delay >119){
                   run_t.gTimer_temp_delay =0;
+				 if(run_t.g_manul_shutoff_flag ==0){
                   run_t.gDry = 1;
 	              SendData_Set_Command(DRY_ON_NO_BUZZER); //PTC turn On
+				  }
              
              
              }
