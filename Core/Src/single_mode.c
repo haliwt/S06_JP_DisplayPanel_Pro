@@ -171,9 +171,9 @@ void RunPocess_Command_Handler(void)
       case RUN_POWER_ON: //2
          run_t.power_off_recoder_times=0;
 
-         the_firs_dc_power_on=2;
+        // the_firs_dc_power_on=2;
 
-		 run_t.wifi_receive_power_off_flag=0;
+		 //run_t.wifi_receive_power_off_flag=0;
 		 run_t.power_on_run_update_data_flag=0;
 		 run_t.g_manul_shutoff_flag =0;
 		 g_pro.power_on_flag =  1;
@@ -184,12 +184,13 @@ void RunPocess_Command_Handler(void)
 
 
       case UPDATE_DATA: //3
-
+      #if 0
        if(run_t.wifi_receive_power_on_flag ==0){
 		 	   SendData_PowerOnOff(1);
                HAL_Delay(5);
               
        }
+	   #endif 
       
       if(run_t.power_on_run_update_data_flag ==0){
         run_t.power_on_run_update_data_flag++;
@@ -241,18 +242,7 @@ void RunPocess_Command_Handler(void)
 
 	 case RUN_POWER_OFF: //1
        
-//           do{
-//              
-//             if(run_t.wifi_receive_power_off_flag ==0){
-//		 	   SendData_PowerOnOff(0);
-//               HAL_Delay(1);
-//               power_off_id=1;
-//             }
-//             else{
-//                 power_off_id=0;
-//             }
-//              
-//            }while(power_off_id);
+
 		  run_t.g_manul_shutoff_flag =0;
 
           run_t.wifi_receive_power_on_flag = 0;
@@ -263,6 +253,11 @@ void RunPocess_Command_Handler(void)
           run_t.define_initialization_timer_time_hours=0;
           run_t.set_timer_special_value = timing_donot;
           run_t.send_works_times_to_app=0;
+		  if(g_pro.key_power_off_sound_flag ==0 && the_firs_dc_power_on !=0){
+		       SendData_PowerOnOff(0);
+			   HAL_Delay(5);
+          }
+		  if(the_firs_dc_power_on==0)the_firs_dc_power_on++;
 	      
 		   run_t.gRunCommand_label =POWER_OFF_PROCESS;
 	  break;
@@ -278,11 +273,7 @@ void RunPocess_Command_Handler(void)
 
             the_firs_dc_power_on++;
        }
-       else if(run_t.wifi_receive_power_off_flag ==0 && the_firs_dc_power_on !=1){
-		 	 SendData_PowerOnOff(0);
-             HAL_Delay(5);
-               
-        }
+
 
       
        if(run_t.power_off_recoder_times ==0){

@@ -1,10 +1,5 @@
-#include "run.h"
-#include "smg.h"
-#include "gpio.h"
-#include "cmd_link.h"
-#include "led.h"
-#include "display.h"
-#include "single_mode.h"
+#include "bsp.h"
+
 
 RUN_T run_t;
 
@@ -190,7 +185,7 @@ static void Receive_Wifi_Cmd(uint8_t cmd)
                 run_t.power_on_run_update_data_flag=0;
 				run_t.wifi_link_cloud_flag =WIFI_CLOUD_SUCCESS;
                 run_t.wifi_receive_power_on_flag = 1;
-                run_t.wifi_receive_power_off_flag =0;
+                 g_pro.key_power_off_sound_flag =0;
 			break;
 
 
@@ -203,8 +198,9 @@ static void Receive_Wifi_Cmd(uint8_t cmd)
                 run_t.power_on_run_update_data_flag=0;
 				run_t.wifi_link_cloud_flag =WIFI_CLOUD_SUCCESS;
                 run_t.wifi_receive_power_on_flag =1;
-                run_t.wifi_receive_power_off_flag =0;
+               
 				run_t.phone_timer_on_mouse_flag=1;
+				 g_pro.key_power_off_sound_flag =0;
 				
 			break;
 
@@ -220,8 +216,9 @@ static void Receive_Wifi_Cmd(uint8_t cmd)
                run_t.power_on_run_update_data_flag=0;
                run_t.wifi_power_on_flag = RUN_POWER_OFF_NULL;
 			   run_t.wifi_link_cloud_flag =WIFI_CLOUD_SUCCESS;
-			   run_t.wifi_receive_power_off_flag =1;
+			 
                run_t.wifi_receive_power_on_flag =0;
+			   g_pro.key_power_off_sound_flag =1;
 			   
             
 

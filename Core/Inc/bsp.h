@@ -28,6 +28,7 @@
 typedef struct __PROCESS_T{
 
   uint8_t power_on_flag ;
+  uint8_t key_power_off_sound_flag;
   uint8_t wifi_set_timer_timing_flag;
 
   uint8_t gTimer_turn_on_led;

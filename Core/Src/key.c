@@ -1,11 +1,5 @@
-#include "key.h"
-#include "gpio.h"
-#include "run.h"
-#include "smg.h"
-#include "cmd_link.h"
-#include "display.h"
-#include "single_mode.h"
-#include "led.h"
+#include "bsp.h"
+
 
 
 
@@ -406,7 +400,7 @@ void Power_OnOff_Key_Handler(void)
       case KEY_POWER_ON:
 
                 run_t.power_key_interrupt_flag=0;
-    	        run_t.wifi_receive_power_off_flag=0;
+    	        //run_t.wifi_receive_power_off_flag=0;
                 
     	        SendData_PowerOnOff(1);
                 HAL_Delay(10);
@@ -417,6 +411,7 @@ void Power_OnOff_Key_Handler(void)
                 run_t.power_on_recoder_times++ ;
                 run_t.key_power_on_flag = 1;
                 run_t.wifi_power_on_flag = RUN_POWER_OFF_NULL; //divisive app pow
+                g_pro.key_power_off_sound_flag = 0;
 
            // }
       break;
@@ -434,7 +429,7 @@ void Power_OnOff_Key_Handler(void)
 	        run_t.power_on_recoder_times++ ;
             run_t.power_key_interrupt_flag=0;
             run_t.key_power_on_flag= 0;
-        
+            g_pro.key_power_off_sound_flag = 1;
            
 		   
           //  }
