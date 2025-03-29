@@ -34,15 +34,15 @@ typedef enum TIMING_T{
 typedef enum _Signal{
     POWER_OFF= 0xFD,
 	POWER_ON=0x01,
-    PANEL_DATA,
-	WIFI_INFO,
-	WIFI_TIME,
-	WIFI_TEMP,
-	WIFI_CMD,
-	WIFI_BEIJING_TIME,
-	WIFI_SET_TIMING,
-	WIFI_REF_DATA,
-	WIFI_REF_MOUSE
+    PANEL_DATA=2,
+	WIFI_INFO=3,
+	WIFI_TIME=4,
+	WIFI_TEMP=5,
+	WIFI_CMD=6,
+	WIFI_BEIJING_TIME=7,
+	WIFI_SET_TIMING=8,
+	WIFI_REF_DATA=9,
+	WIFI_REF_MOUSE=10
 }signal_t;
 
 typedef enum _WIFI_POWER_STATE_{
@@ -93,7 +93,7 @@ typedef struct __RUN{
    uint8_t  gPlasma;
  
    uint8_t  gDry;
-   uint8_t  gBug;
+ 
    uint8_t  gWifi;
 
    uint8_t  gUltrasonic;

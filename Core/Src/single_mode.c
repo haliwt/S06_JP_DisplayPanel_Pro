@@ -1,11 +1,5 @@
-#include "single_mode.h"
-#include "run.h"
-#include "smg.h"
-#include "gpio.h"
-#include "cmd_link.h"
-#include "led.h"
-#include "key.h"
-#include "display.h"
+#include "bsp.h"
+
 
 
 
@@ -42,6 +36,10 @@ static void Timing_Handler(void)
 	switch(run_t.timer_timing_define_flag){
 
 	case timing_success:
+	   if(g_pro.wifi_set_timer_timing_flag ==1){
+
+	   }
+	   else{
 	   if(run_t.gTimer_Counter > 59){
 	    run_t.gTimer_Counter =0;
 		run_t.dispTime_minutes -- ;
@@ -93,6 +91,7 @@ static void Timing_Handler(void)
 	   
 		   	Display_GMT(run_t.dispTime_hours,run_t.dispTime_minutes);
             HAL_Delay(5);
+	   	}
 		
 		
 	   }
@@ -177,9 +176,10 @@ void RunPocess_Command_Handler(void)
 		 run_t.wifi_receive_power_off_flag=0;
 		 run_t.power_on_run_update_data_flag=0;
 		 run_t.g_manul_shutoff_flag =0;
+		 g_pro.power_on_flag =  1;
       
             
-			run_t.gRunCommand_label= UPDATE_DATA;
+		 run_t.gRunCommand_label= UPDATE_DATA;
 	  break;
 
 
@@ -226,6 +226,14 @@ void RunPocess_Command_Handler(void)
       
        Display_TimeColon_Blink_Fun();
 
+	   if(g_pro.gTimer_turn_on_led > 1){
+
+	      g_pro.gTimer_turn_on_led=0;
+		  power_on_run_led_handler();
+
+
+	   }
+
 		
 	   
 
@@ -263,7 +271,7 @@ void RunPocess_Command_Handler(void)
       run_t.power_on_run_update_data_flag=0;
       run_t.wifi_power_on_flag = RUN_NULL;
        run_t.define_initialization_timer_time_hours=0;
-
+       g_pro.power_on_flag =  0;
       
        timer_timing_flag=0;
        if(the_firs_dc_power_on==0){

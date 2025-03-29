@@ -1,9 +1,5 @@
-#include "cmd_link.h"
-#include "usart.h"
-#include "gpio.h"
-#include "run.h"
-#include "display.h"
-#include "led.h"
+#include "bsp.h"
+
 
 volatile static uint8_t transOngoingFlag; //interrupt Transmit flag bit , 1---stop,0--run
 uint8_t outputBuf[8];
@@ -327,9 +323,15 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 
              case WIFI_SET_TIMING:
              	run_t.dispTime_hours  = inputBuf[0];
-				run_t.gTimer_key_timing=0;
-             		 state=0;
-                    run_t.decodeFlag=1; 
+				
+			    //run_t.timer_timing_define_flag =timing_success; //WT.EDIT 2025.03.28
+				//run_t.gTimer_Counter =0; //WT.EDIT 2025.03.28
+				// run_t.temp_set_timer_timing_flag= 1;//WT.EDIT 2025.03.28
+				// run_t.gTimer_key_timing =0;//WT.EDIT 2025.03.28
+				// run_t.dispTime_minutes = 0;//WT.EDIT 2025.03.28
+				g_pro.wifi_set_timer_timing_flag = 1;
+             	state=0;
+                //run_t.decodeFlag=1; 
  
              break;
 
@@ -382,7 +384,10 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 
             
 		     run_t.gPlasma = inputBuf[0];
-			 state = 5; 
+			// state = 5; 
+
+			  state=0;
+             run_t.decodeFlag=1; 
 
 
 		 
@@ -401,7 +406,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 		 else if(run_t.wifi_orderByMainboard_label ==WIFI_REF_DATA ){
 
             
-		     run_t.gUltrasonic = inputBuf[0];
+		    // run_t.gUltrasonic = inputBuf[0];
 			  state=0;
              run_t.decodeFlag=1; 
 
@@ -418,6 +423,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 		break;
 
 		}
+		__HAL_UART_CLEAR_OREFLAG(&huart1);
 		HAL_UART_Receive_IT(&huart1,inputBuf,1);//UART receive data interrupt 1 byte
 	}
 }
