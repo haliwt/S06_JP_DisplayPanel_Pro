@@ -132,7 +132,7 @@ int main(void)
 		   RunPocess_Command_Handler();
 		   decode_process_handler();
            
-           
+           answer_cmd_form_mainboard();
 		 //  USART1_Cmd_Error_Handler();
 			   
 

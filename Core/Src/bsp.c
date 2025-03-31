@@ -41,3 +41,41 @@ void power_on_run_led_handler(void)
 
 }
 
+void answer_cmd_form_mainboard(void)
+{
+
+    if(g_pro.copy_cmd_flag !=0 && g_pro.gTimer_copy_cmd_couter > 1){
+
+       g_pro.gTimer_copy_cmd_couter=0;
+
+	   switch(g_pro.copy_cmd_flag){
+
+         case KEY_POWER_ON:
+		 	SendData_PowerOnOff(1);
+
+	     break;
+
+		 case KEY_POWER_OFF:
+		    SendData_PowerOnOff(0);
+
+
+		 break;
+
+		 case RUN_WIFI_TIMER_POWER_ON:
+		 	
+		  SendData_Copy_Cmd(0xFB);
+
+
+		 break;
+
+
+
+
+	   }
+
+
+	}
+
+
+}
+

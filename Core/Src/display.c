@@ -51,7 +51,7 @@ void Display_DHT11_Value(void)
 void DisplayTiming_KEY_Add_Subtract_Fun(void)
 {
       
-	  static uint8_t m,n,p,q;
+	  static uint8_t n,p;
 
 	if(run_t.gPower_On==1){
     
@@ -70,7 +70,7 @@ void DisplayTiming_KEY_Add_Subtract_Fun(void)
  }
 void Display_GMT(uint8_t hours,uint8_t minutes)
 { 
-    static uint8_t m,n,p,q;
+    static uint8_t m,q;
 	m = hours /10 %10;
 	run_t.hours_two_bit =	hours%10; 
 	run_t.minutes_one_bit = minutes/10 %10;

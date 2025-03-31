@@ -170,33 +170,18 @@ void RunPocess_Command_Handler(void)
 
       case RUN_POWER_ON: //2
          run_t.power_off_recoder_times=0;
-
-        // the_firs_dc_power_on=2;
-
-		 //run_t.wifi_receive_power_off_flag=0;
-		 run_t.power_on_run_update_data_flag=0;
-		 run_t.g_manul_shutoff_flag =0;
+         g_pro.manual_shutoff_ptc_flag = 0;//run_t.g_manul_shutoff_flag =0;
 		 g_pro.power_on_flag =  1;
-      
+          Power_On_Fun();
             
 		 run_t.gRunCommand_label= UPDATE_DATA;
 	  break;
 
 
       case UPDATE_DATA: //3
-      #if 0
-       if(run_t.wifi_receive_power_on_flag ==0){
-		 	   SendData_PowerOnOff(1);
-               HAL_Delay(5);
-              
-       }
-	   #endif 
+    
       
-      if(run_t.power_on_run_update_data_flag ==0){
-        run_t.power_on_run_update_data_flag++;
-        Power_On_Fun();
-       }
-       if(timer_timing_flag == 0){
+         if(timer_timing_flag == 0){
             timer_timing_flag++;
             run_t.wifi_power_on_flag = RUN_NULL;
             run_t.timer_timing_define_flag = timing_donot;
@@ -243,11 +228,11 @@ void RunPocess_Command_Handler(void)
 	 case RUN_POWER_OFF: //1
        
 
-		  run_t.g_manul_shutoff_flag =0;
+		  g_pro.manual_shutoff_ptc_flag = 0;//run_t.g_manul_shutoff_flag =0;
 
-          run_t.wifi_receive_power_on_flag = 0;
+
           run_t.power_off_recoder_times=0;
-          run_t.power_on_run_update_data_flag=0;
+
           run_t.timer_timing_define_flag = timing_donot;
           run_t.temp_set_timer_timing_flag=0;
           run_t.define_initialization_timer_time_hours=0;
@@ -263,12 +248,13 @@ void RunPocess_Command_Handler(void)
 	  break;
 
 	  case POWER_OFF_PROCESS: //4
-      run_t.power_on_run_update_data_flag=0;
+  
       run_t.wifi_power_on_flag = RUN_NULL;
        run_t.define_initialization_timer_time_hours=0;
        g_pro.power_on_flag =  0;
       
        timer_timing_flag=0;
+	   g_pro.key_power_off_sound_flag =0; //WT.EDIT 2025.03.29
        if(the_firs_dc_power_on==0){
 
             the_firs_dc_power_on++;
@@ -333,11 +319,14 @@ static void RunLocal_Smg_Process(void)
 *******************************************************/
 static void SetTemperature_Function(void)
 {
+    static uint8_t first_open_ptc;
+
+
 	 if(run_t.temperature_set_flag ==1 && run_t.gTimer_temp_delay >60){
                run_t.gTimer_temp_delay =0;
 		 
 		  
-		  if(run_t.wifi_set_temperature <= run_t.gReal_humtemp[1] || run_t.gReal_humtemp[1] >39){//envirment temperature
+		  if(run_t.wifi_set_temperature  < run_t.gReal_humtemp[1] || run_t.gReal_humtemp[1] >39){//envirment temperature
 	  
 				run_t.gDry = 0;
 
@@ -346,8 +335,8 @@ static void SetTemperature_Function(void)
 			    
                 
 		  }
-		  else if((run_t.wifi_set_temperature -3) > run_t.gReal_humtemp[1] ||  run_t.gReal_humtemp[1] < 37){
-	         if(run_t.g_manul_shutoff_flag ==0){
+		  else if(run_t.wifi_set_temperature  > run_t.gReal_humtemp[1] ){
+	         if(g_pro.manual_shutoff_ptc_flag ==0){
 		        run_t.gDry = 1;
 	           SendData_Set_Command(DRY_ON_NO_BUZZER); //PTC turn On
 
@@ -361,14 +350,14 @@ static void SetTemperature_Function(void)
           if(run_t.gReal_humtemp[1] >39 && run_t.gTimer_temp_delay >119){//envirment temperature
 	            run_t.gTimer_temp_delay =0;
 				run_t.gDry = 0;
-                run_t.auto_model_shut_off_ptc_flag =1;
+                first_open_ptc=1;
 			    SendData_Set_Command(DRY_OFF_NO_BUZZER);
 
              }
              
-             if(run_t.gReal_humtemp[1] < 38 && run_t.auto_model_shut_off_ptc_flag ==1 &&  run_t.gTimer_temp_delay >119){
+             if(run_t.gReal_humtemp[1] < 39 && first_open_ptc ==1 &&  run_t.gTimer_temp_delay >119){
                   run_t.gTimer_temp_delay =0;
-				 if(run_t.g_manul_shutoff_flag ==0){
+				 if(g_pro.manual_shutoff_ptc_flag ==0){//if(run_t.g_manul_shutoff_flag ==0){
                   run_t.gDry = 1;
 	              SendData_Set_Command(DRY_ON_NO_BUZZER); //PTC turn On
 				  }

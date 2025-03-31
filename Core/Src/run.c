@@ -179,25 +179,31 @@ static void Receive_Wifi_Cmd(uint8_t cmd)
 
           case WIFI_POWER_ON_NORMAL: //0xB0
 
-                run_t.wifi_power_on_flag = RUN_WIFI_NORMAL_POWER_ON;
+               SendData_Copy_Cmd(phone_power_on);
+	           g_pro.copy_cmd_flag = 0;
+		       g_pro.gTimer_copy_cmd_couter =0;
+	            run_t.wifi_power_on_flag = RUN_WIFI_NORMAL_POWER_ON;
 				run_t.wifi_send_buzzer_sound = WIFI_POWER_ON_ITEM;
 		        run_t.gRunCommand_label = RUN_POWER_ON;
-                run_t.power_on_run_update_data_flag=0;
+     
 				run_t.wifi_link_cloud_flag =WIFI_CLOUD_SUCCESS;
-                run_t.wifi_receive_power_on_flag = 1;
+              
                  g_pro.key_power_off_sound_flag =0;
 			break;
 
 
              case WIFI_POWER_ON_TIMER: //0xB1 //WT.EDIT 2023.08.21
+				SendData_Copy_Cmd(phone_power_timer_on);
+			   g_pro.copy_cmd_flag =0 ;
+		       g_pro.gTimer_copy_cmd_couter =0;
 
                 run_t.wifi_power_on_flag = RUN_WIFI_TIMER_POWER_ON;
              
 				run_t.wifi_send_buzzer_sound = WIFI_POWER_ON_ITEM;
 		        run_t.gRunCommand_label = RUN_POWER_ON;
-                run_t.power_on_run_update_data_flag=0;
+         
 				run_t.wifi_link_cloud_flag =WIFI_CLOUD_SUCCESS;
-                run_t.wifi_receive_power_on_flag =1;
+            
                
 				run_t.phone_timer_on_mouse_flag=1;
 				 g_pro.key_power_off_sound_flag =0;
@@ -208,16 +214,18 @@ static void Receive_Wifi_Cmd(uint8_t cmd)
 			 
 
 			 case WIFI_POWER_OFF: //turn off 
-                
+               SendData_Copy_Cmd(phone_power_off);
+			   g_pro.copy_cmd_flag =0;
+		       g_pro.gTimer_copy_cmd_couter =0;
 			   run_t.wifi_send_buzzer_sound = WIFI_POWER_OFF_ITEM;
 			   run_t.gRunCommand_label = POWER_OFF_PROCESS; //RUN_POWER_OFF; //WT.EDIT 2023.08-16
 			   run_t.power_off_recoder_times=0; //WT.EDIT 2023.08.16
 			   run_t.power_on_recoder_times++;
-               run_t.power_on_run_update_data_flag=0;
+           
                run_t.wifi_power_on_flag = RUN_POWER_OFF_NULL;
 			   run_t.wifi_link_cloud_flag =WIFI_CLOUD_SUCCESS;
 			 
-               run_t.wifi_receive_power_on_flag =0;
+            
 			   g_pro.key_power_off_sound_flag =1;
 			   
             
@@ -297,6 +305,7 @@ void Power_On_Fun(void)
 	
 	   	run_t.gUltrasonic =1;
     }
+  
     run_t.gPower_On=1;
 
     run_t.time_led_flag=1;
@@ -307,7 +316,10 @@ void Power_On_Fun(void)
 	
      Power_ON_Led();
 
-	 if(run_t.timer_counter_to_zero ==1){
+
+	 if(run_t.wifi_power_on_flag !=RUN_WIFI_TIMER_POWER_ON){
+
+	 if(run_t.timer_counter_to_zero ==1 ){
 
 	       run_t.timer_counter_to_zero++;
 		   run_t.dispTime_hours=0;
@@ -345,7 +357,7 @@ void Power_On_Fun(void)
 			 HAL_Delay(5);
 		}
          
-        
+	   }
 
 	  hour_decade=(run_t.dispTime_hours ) /10;
 	  hour_unit=(run_t.dispTime_hours ) %10;

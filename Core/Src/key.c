@@ -236,7 +236,8 @@ void Process_Key_Handler(uint8_t keylabel)
 			
 				   run_t.set_temperature_flag=1;
 				   run_t.gTimer_key_temp_timing=0;
-				   run_t.g_manul_shutoff_flag =0;
+				   //run_t.g_manul_shutoff_flag =0;
+				   g_pro.manual_shutoff_ptc_flag = 0;
 			
 			break;
 
@@ -284,7 +285,8 @@ void Process_Key_Handler(uint8_t keylabel)
 			 HAL_Delay(10);
 		      run_t.set_temperature_flag=1;
 			  run_t.gTimer_key_temp_timing=0;
-			  run_t.g_manul_shutoff_flag =0;
+			  //run_t.g_manul_shutoff_flag =0;
+			  g_pro.manual_shutoff_ptc_flag = 0;
 			 
 	    	
 		   break;
@@ -322,13 +324,15 @@ void Process_Key_Handler(uint8_t keylabel)
           if(run_t.gPower_On ==1){
 		
 			  if(run_t.gDry== 1){
-			  	    run_t.g_manul_shutoff_flag =1;
+			  	    g_pro.manual_shutoff_ptc_flag = 1;//run_t.g_manul_shutoff_flag =1;
 				    run_t.gDry =0;
+			        g_pro.manual_shutoff_ptc_flag = 1;
 					SendData_Set_Command(DRY_OFF);
                }
                else{
-			   	    run_t.g_manul_shutoff_flag =0;
+			   	    g_pro.manual_shutoff_ptc_flag = 0;//run_t.g_manul_shutoff_flag =0;
                     run_t.gDry =1;
+			        g_pro.manual_shutoff_ptc_flag = 0;
 					SendData_Set_Command(DRY_ON);
                  }  
 			   }
@@ -400,13 +404,15 @@ void Power_OnOff_Key_Handler(void)
       case KEY_POWER_ON:
 
                 run_t.power_key_interrupt_flag=0;
-    	        //run_t.wifi_receive_power_off_flag=0;
+    	        g_pro.copy_cmd_flag = KEY_POWER_ON; //WT.EDIT 2025.03.31
+	            g_pro.gTimer_copy_cmd_couter =0;//WT.EDIT 2025.03.31
+			
                 
     	        SendData_PowerOnOff(1);
                 HAL_Delay(10);
                 run_t.gTimer_set_temp_times=0; //conflict with send temperatur value
                 run_t.gRunCommand_label =RUN_POWER_ON;
-                run_t.power_on_run_update_data_flag=0;
+               
                 run_t.power_key_interrupt_flag=0;
                 run_t.power_on_recoder_times++ ;
                 run_t.key_power_on_flag = 1;
@@ -419,13 +425,15 @@ void Power_OnOff_Key_Handler(void)
       case KEY_POWER_OFF:
             run_t.power_key_interrupt_flag=0;
 
-            run_t.wifi_receive_power_on_flag=0;
+           
+			g_pro.copy_cmd_flag = KEY_POWER_OFF;//WT.EDIT 2025.03.31
+			g_pro.gTimer_copy_cmd_couter =0;//WT.EDIT 2025.03.31
 
 		    SendData_PowerOnOff(0);
             HAL_Delay(10);
             run_t.wifi_power_on_flag = RUN_POWER_OFF_NULL; //divisive app power on and key power on
 		    run_t.gRunCommand_label =RUN_POWER_OFF;
-            run_t.power_on_run_update_data_flag=0;
+         
 	        run_t.power_on_recoder_times++ ;
             run_t.power_key_interrupt_flag=0;
             run_t.key_power_on_flag= 0;

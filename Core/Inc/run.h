@@ -98,7 +98,7 @@ typedef struct __RUN{
 
    uint8_t  gUltrasonic;
    uint8_t  phone_timer_on_mouse_flag;
-   uint8_t  g_manul_shutoff_flag ;
+  
   
   
    
@@ -127,14 +127,13 @@ typedef struct __RUN{
    uint8_t set_temperature_flag;
    //command from mainboard 
    //uint8_t wifi_receive_power_off_flag;
-   uint8_t wifi_receive_power_on_flag ;
+
    //interrupt
    uint8_t power_key_interrupt_flag;
    uint8_t key_power_tag;
 
    //power on or off
     uint8_t power_off_recoder_times;
-    uint8_t power_on_run_update_data_flag;
   
 	
    uint8_t gReal_humtemp[2];

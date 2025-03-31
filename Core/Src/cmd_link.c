@@ -36,6 +36,37 @@ void SendData_PowerOnOff(uint8_t index)
 	}
 	
 }
+
+/*********************************************************
+ * 
+ * Function Name:void void SendData_Copy_Cmd(uint8_t tdata)
+ * Function:
+ * 
+*********************************************************/
+void SendData_Copy_Cmd(uint8_t tdata)
+{
+
+        outputBuf[0]='T'; //4D
+		outputBuf[1]='K'; //58
+		outputBuf[2]='Y'; // Y-> copy order
+		outputBuf[3]=tdata; //
+		
+		transferSize=4;
+		if(transferSize)
+		{
+			while(transOngoingFlag);
+			transOngoingFlag=1;
+			HAL_UART_Transmit_IT(&huart1,outputBuf,transferSize);
+		}
+
+}
+/*********************************************************
+ * 
+ * Function Name:void SendData_Temp_Data(uint8_t tdata)
+ * Function:send 
+ * 
+*********************************************************/
+
 void SendData_Buzzer(void)
 {
 	
@@ -155,8 +186,8 @@ void SendData_Works_Time(uint8_t tdata,uint8_t tdata_2)
 {
 
         outputBuf[0]='T'; //4D
-		outputBuf[1]='O'; //"T"->temperature
-		outputBuf[2]=tdata; //53	//
+		outputBuf[1]='O'; //diplay works times how many
+		outputBuf[2]=tdata; //
 		outputBuf[3]=tdata_2;
 		
 		transferSize=4;
@@ -174,7 +205,7 @@ void SendData_Remaining_Time(uint8_t tdata,uint8_t tdata_2)
 {
 
         outputBuf[0]='T'; //4D
-		outputBuf[1]='R'; //"T"->temperature
+		outputBuf[1]='R'; // remaining times works how many 
 		outputBuf[2]=tdata; //53	//
 		outputBuf[3]=tdata_2;
 		
@@ -274,19 +305,19 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 				  
                  break;
 
-                 case 0x54 : //power on return confirm flag
+                 case 0x54 : //power on return confirm flag --ansower command 
                 
                     
-                      run_t.wifi_receive_power_on_flag =1;
-                       state=0;
+                    g_pro.copy_cmd_flag = 0;
+                    state=0;
 		            run_t.decodeFlag=0;
 
                  break;
 
-                 case 0x53: //power off return confirm flag
+                 case 0x53: //power off return confirm flag-answer command
               
-                    
-                   // run_t.wifi_receive_power_off_flag =1;
+                     g_pro.copy_cmd_flag = 0;
+           
                      state=0;
 		            run_t.decodeFlag=0;
 
@@ -303,7 +334,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 
             case WIFI_TEMP ://4 //wifi modify temperature of value
                  run_t.wifi_set_temperature=inputBuf[0]; 
-				  run_t.g_manul_shutoff_flag =0;
+				 g_pro.manual_shutoff_ptc_flag = 0;
                  
                  state=0;
                  run_t.decodeFlag=1;
@@ -332,8 +363,13 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 			 case WIFI_REF_DATA:
 
 			    run_t.gDry = inputBuf[0];
-				if(inputBuf[0]==0)
-				   run_t.g_manul_shutoff_flag =1;
+				if(inputBuf[0]==0){
+				  g_pro.manual_shutoff_ptc_flag = 1;// run_t.g_manul_shutoff_flag =1;
+				}
+				else{
+				   g_pro.manual_shutoff_ptc_flag = 0;
+
+				}
 				state = 4; 
 				 
 			break;

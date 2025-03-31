@@ -8,6 +8,15 @@ extern uint8_t inputBuf[MAX_BUFFER_SIZE];
 extern uint8_t outputBuf[8];
 
 
+
+typedef enum _copy_cmd{
+
+     phone_power_off = 0xF0,
+	 phone_power_on = 0xF1,
+	 phone_power_timer_on = 0xFB
+
+}compy_cmd_t;
+
 typedef enum{
 
      WIFI_CLOUD_FAIL,
@@ -32,6 +41,9 @@ void SendData_Works_Time(uint8_t tdata,uint8_t tdata_2);
 
 void SendData_Remaining_Time(uint8_t tdata,uint8_t tdata_2);
 void USART1_Cmd_Error_Handler(void);
+
+void SendData_Copy_Cmd(uint8_t tdata);
+
 
 
 #endif 
