@@ -135,29 +135,14 @@ void Receive_MainBoard_Data_Handler(uint8_t cmd)
  
       break;
 
-      case WIFI_SET_TIMING:
-        
-       
-            run_t.dispTime_minutes = 0;
-             
-            run_t.temp_set_timer_timing_flag= 1;
-	   
-			run_t.gTimer_key_timing=0;
-		    
-            
-             m=(run_t.dispTime_hours ) /10;
-	       
+      case WIFI_SET_TIMING: //0x08
 
-			 n= (run_t.dispTime_hours ) %10;;
-			
-	         run_t.hours_two_bit = n;
-			 run_t.minutes_one_bit = 0;
-			 
-             TM1639_Write_4Bit_Time(m,run_t.hours_two_bit,run_t.minutes_one_bit,0,0) ; // timer   mode  "H0: xx"
-            
-	   
+	    g_pro.wifi_set_timer_timing_flag =1;
+        
+      
 
       break;
+	  
 
 	}
 
@@ -184,15 +169,21 @@ static void Receive_Wifi_Cmd(uint8_t cmd)
 		       g_pro.gTimer_copy_cmd_couter =0;
 	            run_t.wifi_power_on_flag = RUN_WIFI_NORMAL_POWER_ON;
 				run_t.wifi_send_buzzer_sound = WIFI_POWER_ON_ITEM;
-		        run_t.gRunCommand_label = RUN_POWER_ON;
+		        g_pro.gpower_on = RUN_POWER_ON;
+				g_pro.run_power_on_step=0;
+				
      
 				run_t.wifi_link_cloud_flag =WIFI_CLOUD_SUCCESS;
               
                  g_pro.key_power_off_sound_flag =0;
+				 g_pro.wifi_timer_power_on_flag = 0;
 			break;
 
 
              case WIFI_POWER_ON_TIMER: //0xB1 //WT.EDIT 2023.08.21
+
+                if(g_pro.wifi_timer_power_on_flag ==0){
+			 
 				SendData_Copy_Cmd(phone_power_timer_on);
 			   g_pro.copy_cmd_flag =0 ;
 		       g_pro.gTimer_copy_cmd_couter =0;
@@ -200,25 +191,31 @@ static void Receive_Wifi_Cmd(uint8_t cmd)
                 run_t.wifi_power_on_flag = RUN_WIFI_TIMER_POWER_ON;
              
 				run_t.wifi_send_buzzer_sound = WIFI_POWER_ON_ITEM;
-		        run_t.gRunCommand_label = RUN_POWER_ON;
+		        g_pro.gpower_on = RUN_POWER_ON;
+				g_pro.run_power_on_step=0;
+				
          
 				run_t.wifi_link_cloud_flag =WIFI_CLOUD_SUCCESS;
             
                
 				run_t.phone_timer_on_mouse_flag=1;
 				 g_pro.key_power_off_sound_flag =0;
+				 g_pro.wifi_timer_power_on_flag = 1;
+                }
 				
 			break;
 
 			 
 			 
 
-			 case WIFI_POWER_OFF: //turn off 
+			 case WIFI_POWER_OFF: //0x81
                SendData_Copy_Cmd(phone_power_off);
 			   g_pro.copy_cmd_flag =0;
 		       g_pro.gTimer_copy_cmd_couter =0;
 			   run_t.wifi_send_buzzer_sound = WIFI_POWER_OFF_ITEM;
-			   run_t.gRunCommand_label = POWER_OFF_PROCESS; //RUN_POWER_OFF; //WT.EDIT 2023.08-16
+			   g_pro.gpower_on = RUN_POWER_OFF; //RUN_POWER_OFF; //WT.EDIT 2023.08-16
+			 
+				g_pro.run_power_off_step=0;
 			   run_t.power_off_recoder_times=0; //WT.EDIT 2023.08.16
 			   run_t.power_on_recoder_times++;
            
@@ -227,22 +224,25 @@ static void Receive_Wifi_Cmd(uint8_t cmd)
 			 
             
 			   g_pro.key_power_off_sound_flag =1;
+			   g_pro.wifi_timer_power_on_flag = 0;
 			   
             
 
 			 break;
-
+           #if 0
 			 case WIFI_KILL_ON: //kill turn on plasma
 			  if(run_t.gPower_On==1){
                	run_t.gPlasma = 1;
+               	PLASMA_LED_OnOff(1);
 			        
              } 
 			 break;
 
 			 case WIFI_KILL_OFF: //kill turn off
                 if(run_t.gPower_On==1){
-			 	  run_t.gPlasma =0;
-				  
+			 	       run_t.gPlasma =0;
+
+				       PLASMA_LED_OnOff(0);
 		          
                 }
 			 break;
@@ -250,7 +250,8 @@ static void Receive_Wifi_Cmd(uint8_t cmd)
 			 case WIFI_PTC_ON://dry turn on
                 if(run_t.gPower_On==1){
 			        run_t.gDry =1;
-                    
+			         g_pro.manual_shutoff_ptc_flag =0;
+                 DRY_LED_OnOff(1); 
                  
                 }
 			 break;
@@ -259,33 +260,37 @@ static void Receive_Wifi_Cmd(uint8_t cmd)
                
 			 	if(run_t.gPower_On==1){
 					run_t.gDry=0;
+					g_pro.manual_shutoff_ptc_flag =1;
+					DRY_LED_OnOff(1);
+					
                  
 		           
 			 	}
 
 			 break;
 
-			 case WIFI_SONIC_ON:  //drive bug
-		
-				 if(run_t.gPower_On==1){		   
-				  run_t.gUltrasonic =1; //turn on 
-			
-				 
-			    }
+//			 case WIFI_SONIC_ON:  //drive bug
+//		
+//				 if(run_t.gPower_On==1){		   
+//				  run_t.gUltrasonic =1; //turn on 
+//			    ULTRASONIC_LED_OnOff(1);
+//				 
+//			    }
 
-			 break;
+//			 break;
 
-			 case WIFI_SONIC_OFF: //drive bug turn off
-			 	if(run_t.gPower_On==1){
-				    run_t.gUltrasonic=0;
-					
-			   }
-			 break;
+//			 case WIFI_SONIC_OFF: //drive bug turn off
+//			 	if(run_t.gPower_On==1){
+//				    run_t.gUltrasonic=0;
+//				    ULTRASONIC_LED_OnOff(0);
+//					
+//			   }
+//			 break;
 
-
+    #endif 
 
 	         default :
-                  cmd =0;
+                 
 			 break;
 
 			 
@@ -358,7 +363,14 @@ void Power_On_Fun(void)
 		}
          
 	   }
+	   else{
 
+	     run_t.dispTime_hours=0;
+
+	     run_t.dispTime_minutes =0;
+
+	   }
+      run_t.gTimer_Counter=0;
 	  hour_decade=(run_t.dispTime_hours ) /10;
 	  hour_unit=(run_t.dispTime_hours ) %10;
     
@@ -373,7 +385,7 @@ void Power_On_Fun(void)
 	  run_t.minutes_one_bit =  minutes_one;
       
 	 TM1639_Write_4Bit_Time(hour_decade,run_t.hours_two_bit,run_t.minutes_one_bit,minutes_two,0);
-      Display_DHT11_Value();
+     Display_DHT11_Value();
     
 }
 

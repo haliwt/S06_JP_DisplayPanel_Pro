@@ -9,7 +9,7 @@ void (*single_add_fun)(void);
 void (*single_buzzer_fun)(void);
 void (*sendAi_usart_fun)(uint8_t senddat);
 void (*dispose_key)(uint8_t dsdat);
-static void Setup_Timer_Times(void);
+//static void Setup_Timer_Times(void);
 
 static void Timing_Handler(void);
 static void RunLocal_Smg_Process(void);
@@ -19,6 +19,7 @@ static void SetTemperature_Function(void);
 static void Display_Works_Time_Fun(void);
 static void Send_WorksTime_ToApp_DonotDisplay_Fun(void);
 
+//uint8_t run_step_flag,run_power_off_step;
 
 
 /******************************************************************************
@@ -108,7 +109,9 @@ static void Timing_Handler(void)
 		HAL_Delay(2);
 		
 	  run_t.power_on_recoder_times++; //this is data must be change if not don't "breath led"
-	  run_t.gRunCommand_label = POWER_OFF_PROCESS; //POWER_OFF ; //WT.EDIT 2023.08-16
+	  g_pro.gpower_on = RUN_POWER_OFF; //POWER_OFF ; //WT.EDIT 2023.08-16
+	
+	g_pro.run_power_off_step=0;
 	  run_t.power_off_recoder_times=0; //WT.EDIT 2023.08.16
 	  run_t.timer_timing_define_flag = 0xff;
 
@@ -163,73 +166,84 @@ static void DisplayPanel_DHT11_Value(void)
 ******************************************************************************/
 void RunPocess_Command_Handler(void)
 {
-   static uint8_t power_off_flag=0xff,power_off_recoder_times,timer_timing_flag;
+   static uint8_t power_off_flag=0xff,timer_timing_flag;
    static uint8_t the_firs_dc_power_on;
+
+  switch(g_pro.gpower_on){
+
+   case RUN_POWER_ON:
+
+        switch(g_pro.run_power_on_step){
    
-   switch(run_t.gRunCommand_label){
-
-      case RUN_POWER_ON: //2
-         run_t.power_off_recoder_times=0;
-         g_pro.manual_shutoff_ptc_flag = 0;//run_t.g_manul_shutoff_flag =0;
-		 g_pro.power_on_flag =  1;
-          Power_On_Fun();
-            
-		 run_t.gRunCommand_label= UPDATE_DATA;
-	  break;
-
-
-      case UPDATE_DATA: //3
-    
-      
-         if(timer_timing_flag == 0){
-            timer_timing_flag++;
-            run_t.wifi_power_on_flag = RUN_NULL;
-            run_t.timer_timing_define_flag = timing_donot;
-            run_t.send_works_times_to_app=0;
-           
-            run_t.dispTime_hours=0;
-            run_t.works_dispTime_hours=0;
-            run_t.works_dispTime_minutes=0;
-            run_t.send_app_wokes_minutes_one=0;
-            run_t.send_app_wokes_minutes_two=0;
-            run_t.send_app_timer_minutes_one=0;
-            run_t.send_app_timer_minutes_two=0;
-            SendData_Time_Data(run_t.dispTime_hours);
-            HAL_Delay(5);
-            SendData_Works_Time(run_t.send_app_wokes_minutes_one ,run_t.send_app_wokes_minutes_two);
-            HAL_Delay(5);
-            SendData_Remaining_Time(run_t.send_app_timer_minutes_one, run_t.send_app_timer_minutes_two);
-            HAL_Delay(5);
-
-       }
-	   RunLocal_Smg_Process();
-     
-	   Timing_Handler();
-	  
-       SetTemperature_Function(); 
+		 case 0:
+			 g_pro.run_power_off_step=0;
+            run_t.gPower_On=1;
+            run_t.power_off_recoder_times=0;
+			g_pro.manual_shutoff_ptc_flag = 0;//run_t.g_manul_shutoff_flag =0;
+			g_pro.power_on_flag =  1;
+			 Power_On_Fun();
+			   
+		
+   
+		   if(timer_timing_flag == 0){
+			   timer_timing_flag++;
+			   run_t.wifi_power_on_flag = RUN_NULL;
+			   run_t.timer_timing_define_flag = timing_donot;
+			   run_t.send_works_times_to_app=0;
+			  
+			   run_t.dispTime_hours=0;
+			   run_t.works_dispTime_hours=0;
+			   run_t.works_dispTime_minutes=0;
+			   run_t.send_app_wokes_minutes_one=0;
+			   run_t.send_app_wokes_minutes_two=0;
+			   run_t.send_app_timer_minutes_one=0;
+			   run_t.send_app_timer_minutes_two=0;
+			   SendData_Time_Data(run_t.dispTime_hours);
+			   HAL_Delay(5);
+			   SendData_Works_Time(run_t.send_app_wokes_minutes_one ,run_t.send_app_wokes_minutes_two);
+			   HAL_Delay(5);
+			   SendData_Remaining_Time(run_t.send_app_timer_minutes_one, run_t.send_app_timer_minutes_two);
+			   HAL_Delay(5);
+   
+		  }
+		  
+		
+		 
+          g_pro.run_power_on_step=1;
+		 break;
+		 case 1: //3
 	   
-   	   SetTimer_Temperature_Number_Blink();
-      
-       Display_TimeColon_Blink_Fun();
-
-	   if(g_pro.gTimer_turn_on_led > 1){
-
-	      g_pro.gTimer_turn_on_led=0;
-		  power_on_run_led_handler();
-
-
+		 
+		  
+		  RunLocal_Smg_Process();
+		
+		  Timing_Handler();
+		 
+		  SetTemperature_Function(); 
+		  
+		  SetTimer_Temperature_Number_Blink();
+		 
+		  Display_TimeColon_Blink_Fun();
+   
+		
+		   
+		  
+   
+		 break;
 	   }
 
-		
-	   
+   break;
 
-	  break;
+   case RUN_POWER_OFF:
+   
+     switch(g_pro.run_power_off_step){
 
-	 case RUN_POWER_OFF: //1
-       
 
-		  g_pro.manual_shutoff_ptc_flag = 0;//run_t.g_manul_shutoff_flag =0;
-
+        case 0:
+          g_pro.run_power_on_step=0;
+          g_pro.manual_shutoff_ptc_flag = 0;//run_t.g_manul_shutoff_flag =0;
+          g_pro.wifi_set_timer_timing_flag =0;
+		   run_t.gPower_On = 0;
 
           run_t.power_off_recoder_times=0;
 
@@ -243,54 +257,63 @@ void RunPocess_Command_Handler(void)
 			   HAL_Delay(5);
           }
 		  if(the_firs_dc_power_on==0)the_firs_dc_power_on++;
-	      
-		   run_t.gRunCommand_label =POWER_OFF_PROCESS;
-	  break;
+		  g_pro.wifi_timer_power_on_flag = 0;
+		  
+		   run_t.dispTime_hours=0;
+		   
+		   run_t.dispTime_minutes =0;
+		   g_pro.wifi_set_timer_timing_flag=0;
+	     
 
-	  case POWER_OFF_PROCESS: //4
-  
-      run_t.wifi_power_on_flag = RUN_NULL;
-       run_t.define_initialization_timer_time_hours=0;
-       g_pro.power_on_flag =  0;
-      
-       timer_timing_flag=0;
-	   g_pro.key_power_off_sound_flag =0; //WT.EDIT 2025.03.29
-       if(the_firs_dc_power_on==0){
+           g_pro.run_power_off_step=1;
 
-            the_firs_dc_power_on++;
-       }
+        break;
+   
+		case 1: //4
+	
+		run_t.wifi_power_on_flag = RUN_NULL;
+		 run_t.define_initialization_timer_time_hours=0;
+		 g_pro.power_on_flag =	0;
+		
+		 timer_timing_flag=0;
+		 g_pro.key_power_off_sound_flag =0; //WT.EDIT 2025.03.29
+		 if(the_firs_dc_power_on==0){
+   
+			  the_firs_dc_power_on++;
+		 }
+   
+   
+		
+		 if(run_t.power_off_recoder_times ==0){
+		   run_t.power_off_recoder_times++;
+		   
+		   Power_Off_Fun();
+   
+		 }
+   
+		 if(run_t.gPower_On ==POWER_OFF || run_t.gPower_On == 0xff){
+   
+			if(power_off_flag !=run_t.power_on_recoder_times){
+				power_off_flag = run_t.power_on_recoder_times;
+			  run_t.gPower_On =0xff;
+			  Breath_Led();
+			
+			}
+			
+			if(run_t.gPower_On ==0xff || run_t.gPower_On ==POWER_OFF){
+				  Breath_Led();
+			}
 
+		 }
+   
+		break;
+	  }
 
-      
-       if(run_t.power_off_recoder_times ==0){
-         run_t.power_off_recoder_times++;
-         
-         Power_Off_Fun();
-
-       }
-
-	   if(run_t.gPower_On ==POWER_OFF || run_t.gPower_On == 0xff){
-
-	      if(power_off_flag !=run_t.power_on_recoder_times){
-		  	  power_off_flag = run_t.power_on_recoder_times;
-	 	  	run_t.gPower_On =0xff;
-		    Breath_Led();
-          
-	      }
-          
-		  if(run_t.gPower_On ==0xff || run_t.gPower_On ==POWER_OFF){
-				Breath_Led();
-		  }
-		  else{
-            run_t.gPower_On = POWER_ON;
-			run_t.gRunCommand_label= UPDATE_DATA;
-		  }
-       }
-
-	  break;
-
-  }
+      break;
+   }
+   
 }
+
 /*******************************************************
 	*
 	*Function Name: static void RunLocal_Smg_Process(void)
@@ -303,7 +326,7 @@ static void RunLocal_Smg_Process(void)
 {
 
      
-	 Panel_Led_OnOff_Function() ;//Lcd_PowerOn_Fun();
+	// Panel_Led_OnOff_Function() ;//Lcd_PowerOn_Fun();
 	
 	 DisplayPanel_DHT11_Value();
 
@@ -329,7 +352,7 @@ static void SetTemperature_Function(void)
 		  if(run_t.wifi_set_temperature  < run_t.gReal_humtemp[1] || run_t.gReal_humtemp[1] >39){//envirment temperature
 	  
 				run_t.gDry = 0;
-
+                LED_DRY_OFF();
 		        SendData_Set_Command(DRY_OFF_NO_BUZZER);//PTC turn off
 			    
 			    
@@ -338,6 +361,7 @@ static void SetTemperature_Function(void)
 		  else if(run_t.wifi_set_temperature  > run_t.gReal_humtemp[1] ){
 	         if(g_pro.manual_shutoff_ptc_flag ==0){
 		        run_t.gDry = 1;
+				LED_DRY_ON();
 	           SendData_Set_Command(DRY_ON_NO_BUZZER); //PTC turn On
 
 	          }
@@ -350,6 +374,7 @@ static void SetTemperature_Function(void)
           if(run_t.gReal_humtemp[1] >39 && run_t.gTimer_temp_delay >119){//envirment temperature
 	            run_t.gTimer_temp_delay =0;
 				run_t.gDry = 0;
+		        LED_DRY_OFF();
                 first_open_ptc=1;
 			    SendData_Set_Command(DRY_OFF_NO_BUZZER);
 
@@ -359,6 +384,7 @@ static void SetTemperature_Function(void)
                   run_t.gTimer_temp_delay =0;
 				 if(g_pro.manual_shutoff_ptc_flag ==0){//if(run_t.g_manul_shutoff_flag ==0){
                   run_t.gDry = 1;
+				  LED_DRY_ON();
 	              SendData_Set_Command(DRY_ON_NO_BUZZER); //PTC turn On
 				  }
              

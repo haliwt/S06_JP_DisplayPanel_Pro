@@ -7,6 +7,7 @@ static uint8_t transferSize;
 static uint8_t state;
 uint8_t inputBuf[MAX_BUFFER_SIZE];
 
+uint8_t ptc_counter;
 
 
 
@@ -341,9 +342,62 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
             break;
 
             case WIFI_CMD:
-                 run_t.wifiCmd[0] =inputBuf[0];
-                 state=0;
-                 run_t.decodeFlag=1; 
+				 switch(inputBuf[0]){
+				 	
+                  case WIFI_PTC_ON: //
+					ptc_counter++;
+                   g_pro.manual_shutoff_ptc_flag = 0;
+                   run_t.gDry =1;
+			        LED_DRY_ON();
+                  state=0;
+				  break;
+
+				  case WIFI_PTC_OFF:
+				  	g_pro.manual_shutoff_ptc_flag = 1;
+				  	run_t.gDry =0;
+			        LED_DRY_OFF();
+                  state=0;
+				  break;
+
+				  case WIFI_KILL_OFF:
+				  	 run_t.gPlasma = 0;
+				   LED_PLASMA_OFF();
+
+				  break;
+
+                  case WIFI_KILL_ON:
+				  	  run_t.gPlasma = 1;
+				   LED_PLASMA_ON();
+				  state=0;
+
+				  break;
+
+				  case WIFI_ULTRASONIC_ON:
+				  		run_t.gUltrasonic =1; //tur ON
+ 					LED_FAN_ON();
+                  state=0;
+				  break;
+				  
+
+				  case WIFI_ULTRASONIC_OFF:
+				  run_t.gUltrasonic =0;
+				  LED_FAN_OFF();
+				  state=0;
+
+				  break;
+
+				  default:
+				          
+				   run_t.wifiCmd[0] =inputBuf[0];
+				  state=0;
+				  run_t.decodeFlag=1; 
+
+				  break;
+				  
+
+				 }
+                 //state=0;
+                 //run_t.decodeFlag=1; 
             break;
 
 			 case WIFI_BEIJING_TIME:

@@ -44,6 +44,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
 	   g_pro.gTimer_turn_on_led ++;
 	    g_pro.gTimer_copy_cmd_couter ++;
+		g_pro.gTimer_wifi_set_timing ++;
 
 		if(run_t.gPower_On==1){
 		    run_t.gTimer_Counter ++;

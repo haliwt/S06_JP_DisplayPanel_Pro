@@ -1,14 +1,10 @@
-#include "display.h"
-#include "smg.h"
-#include "cmd_link.h"
-#include "run.h"
-#include "key.h"
-#include "led.h"
-//#include "single_mode.h"
+#include "bsp.h"
 
 
 
-static void TimeColon_Smg_Blink_Fun(void);
+
+
+
 
 
 /**********************************************************************
@@ -82,7 +78,7 @@ void Display_GMT(uint8_t hours,uint8_t minutes)
 
 
 
-static void TimeColon_Smg_Blink_Fun(void)
+void TimeColon_Smg_Blink_Fun(void)
 {
 	if(run_t.gTimer_colon < 2){
 		  SmgBlink_Colon_Function(run_t.hours_two_bit ,run_t.minutes_one_bit,0);
@@ -119,8 +115,8 @@ void Display_TimeColon_Blink_Fun(void)
 
 	}
 	
-
-   if(run_t.set_temperature_flag==0 && run_t.set_temperature_special_value==0 && run_t.set_timer_special_value==0 && run_t.temp_set_timer_timing_flag==0\
+ 
+   else if(run_t.set_temperature_flag==0 && run_t.set_temperature_special_value==0 && run_t.set_timer_special_value==0 && run_t.temp_set_timer_timing_flag==0\
    	    && continue_flag==1 && continue_2_flag==1){	
 				 	
                      continue_2_flag = 0;
@@ -131,6 +127,7 @@ void Display_TimeColon_Blink_Fun(void)
 	}
 	}
 
+  
 }
 
 

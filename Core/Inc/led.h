@@ -55,7 +55,10 @@ void Power_Off_Led_Off(void);
 
 void Power_ON_Led(void);
 
+void ULTRASONIC_LED_OnOff(uint8_t sel);
 
+void DRY_LED_OnOff(uint8_t sel);
+void PLASMA_LED_OnOff(uint8_t sel);
 
 
 

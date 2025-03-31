@@ -17,5 +17,6 @@ void Display_GMT(uint8_t hours,uint8_t minutes);
 
 void Display_TimeColon_Blink_Fun(void);
 
+void TimeColon_Smg_Blink_Fun(void);
 
 #endif 

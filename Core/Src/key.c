@@ -319,20 +319,22 @@ void Process_Key_Handler(uint8_t keylabel)
 	   	}
 		 run_t.keyvalue = 0xff;
 	  break;
-
+      //FUNCTION 
 	   case DRY_KEY_ID://0x02: //CIN6  ->DRY KEY 
           if(run_t.gPower_On ==1){
 		
 			  if(run_t.gDry== 1){
 			  	    g_pro.manual_shutoff_ptc_flag = 1;//run_t.g_manul_shutoff_flag =1;
 				    run_t.gDry =0;
-			        g_pro.manual_shutoff_ptc_flag = 1;
+			        LED_DRY_OFF();
+			       
 					SendData_Set_Command(DRY_OFF);
                }
                else{
 			   	    g_pro.manual_shutoff_ptc_flag = 0;//run_t.g_manul_shutoff_flag =0;
                     run_t.gDry =1;
-			        g_pro.manual_shutoff_ptc_flag = 0;
+			        LED_DRY_ON();
+			      
 					SendData_Set_Command(DRY_ON);
                  }  
 			   }
@@ -346,10 +348,12 @@ void Process_Key_Handler(uint8_t keylabel)
 			   if(run_t.gPlasma ==1){  //turun off kill 
 			   	
 			       run_t.gPlasma = 0;
+				   LED_PLASMA_OFF();
 				   SendData_Set_Command(PLASMA_OFF);
 			   	}  
                 else{
                    run_t.gPlasma = 1;
+				   LED_PLASMA_ON();
 				   SendData_Set_Command(PLASMA_ON);
 				}
 				   
@@ -363,14 +367,16 @@ void Process_Key_Handler(uint8_t keylabel)
                    
                 if(run_t.gUltrasonic==0){
  					run_t.gUltrasonic =1; //tur ON
+ 					LED_FAN_ON();
  					SendData_Set_Command(ULTRASONIC_ON);
-				HAL_Delay(10);
+				//HAL_Delay(10);
 			     }
                 else{
                
 					run_t.gUltrasonic =0;
+					LED_FAN_OFF();
 					SendData_Set_Command(ULTRASONIC_OFF);
-				HAL_Delay(10);
+				//HAL_Delay(10);
                     
                  }
 				  
@@ -411,7 +417,9 @@ void Power_OnOff_Key_Handler(void)
     	        SendData_PowerOnOff(1);
                 HAL_Delay(10);
                 run_t.gTimer_set_temp_times=0; //conflict with send temperatur value
-                run_t.gRunCommand_label =RUN_POWER_ON;
+                g_pro.gpower_on =RUN_POWER_ON;
+				g_pro.run_power_on_step=0;
+				//g_pro.run_power_off_step
                
                 run_t.power_key_interrupt_flag=0;
                 run_t.power_on_recoder_times++ ;
@@ -432,7 +440,9 @@ void Power_OnOff_Key_Handler(void)
 		    SendData_PowerOnOff(0);
             HAL_Delay(10);
             run_t.wifi_power_on_flag = RUN_POWER_OFF_NULL; //divisive app power on and key power on
-		    run_t.gRunCommand_label =RUN_POWER_OFF;
+		    g_pro.gpower_on =RUN_POWER_OFF;
+				
+			g_pro.run_power_off_step=0;
          
 	        run_t.power_on_recoder_times++ ;
             run_t.power_key_interrupt_flag=0;
@@ -463,8 +473,9 @@ void Power_OnOff_Key_Handler(void)
 void SetTimer_Temperature_Number_Blink(void)
 {
 
-    static uint8_t m,n,p,q,counter_timesb,send_timing_value,counter_times;
-    static uint8_t timing_flag,set_timer_flag,set_temp_flag,define_timer_times;
+    static uint8_t m,n,p,q,send_timing_value;
+    static uint8_t timing_flag,set_timer_flag,set_temp_flag;
+	  static uint8_t counter_times;
 	
 	//set timer timing value 
 	switch(run_t.temp_set_timer_timing_flag){

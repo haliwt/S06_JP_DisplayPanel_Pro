@@ -109,10 +109,13 @@ int main(void)
           case 0:
 	        HAL_Delay(2000);
 			run_t.gPower_On=0xff;
-			run_t.gRunCommand_label =POWER_OFF_PROCESS;
+			
             run_t.power_off_recoder_times =0; //WT.EDIT 2023.08.16
 			run_t.power_times=1;
             run_t.first_power_on_times=1;
+			g_pro.gpower_on = RUN_POWER_OFF;
+			
+				g_pro.run_power_off_step=0;
                
 
 	      break;
@@ -131,6 +134,7 @@ int main(void)
 	      
 		   RunPocess_Command_Handler();
 		   decode_process_handler();
+		   panel_process_led_on();
            
            answer_cmd_form_mainboard();
 		 //  USART1_Cmd_Error_Handler();

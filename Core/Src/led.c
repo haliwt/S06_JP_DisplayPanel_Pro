@@ -4,8 +4,7 @@
 void (*panel_led_fun)(void);
 
 
-static void DRY_LED_OnOff(uint8_t sel);
-static void PLASMA_LED_OnOff(uint8_t sel);
+
 
 static void TIME_LED_OnOff(uint8_t sel);
 
@@ -13,11 +12,11 @@ static void Power_BreathOnOff(void);
 
 static void WIFI_LED_OnOff(uint8_t sel);
 
-static void ULTRASONIC_LED_OnOff(uint8_t sel);
 
-static void LED_Breath_Fun(void);
 
-static void delay_led_times(uint16_t t);
+//static void LED_Breath_Fun(void);
+
+//static void delay_led_times(uint16_t t);
 
 
 /***********************************************************
@@ -84,7 +83,7 @@ static void WIFI_LED_OnOff(uint8_t sel)
 	}
 }
 
-static void DRY_LED_OnOff(uint8_t sel)
+void DRY_LED_OnOff(uint8_t sel)
 {
    if(sel==1){
 	 LED_DRY_ON();
@@ -93,7 +92,7 @@ static void DRY_LED_OnOff(uint8_t sel)
    	LED_DRY_OFF();
 
 }
-static void PLASMA_LED_OnOff(uint8_t sel)
+void PLASMA_LED_OnOff(uint8_t sel)
 {
 	if(sel==1){
 		LED_PLASMA_ON();
@@ -119,7 +118,7 @@ void KeyLed_Power_On(void)
 
 }
 
-static void ULTRASONIC_LED_OnOff(uint8_t sel)
+void ULTRASONIC_LED_OnOff(uint8_t sel)
 {
 
 	if(sel==1)LED_FAN_ON();
@@ -153,6 +152,7 @@ void Panel_Led_OnOff_Function(void)
 {
 	
 	LED_POWER_ON();
+	SMG_POWER_ON();
 	if(run_t.gWifi ==0){
        WIFI_LED_OnOff(0);
 
@@ -165,40 +165,33 @@ void Panel_Led_OnOff_Function(void)
 
      if(run_t.gDry==1){
 		 
-	     DRY_LED_OnOff(1);
+	     LED_DRY_ON();
 
      }
 	 else{
 
 	   
-	     DRY_LED_OnOff(0);
+	    LED_DRY_OFF();
 		
 
 	 }
 
 	 if(run_t.gPlasma==1){
 	 	
-	     PLASMA_LED_OnOff(1);
-
+	     LED_PLASMA_ON();
      }
 	 else{
-	   PLASMA_LED_OnOff(0);
+	    LED_PLASMA_OFF();
 
 	 }
 
 	 if(run_t.gUltrasonic == 1){
-         ULTRASONIC_LED_OnOff(1);
+         LED_FAN_ON();//ULTRASONIC_LED_OnOff(1);
 	 }
 	 else{
-         ULTRASONIC_LED_OnOff(0);
+         LED_FAN_OFF();//ULTRASONIC_LED_OnOff(0);
 	 }
 	 
-
-	 if(run_t.time_led_flag ==1){
-	    TIME_LED_OnOff(1);
-	 }
-	 else
-	 	TIME_LED_OnOff(0);
 
     
 	
