@@ -171,11 +171,13 @@ void RunPocess_Command_Handler(void)
 
   switch(g_pro.gpower_on){
 
-   case RUN_POWER_ON:
+   case RUN_POWER_ON: //2
 
         switch(g_pro.run_power_on_step){
    
 		 case 0:
+
+		    if(g_pro.run_power_on_step !=1){
 			 g_pro.run_power_off_step=0;
             run_t.gPower_On=1;
             run_t.power_off_recoder_times=0;
@@ -207,7 +209,7 @@ void RunPocess_Command_Handler(void)
    
 		  }
 		  
-		
+		   }
 		 
           g_pro.run_power_on_step=1;
 		 break;
@@ -223,9 +225,8 @@ void RunPocess_Command_Handler(void)
 		  
 		  SetTimer_Temperature_Number_Blink();
 		 
-		  Display_TimeColon_Blink_Fun();
-   
-		
+		  // Display_TimeColon_Blink_Fun();
+		  g_pro.run_power_on_step=1;
 		   
 		  
    

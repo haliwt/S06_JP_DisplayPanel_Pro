@@ -135,6 +135,9 @@ int main(void)
 		   RunPocess_Command_Handler();
 		   decode_process_handler();
 		   panel_process_led_on();
+
+		 
+           TimeColon_Smg_Blink_Fun();
            
            answer_cmd_form_mainboard();
 		 //  USART1_Cmd_Error_Handler();

@@ -34,8 +34,8 @@ typedef struct __PROCESS_T{
   uint8_t copy_cmd_flag;
   uint8_t manual_shutoff_ptc_flag ;
   uint8_t wifi_timer_power_on_flag;
-  uint8_t run_power_on_step;
-   uint8_t run_power_off_step;
+  volatile uint8_t run_power_on_step;
+  volatile uint8_t run_power_off_step;
   
 
   uint8_t gTimer_turn_on_led;

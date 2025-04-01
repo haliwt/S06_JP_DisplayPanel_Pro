@@ -80,24 +80,29 @@ void Display_GMT(uint8_t hours,uint8_t minutes)
 
 void TimeColon_Smg_Blink_Fun(void)
 {
-	if(run_t.gTimer_colon < 2){
+    static uint8_t colon_counter;
+    if(g_pro.gpower_on == RUN_POWER_ON){
+	if(run_t.gTimer_colon >  0){
+		run_t.gTimer_colon=0;
+		colon_counter++;
+	   if(colon_counter==1){
 		  SmgBlink_Colon_Function(run_t.hours_two_bit ,run_t.minutes_one_bit,0);
 	   }
-	   else if(run_t.gTimer_colon >  1	&&	run_t.gTimer_colon < 3){
+	   else{
+	   	   colon_counter=0;
 		   SmgBlink_Colon_Function(run_t.hours_two_bit ,run_t.minutes_one_bit,1);
 
 	  }
-	  else{
-		 run_t.gTimer_colon =0;
-
-	  }
+   }
+	
 }
 
+}
 
 void Display_TimeColon_Blink_Fun(void)
 {
     static uint8_t  continue_flag=0, continue_2_flag=0;
- 
+   if(g_pro.gpower_on == RUN_POWER_ON){
    if(run_t.gTimer_time_colon >27){ //10*20ms=300ms
 
 	   run_t.gTimer_time_colon =0;
@@ -114,20 +119,18 @@ void Display_TimeColon_Blink_Fun(void)
 	                 continue_2_flag = 1;
 
 	}
-	
- 
-   else if(run_t.set_temperature_flag==0 && run_t.set_temperature_special_value==0 && run_t.set_timer_special_value==0 && run_t.temp_set_timer_timing_flag==0\
+	else if(run_t.set_temperature_flag==0 && run_t.set_temperature_special_value==0 && run_t.set_timer_special_value==0 && run_t.temp_set_timer_timing_flag==0\
    	    && continue_flag==1 && continue_2_flag==1){	
 				 	
                      continue_2_flag = 0;
 			         continue_flag=0;
-					TimeColon_Smg_Blink_Fun();
+					//TimeColon_Smg_Blink_Fun();
 					
 
 	}
 	}
 
-  
+   	}
 }
 
 
